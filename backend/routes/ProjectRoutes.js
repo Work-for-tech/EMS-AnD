@@ -11,6 +11,4 @@ router.post("/getProjects", projectController.getProject);
 // Here
 router.get("/getAll", projectController.getProjects);
 
-router.post("/changeProjectStatus", projectController.changeProjectStatus);
-
 module.exports = router;

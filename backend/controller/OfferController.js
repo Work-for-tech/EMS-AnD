@@ -54,7 +54,7 @@ exports.updateOfferStatus = async (req, res) => {
 
     if (offer.status === "Final") {
       const project = await projectSchema.findById(offer.project_id);
-
+      project.is_finalized = true;
       project.total_price += offer.price;
       project.save();
     }
