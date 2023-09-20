@@ -4,9 +4,9 @@ module.exports.dbConnect = () => {
   mongoose
     .connect(process.env.MONGO_URI)
     .then((data) => {
-      console.log("db connected");
+      console.log("DB connected");
     })
     .catch((err) => {
-      console.log("db not connected");
+      console.log("DB not connected");
     });
 };
