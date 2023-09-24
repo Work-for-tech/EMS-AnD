@@ -1,4 +1,4 @@
-// Here
+// DeOkumar
 const offerComponentSchema = require("../models/OfferComponent");
 
 exports.add = async (req, res) => {

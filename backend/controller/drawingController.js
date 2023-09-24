@@ -13,6 +13,7 @@ const upload1 = multer({
   storage: storage,
 }).single("file");
 
+// DeOkumar
 module.exports.getDrawingFile = (req, res) => {
   const fileName = req.body.fileName;
   const filePath = path.join(__dirname, "../../Uploads", fileName);

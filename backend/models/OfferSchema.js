@@ -26,6 +26,7 @@ const offerSchema = new Schema({
     min: 1,
   },
 
+  // DeOkumar
   status: {
     type: String,
     enum: ["not Final", "ongoing", "Final", "Rejected"],

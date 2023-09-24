@@ -42,33 +42,39 @@ app.use(base_url + "/company", companyRoutes);
 const subComponentRoutes = require("./routes/SubComponentRoutes");
 app.use(base_url + "/subcomponent", subComponentRoutes);
 
-// Here
+// DeOkumar
 const project_offerRoutes = require("./routes/Offer_projectRoutes");
 app.use(base_url + "/project_offer", project_offerRoutes);
 
-// Here
+// DeOkumar
 const componentRoutes = require("./routes/ComponentRoutes");
 app.use(base_url + "/component", componentRoutes);
 
-// Here
+// DeOkumar
 const offerRoutes = require("./routes/OfferRoutes");
 app.use(base_url + "/offer", offerRoutes);
 
-// Here
+// DeOkumar
 const revisionRoutes = require("./routes/RevisionRoutes");
 app.use(base_url + "/revision", revisionRoutes);
 
-// Here
+// DeOkumar
 const offerSubComponentRoutes = require("./routes/OfferSubComponentRoutes");
 app.use(base_url + "/offerSubComponent", offerSubComponentRoutes);
 
-// Here
+// DeOkumar
 const offerComponentRoutes = require("./routes/OfferComponentRoutes");
 app.use(base_url + "/offerComponent", offerComponentRoutes);
 
-// Here
+// DeOkumar
 const drawingRoutes = require("./routes/drawingRoutes");
 app.use(base_url + "/drawing", drawingRoutes);
+
+const storeRoutes = require("./routes/storeRoutes");
+app.use(base_url + "/store", storeRoutes);
+
+const vendorRoutes = require("./routes/vendorRoutes");
+app.use(base_url + "/vendor", vendorRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

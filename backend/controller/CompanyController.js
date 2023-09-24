@@ -30,7 +30,7 @@ exports.getAllCompanies = async (req, res) => {
   }
 };
 
-// Here
+// DeOkumar
 exports.deleteCompany = async (req, res) => {
   try {
     const company = await companySchema.findByIdAndDelete(req.params.id);
@@ -46,7 +46,7 @@ exports.deleteCompany = async (req, res) => {
   }
 };
 
-// Here
+// DeOkumar
 exports.getOneCompany = async (req, res) => {
   try {
     const company = await companySchema.findById(req.params.id);

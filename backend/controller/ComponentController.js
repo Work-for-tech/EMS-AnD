@@ -1,4 +1,4 @@
-// Here
+// DeOkumar
 const componentSchema = require("../models/ComponentSchema");
 
 exports.addComponent = async (req, res) => {
@@ -31,7 +31,7 @@ exports.getAllCompComponents = async (req, res) => {
   }
 };
 
-// Here
+// DeOkumar
 exports.deleteComponents = async (req, res) => {
   try {
     const component = await componentSchema.findByIdAndDelete(req.params.id);
@@ -47,7 +47,7 @@ exports.deleteComponents = async (req, res) => {
   }
 };
 
-// Here
+// DeOkumar
 exports.getOneComponent = async (req, res) => {
   try {
     const component = await componentSchema

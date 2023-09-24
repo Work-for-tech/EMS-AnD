@@ -62,7 +62,10 @@ exports.deleteById = async (req, res) => {
 
 exports.getAllSubComponents = async (req, res) => {
   try {
-    const items = await subComponentSchema.find();
+    const items = await subComponentSchema.find().populate({
+      path: "catalog.rating.companies.company_id",
+      model: "Companies", // Replace with your actual company model name
+    });
     res.status(200).json({
       message: "All SubComponents Fetched SuccessFully",
       data: items,
@@ -75,7 +78,7 @@ exports.getAllSubComponents = async (req, res) => {
   }
 };
 
-// Here
+// DeOkumar
 exports.getOneSubComponent = async (req, res) => {
   try {
     const item = await subComponentSchema.findById(req.params.id).populate({
@@ -109,7 +112,6 @@ exports.getOneSubComponentByDesc = async (req, res) => {
         path: "catalog.rating.companies.company_id",
         model: "Companies",
       });
-
 
     if (!item) {
       return res.status(500).json({
