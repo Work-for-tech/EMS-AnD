@@ -76,6 +76,9 @@ app.use(base_url + "/store", storeRoutes);
 const vendorRoutes = require("./routes/vendorRoutes");
 app.use(base_url + "/vendor", vendorRoutes);
 
+const indentRoutes = require("./routes/indentRoutes");
+app.use(base_url + "/indent", indentRoutes);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
