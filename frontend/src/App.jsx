@@ -21,6 +21,9 @@ import { CreateVendor } from "./Components/Vendor/page";
 import { VendorList } from "./Components/Lists/VendorList";
 import { CreateStore } from "./Components/Store/page";
 import { StoreList } from "./Components/Lists/StoreList";
+import { IndentOffers } from "./Components/Indent/IndentOffers";
+import { BulkIndent } from "./Components/BulkIndent/BulkIndent";
+import { IndentList } from "./Components/Lists/IndentList";
 
 function App() {
   const dispatch = useDispatch();
@@ -56,6 +59,9 @@ function App() {
           <Route path="/vendorlist" element={<VendorList />} />
           <Route path="/createstore" element={<CreateStore />} />
           <Route path="/storelist" element={<StoreList />} />
+          <Route path="/indent" element={<IndentOffers />} />
+          <Route path="/bulkindent" element={<BulkIndent />} />
+          <Route path="/indentlist" element={<IndentList />} />
         </Routes>
       </Router>
     </div>

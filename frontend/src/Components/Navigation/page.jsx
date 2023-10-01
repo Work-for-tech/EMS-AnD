@@ -19,22 +19,35 @@ export const Navigator = () => {
     };
   }
 
-  const items = [
-    getItem("Menu", "sub1", [
+  const item1 = [
+    getItem("Offer", "sub1", [
       getItem("Companies", "companies"),
       getItem("Add SubComponent", "subComponent"),
       getItem("Add Component", "component"),
       getItem("Add Offer", "offer"),
+      getItem("Offers List", "offerlist"),
+      getItem("Export Offer", "export"),
+    ]),
+  ];
+
+  const item2 = [
+    getItem("Project", "sub2", [
       getItem("Add Project", "project"),
       getItem("Add Client", "client"),
-      getItem("Offers List", "offerlist"),
       getItem("Projects List", "projectlist"),
       getItem("Drawing", "drawing"),
-      getItem("Export Offer", "export"),
+    ]),
+  ];
+
+  const item3 = [
+    getItem("Indent", "sub3", [
       getItem("Create Vendor", "createvendor"),
       getItem("Vendor List", "vendorlist"),
       getItem("Create Store", "createstore"),
       getItem("Store List", "storelist"),
+      getItem("Indent", "indent"),
+      getItem("Bulk Indent", "bulkindent"),
+      getItem("Indent List", "indentlist"),
     ]),
   ];
 
@@ -53,11 +66,27 @@ export const Navigator = () => {
       <p className="text-2xl p-3 font-semibold">ERP</p>
       <Menu
         mode="inline"
-        className="p-4"
+        className=" "
         openKeys={openKeys}
         onOpenChange={onOpenChange}
         onClick={(e) => navigate(`/${e.key}`)}
-        items={items}
+        items={item1}
+      />
+      <Menu
+        mode="inline"
+        className=""
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        onClick={(e) => navigate(`/${e.key}`)}
+        items={item2}
+      />
+      <Menu
+        mode="inline"
+        className=""
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        onClick={(e) => navigate(`/${e.key}`)}
+        items={item3}
       />
     </div>
   );
