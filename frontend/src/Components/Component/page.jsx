@@ -59,7 +59,7 @@ export const ComponentPage = () => {
           <button
             className="text-red-800 cursor-pointer"
             onClick={() => {
-              setData((data) => data.filter((e) => e.id !== record.id));
+              setData((data) => data.filter((e) => e.key !== record.key));
             }}
           >
             <Trash2 />
@@ -111,6 +111,8 @@ export const ComponentPage = () => {
       return;
     }
 
+    console.log(newData);
+
     setData([...data, newData]);
     setSubComponent("Select Sub Component");
   };
@@ -123,11 +125,14 @@ export const ComponentPage = () => {
     };
 
     data.map((e) => {
+      console.log(e);
       sendData.sub_components.push({
         subcomponent_id: e.sub_component,
         quantity: Number(e.quantity),
       });
     });
+
+    console.log(sendData);
 
     const response = await postComponents(sendData);
 

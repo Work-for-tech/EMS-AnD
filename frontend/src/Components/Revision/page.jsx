@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Revision = () => {
   const offer = useSelector((state) => state.offer);
+  const updatePanel = useSelector((state) => state.updatepanel);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [offerData, setOfferData] = useState([]);
@@ -126,9 +127,11 @@ export const Revision = () => {
               onClick={() => {
                 setRecentData(record);
                 setOfferId(record.key);
-                dispatch(
-                  offerActions.setPanelsToBeCreated(record.panels_to_be_created)
-                );
+                const dispatchData = {
+                  panels_to_be_created: record.panels_to_be_created,
+                  id: record.key,
+                };
+                dispatch(offerActions.setPanelsToBeCreated(dispatchData));
               }}
             >
               <PlusCircle />
@@ -240,7 +243,8 @@ export const Revision = () => {
 
   useEffect(() => {
     getAllOffers();
-    if (offer.id !== "") {
+    console.log(offer.id);
+    if (offer.id && updatePanel.type === "revision") {
       setOfferId(offer.id);
       setRecentData(offer);
       setAddRevision(offer.id);

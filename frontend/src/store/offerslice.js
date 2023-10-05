@@ -91,7 +91,8 @@ const offerSlice = createSlice({
       });
     },
     setPanelsToBeCreated(state, action) {
-      state.panels_to_be_created = action.payload;
+      state.panels_to_be_created = action.payload.panels_to_be_created;
+      state.id = action.payload.id;
     },
     setOfferId(state, action) {
       state.id = action.payload;

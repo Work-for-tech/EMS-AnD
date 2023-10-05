@@ -224,7 +224,7 @@ export const OfferRevision = ({
                         profit_percentage: record.profit_percentage,
                         components: data,
                         id: record.id,
-                        type: "revision"
+                        type: "revision",
                       })
                     );
                     navigate("/updateoffer");
@@ -420,6 +420,7 @@ export const OfferRevision = ({
         clientName: clientName,
         QtyOfPanel: QtyOfPanel,
         DescriptionOfPanel: DescriptionOfPanel,
+        id: OfferId,
       })
     );
   };
@@ -582,6 +583,7 @@ export const OfferRevision = ({
                       id: OfferId,
                     })
                   );
+                  dispatch(updatepanelActions.addType("revision"));
                   dispatch(panelActions.initial());
                   navigate("/offerpanels");
                 }}
