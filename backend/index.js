@@ -79,6 +79,9 @@ app.use(base_url + "/vendor", vendorRoutes);
 const indentRoutes = require("./routes/indentRoutes");
 app.use(base_url + "/indent", indentRoutes);
 
+const purchaseRoutes=require('./routes/purchaseRoutes')
+app.use(base_url+"/purchase",purchaseRoutes)
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
