@@ -6,7 +6,7 @@ export const createStoreData = async (data) => {
       "inverntoryManagment/api/v1/public/store/addtostore",
       data
     );
-
+      console.log("osdjko",response)
     console.log(response.status);
 
     return {

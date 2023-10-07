@@ -2,7 +2,8 @@ const store = require("../models/storeSchema");
 
 exports.addToStore = async (req, res) => {
   try {
-    var data = await store
+    console.log(req.body)
+    await store
       .findOneAndUpdate(
         {
           $and: [
@@ -16,12 +17,7 @@ exports.addToStore = async (req, res) => {
         { upsert: true }
       )
       .exec();
-
-    if (data) {
       res.status(200).json({ message: "Stored succesfully", data: data });
-    } else {
-      res.status(400).json({ message: "failed" });
-    }
   } catch (err) {
     res.status(500).json({
       message: "Error in adding store",

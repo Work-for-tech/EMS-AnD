@@ -15,17 +15,18 @@ module.exports.addIndentUsingPid = (async (req, res) => {
         // ]
         // }
         console.log(req.body)
-        var data = await indentSchema.updateOne({ projectId: req.body.projectId, purchased: false }, { $set: req.body }, { upsert: true }).exec()
-        console.log(data.upsertedCount > 0 || data.modifiedCount > 0)
-
-        if (data.upsertedCount > 0) {
-            res.status(200).json({ message: 'Indent updated' })
+        var data=await indentSchema.findOne({ projectId: req.body.projectId,clientId:req.body.clientId })
+        console.log(data)
+        if(data!=null)
+        {
+            var upd=await indentSchema.updateOne({_id:data?._id},{$push:{items:req.body.items}}).exec()
+            res.status(200).json({message:"Items in indent Added"})
         }
-        else if (data.modifiedCount > 0) {
-            res.status(200).json({ message: 'Indent updated' })
-        }
-        else {
-            res.status(400).json({ message: 'something went wrong' })
+        else{
+            console.log(22)
+            var create=await indentSchema.create(req.body)
+            console.log(create)
+            res.status(200).json({message:"Items in indent Added"})
         }
     }
     catch (error) {
@@ -65,7 +66,7 @@ module.exports.addBulkIndent = (async (req, res) => {
 
 module.exports.getIndentbypid = (async (req, res) => {
     try {
-        var data = await indentSchema.find({ projectId: req.params.projectId, clientId: req.params.clientId }).populate('projectId').populate('clientId').populate({ path: 'items.subcomponent' })
+        var data = await indentSchema.find({ projectId: req.params.projectId, clientId: req.params.clientId,'items':  { $elemMatch: { purchased: true }  } }).populate('projectId').populate('clientId').populate({ path: 'items.subcomponent' })
         if (data != null) {
             res.status(200).json({ message: 'Indent fetched', data: data })
         }

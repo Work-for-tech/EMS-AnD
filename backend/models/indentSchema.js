@@ -20,12 +20,12 @@ const indentSchema = new scehma({
         },
         quantityOrdered:{
             type:"Number"
+        },
+        purchased:{
+            type:Boolean,
+            default:false
         }
     }],
-    purchased:{
-        type:"Boolean",
-        default:false
-    }
 })
 
 module.exports =mongoose.model('indent',indentSchema)
