@@ -6,7 +6,7 @@ const purchaseSchema=new Schema({
         type:Schema.Types.ObjectId,
         ref:'indent'
     },
-    vendor:{
+    vendorId:{
         type:mongoose.Types.ObjectId,
         ref:'vendor'
     },
