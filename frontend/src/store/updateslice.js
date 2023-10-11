@@ -26,6 +26,10 @@ const updatepanelSlice = createSlice({
       state.type = action.payload.type;
     },
 
+    addType(state, action) {
+      state.type = action.payload;
+    },
+
     addPanel(state, action) {
       state.panel.push(action.payload);
     },

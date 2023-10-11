@@ -92,9 +92,11 @@ export const ProjectOfferList = ({ projectId, setProjectId }) => {
               onClick={() => {
                 setRecentData(record);
                 setOfferId(record.key);
-                dispatch(
-                  offerActions.setPanelsToBeCreated(record.panels_to_be_created)
-                );
+                const dispatchData = {
+                  panels_to_be_created: record.panels_to_be_created,
+                  id: record.key,
+                };
+                dispatch(offerActions.setPanelsToBeCreated(dispatchData));
               }}
             >
               <PlusCircle />
@@ -205,7 +207,7 @@ export const ProjectOfferList = ({ projectId, setProjectId }) => {
 
   useEffect(() => {
     getAllOffers();
-    if (offer.id !== "") {
+    if (!offer.id) {
       setOfferId(offer.id);
       setRecentData(offer);
       setAddRevision(offer.id);

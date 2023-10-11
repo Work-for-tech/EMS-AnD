@@ -193,7 +193,7 @@ export const Offer = () => {
 
   useEffect(() => {
     getAllClients();
-    if (offer.id !== "") {
+    if (!offer.id && offer.panelsData.length === 0) {
       dispatch(offerActions.setInitials());
     }
   }, []);
@@ -216,8 +216,8 @@ export const Offer = () => {
 
   useEffect(() => {
     console.log(offer);
-    if (offer.id !== "") {
-      dispatch(offerActions.setInitials());
+    if (!offer.id && offer.panelsData.length === 0) {
+      // dispatch(offerActions.setInitials());
       return;
     }
     if (!offer.DescriptionOfPanel) {

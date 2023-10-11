@@ -12,6 +12,7 @@ export const OfferPanel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const panel = useSelector((state) => state.panel.panel);
+  const updatePanel = useSelector((state) => state.updatepanel);
   const offer = useSelector((state) => state.offer);
   const [validPanel, setValidPanel] = useState("");
   const [Name, setName] = useState("");
@@ -121,10 +122,11 @@ export const OfferPanel = () => {
     console.log(sendData);
 
     dispatch(offerActions.setPanelsData(sendData));
-    if (offer.id === "") {
+    if (!offer.id) {
       navigate("/offer");
     } else {
-      if (panel.type === "revision") {
+      console.log("updatePanel ", updatePanel);
+      if (updatePanel.type === "revision") {
         navigate("/offerlist");
       } else {
         navigate("/projectlist");

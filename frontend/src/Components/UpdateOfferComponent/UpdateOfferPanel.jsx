@@ -75,9 +75,10 @@ export const UpdateOfferPanel = () => {
     panel.components.forEach((e) => (sendData.price += e.price));
 
     dispatch(offerActions.setReplacePanel(sendData));
-    if (offer.id === "") {
+    if (!offer.id) {
       navigate("/offer");
     } else {
+      console.log("Panel ", panel.type);
       if (panel.type === "revision") {
         navigate("/offerlist");
       } else {
