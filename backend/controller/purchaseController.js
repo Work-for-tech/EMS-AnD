@@ -91,7 +91,7 @@ module.exports.getBothDetails=(async(req,res)=>{
 
 module.exports.getPurchaseList = (async (req, res) => {
     try {
-        var data = await purchaseSchema.find({ indentId: req.params.indentId }).populate({ path: 'indentId', select: "clientId projectId" }).populate("vendorId").populate({ path: 'items.subcomponent' })
+        var data = await purchaseSchema.find({ indentId: req.params.indentId }).populate({ path: 'indentId', select: "clientId projectId" }).populate("vendor").populate({ path: 'items.subcomponent' })
         console.log(data)
         res.status(200).json({ message: "fetched", data: data })
     }
@@ -102,6 +102,7 @@ module.exports.getPurchaseList = (async (req, res) => {
         });
     }
 })
+
 
 module.exports.getBulkPurchaseList = (async (req, res) => {
     try {
@@ -152,7 +153,7 @@ module.exports.sendMail = (async (req, res) => {
             console.log(req.file)
             var data = await purchaseSchema.findByIdAndUpdate(req.body.purchaseId, { emailSent: true }).populate('vendorId').exec()
             console.log(data)
-            mail(data.vendorId.email1, req.file.path, req.file.originalname, data._id).then((data) => {
+            mail(data.vendorId.email1, req.file.path, req.file.originalname,data._id).then((data) => {
                 res.status(200).json({ message: "Mail Send Sucessfully", mail: data })
             }).catch((error) => {
                 res.status(400).json({ message: "Mail fail to send", error: error })
