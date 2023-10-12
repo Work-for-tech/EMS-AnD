@@ -82,6 +82,15 @@ app.use(base_url + "/indent", indentRoutes);
 const purchaseRoutes=require('./routes/purchaseRoutes')
 app.use(base_url+"/purchase",purchaseRoutes)
 
+const grnRoutes = require("./routes/grnRoutes");
+app.use(base_url + "/grn", grnRoutes);
+
+const grnApprovalPendingRoutes = require("./routes/grnApprovalPendingRoutes");
+app.use(base_url + "/grn/approval/pending", grnApprovalPendingRoutes);
+
+const receivedItemRoutes = require("./routes/receivedItemsRoutes");
+app.use(base_url + "/receiveditem", receivedItemRoutes);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
