@@ -7,10 +7,7 @@ const bulkIndentSchema=new Schema({
             type: Schema.Types.ObjectId,
             ref: 'offersubcomponent'
         },
-        quantityRequired: {
-            type:"Number"
-        },
-        quantityOrdered:{
+        quantity:{
             type:"Number"
         }
     }],
