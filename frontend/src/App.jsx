@@ -24,6 +24,8 @@ import { StoreList } from "./Components/Lists/StoreList";
 import { IndentOffers } from "./Components/Indent/IndentOffers";
 import { BulkIndent } from "./Components/BulkIndent/BulkIndent";
 import { IndentList } from "./Components/Lists/IndentList";
+import { Purchase } from "./Components/Purchase/Purchase";
+import { PurchaseMail } from "./Components/Purchase/PurchaseMail";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,6 +64,8 @@ function App() {
           <Route path="/indent" element={<IndentOffers />} />
           <Route path="/bulkindent" element={<BulkIndent />} />
           <Route path="/indentlist" element={<IndentList />} />
+          <Route path="/purchase" element={<Purchase />} />
+          <Route path="/purchasemail" element={<PurchaseMail />} />
         </Routes>
       </Router>
     </div>

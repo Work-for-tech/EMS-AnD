@@ -1,10 +1,10 @@
 import axios from "axios";
 
-export const addIndent = async (data) => {
+export const createPurchase = async (purchase) => {
   try {
     const response = await axios.post(
-      "inverntoryManagment/api/v1/public/indent/addindentusingpid",
-      data
+      "inverntoryManagment/api/v1/public/purchase",
+      purchase
     );
     return {
       type: "success",
@@ -18,45 +18,51 @@ export const addIndent = async (data) => {
   }
 };
 
-export const addBulkIndent = async (data) => {
+export const getPurchaseList = async (id) => {
+  try {
+    const response = await axios.get(
+      "inverntoryManagment/api/v1/public/purchase/" + id
+    );
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const getParticularPurchase = async (id) => {
+  try {
+    const response = await axios.get(
+      "inverntoryManagment/api/v1/public/purchase/particularList/" + id
+    );
+    console.log(response);
+
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const sendMail = async (data) => {
   try {
     const response = await axios.post(
-      "inverntoryManagment/api/v1/public/indent/addbulkindent",
-      data
-    );
-    return {
-      type: "success",
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      type: "error",
-      message: "Network Error",
-    };
-  }
-};
-
-export const getAllIndent = async () => {
-  try {
-    const response = await axios.get(
-      `inverntoryManagment/api/v1/public/indent/getbothindentsdata`
-    );
-    return {
-      type: "success",
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      type: "error",
-      message: "Network Error",
-    };
-  }
-};
-
-export const getIndentbyClientProject = async (clientId, projectId) => {
-  try {
-    const response = await axios.get(
-      `inverntoryManagment/api/v1/public/indent/getindents/${clientId}/${projectId}`
+      "inverntoryManagment/api/v1/public/purchase/sendmail",
+      data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
     );
     return {
       type: "success",

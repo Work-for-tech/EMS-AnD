@@ -51,6 +51,13 @@ export const Navigator = () => {
     ]),
   ];
 
+  const item4 = [
+    getItem("Purchase", "sub4", [
+      getItem("Purchase", "purchase"),
+      getItem("Purchase List", "purchaselist"),
+    ]),
+  ];
+
   const [openKeys, setOpenKeys] = useState(["sub1"]);
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -87,6 +94,14 @@ export const Navigator = () => {
         onOpenChange={onOpenChange}
         onClick={(e) => navigate(`/${e.key}`)}
         items={item3}
+      />
+      <Menu
+        mode="inline"
+        className=""
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        onClick={(e) => navigate(`/${e.key}`)}
+        items={item4}
       />
     </div>
   );
