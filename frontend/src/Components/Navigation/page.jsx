@@ -58,6 +58,14 @@ export const Navigator = () => {
     ]),
   ];
 
+  const item5 = [
+    getItem("GRN", "sub5", [
+      getItem("GRN Create", "creategrn"),
+      getItem("GRN List", "listgrn"),
+      getItem("GRN Approval", "grnapproval"),
+    ]),
+  ];
+
   const [openKeys, setOpenKeys] = useState(["sub1"]);
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -102,6 +110,14 @@ export const Navigator = () => {
         onOpenChange={onOpenChange}
         onClick={(e) => navigate(`/${e.key}`)}
         items={item4}
+      />
+      <Menu
+        mode="inline"
+        className=""
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        onClick={(e) => navigate(`/${e.key}`)}
+        items={item5}
       />
     </div>
   );

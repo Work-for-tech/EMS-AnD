@@ -142,7 +142,7 @@ export const Purchase = () => {
       message.error("Please Select Vendor");
       return;
     } else if (
-      purchaseData.findIndex((e) => e.vendor === vendorName.value) > -1
+      purchaseData.findIndex((e) => e.vendorId === vendorName.value) > -1
     ) {
       message.error("Vendor Already Added");
       return;

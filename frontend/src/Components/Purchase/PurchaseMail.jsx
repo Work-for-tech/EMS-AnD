@@ -75,6 +75,11 @@ export const PurchaseMail = ({ emailpurchaseId }) => {
         </Button>
         <table ref={tableRef} className="text-left">
           <tr>
+            <td className="font-semibold text-xl" colSpan={9}>
+              EMS Project Pvt. Ltd.
+            </td>
+          </tr>
+          <tr>
             <td className="font-semibold" colSpan={9}>
               Factory : {data.vendorId.address}
             </td>
@@ -103,7 +108,7 @@ export const PurchaseMail = ({ emailpurchaseId }) => {
           </tr>
           <tr>
             <th className="p-2" colSpan={3}>
-              Indent No. : NA
+              Indent No. : {data.indentId}
             </th>
             <th className="p-2" colSpan={3}>
               Material Indent Date : 08/10/2023

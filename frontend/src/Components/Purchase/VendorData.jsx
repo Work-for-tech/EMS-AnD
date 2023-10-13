@@ -23,6 +23,8 @@ export const VendorData = ({
   const [emailpurchaseId, setEmailPurchaseId] = useState("");
   const [sentEmail, setSentEmail] = useState(false);
 
+  console.log(data, itemsData, items, subcomponentsData)
+
   const columns = [
     {
       title: "Description",
@@ -122,10 +124,13 @@ export const VendorData = ({
   };
 
   const SubmitSubcomponentHandler = (e) => {
-    if (quantityRef.current.input.value === "") {
-      message.error("Please Enter Quantity");
-      return;
-    }
+
+    console.log("Hit");
+
+    // if (quantityRef.current.input.value === "") {
+    //   message.error("Please Enter Quantity");
+    //   return;
+    // }
 
     setItems([
       ...items,
@@ -136,11 +141,11 @@ export const VendorData = ({
         desc: e.subcomponent.desc,
         quantityRequired: e.quantityRequired,
         quantityOrdered: e.quantityOrdered,
-        quantity: Number(quantityRef.current.input.value),
+        quantity: e.quantityOrdered,
       },
     ]);
 
-    console.log(e, quantityRef.current.input.value);
+    console.log(e);
   };
 
   console.log(data);
@@ -242,14 +247,14 @@ export const VendorData = ({
           );
         else
           return (
-            <div key={i} className="w-full bg-white flex flex-col rounded-md">
+            <div key={i} className="w-full bg-white flex items-center rounded-md">
               <p className="text-blue-800 font-semibold text-xl p-4 mx-32">
                 {e.subcomponent.desc}
               </p>
               <div className="bg-[#f3f7ff] flex flex-col gap-10">
                 <div className="bg-white flex items-center justify-center flex-row w-full p-4 gap-4 rounded-md">
                   <div className="w-1/2">
-                    <div className="w-full flex flex-row gap-4 p-2 my-2">
+                    {/* <div className="w-full flex flex-row gap-4 p-2 my-2">
                       <section className="w-full">
                         <div className="font-semibold p-2 text-gray-500">
                           Add Quantity
@@ -261,13 +266,13 @@ export const VendorData = ({
                           type="number"
                         />
                       </section>
-                    </div>
+                    </div> */}
                     <div className="flex items-center justify-center p-2">
                       <Button
                         onClick={() => SubmitSubcomponentHandler(e)}
                         className="bg-blue-700 text-white"
                       >
-                        Submit
+                        Add This Component
                       </Button>
                     </div>
                   </div>
@@ -299,13 +304,58 @@ export const VendorData = ({
         </div>
       )}
       {sentEmail && (
-        <div className="p-4">
-          Email Sent to {data.vendorId.vendorName} of Subcomponents:{" "}
+        <div className="p-4 text-center">
+          <p className="font-bold text-green-500 p-4">Email Sent to {data.vendorId.vendorName} of Subcomponents:</p>
+
+          <Table className="table-auto w-full" columns={[
+            {
+              title: "Description",
+              dataIndex: "desc",
+              key: "desc",
+            },
+            {
+              title: "Price",
+              dataIndex: "price",
+              key: "price",
+            },
+            {
+              title: "Title",
+              dataIndex: "title",
+              key: "title",
+            },
+            {
+              title: "Catalog Number",
+              dataIndex: "catalog_number",
+              key: "catalog_number",
+            },
+            {
+              title: "Rating Value",
+              dataIndex: "rating_value",
+              key: "rating_value",
+            },
+            {
+              title: "Quantity",
+              dataIndex: "quantity",
+              key: "quantity",
+            },
+          ]} dataSource={
+            data.items.map((e) => {
+              return {
+                key: e._id,
+                desc: e.subcomponent.desc ?? "-",
+                price: e.subcomponent.company.price ?? "-",
+                title: e.subcomponent.title ?? "-",
+                catalog_number: e.subcomponent.catalog_number ?? "-",
+                rating_value: e.subcomponent.rating_value ?? "-",
+                quantity: e.quantity ?? "-",
+              }
+            })
+          } />;
           {data.items
             .map((e) => {
-              return e.subcomponent.desc;
-            })
-            .join(", ")}
+              console.log(e)
+              return
+            })}
         </div>
       )}
     </div>
