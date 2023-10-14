@@ -54,7 +54,7 @@ export const Navigator = () => {
   const item4 = [
     getItem("Purchase", "sub4", [
       getItem("Purchase", "purchase"),
-      getItem("Purchase List", "purchaselist"),
+      getItem("Bulk Purchase", "bulkpurchase"),
     ]),
   ];
 

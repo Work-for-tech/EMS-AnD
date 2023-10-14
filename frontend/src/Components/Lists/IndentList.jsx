@@ -108,7 +108,7 @@ export const IndentList = () => {
       dataIndex: "discount",
     },
     {
-      title: "Quantity Required",
+      title: "Quantity Available",
       dataIndex: "quantityRequired",
     },
     {

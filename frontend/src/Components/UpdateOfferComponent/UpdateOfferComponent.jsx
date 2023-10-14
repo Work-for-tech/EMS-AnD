@@ -92,6 +92,7 @@ export const UpdateOfferComponent = ({ index }) => {
         price: 0,
       };
       response.data.data.sub_components.map((e) => {
+        console.log(e);
         e.subcomponent_id.quantity = e.quantity;
         newData.sub_components.push(e.subcomponent_id);
       });
@@ -106,10 +107,11 @@ export const UpdateOfferComponent = ({ index }) => {
   const addCompaniesWithoutComponent = async () => {
     let newData = {
       component_id: "Add Consumables",
-      subcomponents: [],
+      name: "Add Consumables",
+      sub_components: [],
       completed: 0,
       completed_subcomponents: [],
-      totalPrice: 0,
+      price: 0,
       consumables: {},
     };
     setComponentName("Select Component");

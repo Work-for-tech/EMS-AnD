@@ -149,7 +149,7 @@ export const BulkIndent = () => {
           </div>
 
           {/* Add Subcomponent */}
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
             {newSubComponents.map((e, i) => {
               return (
                 <AddNewSubComponents

@@ -202,6 +202,7 @@ export const OfferRevision = ({
                     });
 
                     const data = await Promise.all(dataPromises);
+                    console.log(data);
                     const completed_components = [];
                     data.map((e) => {
                       e.completed_subcomponents = e.sub_components.map(

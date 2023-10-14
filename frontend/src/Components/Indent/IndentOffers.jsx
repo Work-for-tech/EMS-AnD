@@ -5,6 +5,7 @@ import { finalProjects } from "../../APIs/offer";
 import { getclients } from "../../APIs/client";
 import { AddSubComp } from "./AddSubComp";
 import { addIndent } from "../../APIs/indent";
+import { getStoreDataById } from "../../APIs/store";
 
 export const IndentOffers = () => {
   const [subComponentsData, setSubComponentsData] = useState([]);
@@ -21,8 +22,7 @@ export const IndentOffers = () => {
   const [addSubcomponents, setAddSubcomponents] = useState(false);
   const [newSubComponents, setNewSubComponents] = useState([]);
 
-
-  const HandleOnClickSubmit = async() => {
+  const HandleOnClickSubmit = async () => {
     const sendData = {
       clientId: clientName.value,
       projectId: project.value,
@@ -31,15 +31,14 @@ export const IndentOffers = () => {
         quantityRequired: e.quantityRequired,
         quantityOrdered: e.quantity_ordered,
       })),
-    }
+    };
     console.log(sendData);
     const response = await addIndent(sendData);
 
     if (response.type === "error") {
       message.error(response.message);
       return;
-    }
-    else {
+    } else {
       message.success("Indent Added Successfully");
       setAddSubcomponents(false);
       setNewSubComponents([]);
@@ -47,9 +46,7 @@ export const IndentOffers = () => {
       setProject({ label: "Select Project", value: "" });
       setClientName({ label: "Select Client", value: "" });
     }
-
   };
-
 
   const columns = [
     {
@@ -125,16 +122,17 @@ export const IndentOffers = () => {
         e.panels_to_be_created.map((e) => {
           e.parts.map((e) => {
             e.components.map((e) => {
-              e.sub_components.map((e) => {
+              e.sub_components.map(async (e) => {
                 const objectToAdd = {
                   company: e.company.company_name?.name || "",
+                  companyId: e.company.company_name?._id || "",
                   price: e.company.price,
                   discount: e.company.discount,
                   desc: e.desc,
                   quantityRequired: e.quantity,
                   rating_value: e.rating_value,
                   catalog_number: e.catalog_number,
-                  key : e._id,
+                  key: e._id,
                 };
 
                 newSubcomponentsData.add(objectToAdd);
@@ -230,16 +228,32 @@ export const IndentOffers = () => {
           ) : (
             <div className="w-full p-4 gap-4 rounded-md">
               {subComponentsData.map((e, i) => {
-                return <AddSubComp key={i} data={e} setNewSubComponents={setNewSubComponents} />;
+                return (
+                  <AddSubComp
+                    key={i}
+                    subComponentsData={subComponentsData}
+                    setSubComponentsData={setSubComponentsData}
+                    data={e}
+                    setNewSubComponents={setNewSubComponents}
+                  />
+                );
               })}
-              {newSubComponents.length !== 0 && <Table columns={columns} dataSource={newSubComponents} />}
-              </div>
-          )}
-          {
-            (subComponentsData.length === newSubComponents.length && subComponentsData.length !== 0) && <div className="flex items-center justify-center p-2">
-              <Button onClick={HandleOnClickSubmit} className="bg-blue-700 text-white">Submit</Button>
+              {newSubComponents.length !== 0 && (
+                <Table columns={columns} dataSource={newSubComponents} />
+              )}
             </div>
-          }
+          )}
+          {subComponentsData.length === newSubComponents.length &&
+            subComponentsData.length !== 0 && (
+              <div className="flex items-center justify-center p-2">
+                <Button
+                  onClick={HandleOnClickSubmit}
+                  className="bg-blue-700 text-white"
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
         </div>
       </div>
     </div>

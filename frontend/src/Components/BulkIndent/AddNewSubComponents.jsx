@@ -106,18 +106,18 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
 
   const setPriceAndDiscount = () => {
     console.log(nowData, company);
-    const companyData = nowData[0].companies.filter((e) => {
+    const companyData = nowData[0]?.companies.filter((e) => {
       if (e.company_id._id === company) {
         return e;
       }
     });
     console.log(companyData);
-    setPrice(Number(companyData[0].price));
-    setDiscount(Number(companyData[0].discount));
+    setPrice(Number(companyData[0]?.price));
+    setDiscount(Number(companyData[0]?.discount));
     setTotalPrice(
       Number(
-        (companyData[0].price -
-          (companyData[0].discount * companyData[0].price) / 100) *
+        (companyData[0]?.price -
+          (companyData[0]?.discount * companyData[0]?.price) / 100) *
           quantity
       )
     );
@@ -236,7 +236,7 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
             type="number"
             onChange={(e) => setQuantity(e.target.value)}
             className=""
-            placeholder="Quantity Required"
+            placeholder="Quantity Available"
           />
           <Input
             type="number"

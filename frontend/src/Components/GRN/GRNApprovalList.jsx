@@ -1,16 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 
 export const GRNApprovalList = () => {
+  const getGRNApprovalListInit = () => {};
 
-    const getGRNApprovalListInit = () => {
-            
-    }
+  useEffect(() => {
+    getGRNApprovalListInit();
+  }, []);
 
-    useEffect(() => {
-        getGRNApprovalListInit()
-    }, [])
-
-    return (
-        <div>GRNApprovalList</div>
-    )
-}
+  return <div></div>;
+};

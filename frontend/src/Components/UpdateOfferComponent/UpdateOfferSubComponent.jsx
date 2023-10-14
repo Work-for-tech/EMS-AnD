@@ -30,7 +30,13 @@ export const UpdateOfferSubComponent = ({
       sub_components: subcomponent.completed_subcomponents,
     };
 
+    console.log("EXECUTED");
+
+    console.log(sendData);
+
     const response = await offerComponent(sendData);
+
+    console.log(response);
 
     if (response.type === "success") {
       message.success("Component Created Successfully");

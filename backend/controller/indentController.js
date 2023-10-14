@@ -64,6 +64,25 @@ module.exports.addBulkIndent = async (req, res) => {
   }
 };
 
+module.exports.getonebulkindent = async (req, res) => {
+  try {
+    var data = await bulkIndentSchema
+      .findById(req.params.id)
+      .populate({ path: "items.subcomponent" });
+    if (data != null) {
+      res.status(200).json({ message: "Indent fetched", data: data });
+    } else {
+      res.status(400).json({ message: "required data not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error in updating indent",
+      data: error,
+    });
+  }
+};
+
 module.exports.getIndentbypid = async (req, res) => {
   try {
     var data = await indentSchema
@@ -120,13 +139,11 @@ module.exports.GetBothIndentForList = async (req, res) => {
       .populate({ path: "items.subcomponent" });
 
     if (bulkData != null && indentDataByPid != null) {
-      res
-        .status(200)
-        .json({
-          message: "Indent fetched",
-          bulkData: bulkData,
-          indentDataByPid: indentDataByPid,
-        });
+      res.status(200).json({
+        message: "Indent fetched",
+        bulkData: bulkData,
+        indentDataByPid: indentDataByPid,
+      });
     } else {
       res.status(400).json({ message: "required data not found" });
     }

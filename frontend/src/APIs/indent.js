@@ -53,6 +53,40 @@ export const getAllIndent = async () => {
   }
 };
 
+export const getBulkIndentById = async (id) => {
+  try {
+    const response = await axios.get(
+      `inverntoryManagment/api/v1/public/indent/getonebulkindent/${id}`
+    );
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const getAllBulkIndent = async () => {
+  try {
+    const response = await axios.get(
+      `inverntoryManagment/api/v1/public/indent/getbulkindent`
+    );
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
 export const getIndentbyClientProject = async (clientId, projectId) => {
   try {
     const response = await axios.get(

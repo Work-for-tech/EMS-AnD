@@ -23,7 +23,7 @@ export const VendorData = ({
   const [emailpurchaseId, setEmailPurchaseId] = useState("");
   const [sentEmail, setSentEmail] = useState(false);
 
-  console.log(data, itemsData, items, subcomponentsData)
+  console.log(data, itemsData, items, subcomponentsData);
 
   const columns = [
     {
@@ -124,7 +124,6 @@ export const VendorData = ({
   };
 
   const SubmitSubcomponentHandler = (e) => {
-
     console.log("Hit");
 
     // if (quantityRef.current.input.value === "") {
@@ -132,23 +131,25 @@ export const VendorData = ({
     //   return;
     // }
 
+    console.log(e);
+
     setItems([
       ...items,
       {
-        key: e._id,
+        key: e?._id,
         recoverData: e,
-        subcomponent: e.subcomponent._id,
-        desc: e.subcomponent.desc,
-        quantityRequired: e.quantityRequired,
-        quantityOrdered: e.quantityOrdered,
-        quantity: e.quantityOrdered,
+        subcomponent: e?.subcomponent?._id,
+        desc: e?.subcomponent?.desc,
+        quantityRequired: e?.quantityRequired || e?.subcomponent?.quantity,
+        quantityOrdered: e?.quantityOrdered || e?.subcomponent?.quantity,
+        quantity: e?.quantityOrdered || e?.subcomponent?.quantity,
       },
     ]);
 
     console.log(e);
   };
 
-  console.log(data);
+  console.log(items);
 
   const FinalSubmissionHandler = async () => {
     console.log(subcomponentsData);
@@ -247,7 +248,10 @@ export const VendorData = ({
           );
         else
           return (
-            <div key={i} className="w-full bg-white flex items-center rounded-md">
+            <div
+              key={i}
+              className="w-full bg-white flex items-center rounded-md"
+            >
               <p className="text-blue-800 font-semibold text-xl p-4 mx-32">
                 {e.subcomponent.desc}
               </p>
@@ -300,62 +304,89 @@ export const VendorData = ({
       )}
       {emailpurchaseId && (
         <div className="p-4">
-          <PurchaseMail emailpurchaseId={emailpurchaseId} />
+          <PurchaseMail
+            sentEmail={sentEmail}
+            setSentEmail={setSentEmail}
+            emailpurchaseId={emailpurchaseId}
+          />
         </div>
       )}
       {sentEmail && (
         <div className="p-4 text-center">
-          <p className="font-bold text-green-500 p-4">Email Sent to {data.vendorId.vendorName} of Subcomponents:</p>
-
-          <Table className="table-auto w-full" columns={[
-            {
-              title: "Description",
-              dataIndex: "desc",
-              key: "desc",
-            },
-            {
-              title: "Price",
-              dataIndex: "price",
-              key: "price",
-            },
-            {
-              title: "Title",
-              dataIndex: "title",
-              key: "title",
-            },
-            {
-              title: "Catalog Number",
-              dataIndex: "catalog_number",
-              key: "catalog_number",
-            },
-            {
-              title: "Rating Value",
-              dataIndex: "rating_value",
-              key: "rating_value",
-            },
-            {
-              title: "Quantity",
-              dataIndex: "quantity",
-              key: "quantity",
-            },
-          ]} dataSource={
-            data.items.map((e) => {
+          <p className="font-bold text-green-500 p-4">
+            Email Sent to {data.vendorId.vendorName} of Subcomponents:
+          </p>
+          <Table
+            className="table-auto w-full"
+            columns={[
+              {
+                title: "Description",
+                dataIndex: "desc",
+                key: "desc",
+              },
+              {
+                title: "Price",
+                dataIndex: "price",
+                key: "price",
+              },
+              {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+              },
+              {
+                title: "Catalog Number",
+                dataIndex: "catalog_number",
+                key: "catalog_number",
+              },
+              {
+                title: "Rating Value",
+                dataIndex: "rating_value",
+                key: "rating_value",
+              },
+              {
+                title: "Quantity",
+                dataIndex: "quantity",
+                key: "quantity",
+              },
+            ]}
+            dataSource={data.items.map((e) => {
+              console.log(e);
               return {
-                key: e._id,
-                desc: e.subcomponent.desc ?? "-",
-                price: e.subcomponent.company.price ?? "-",
-                title: e.subcomponent.title ?? "-",
-                catalog_number: e.subcomponent.catalog_number ?? "-",
-                rating_value: e.subcomponent.rating_value ?? "-",
-                quantity: e.quantity ?? "-",
-              }
-            })
-          } />;
-          {data.items
-            .map((e) => {
-              console.log(e)
-              return
+                key: e?._id || e?.recoverData?._id,
+                desc:
+                  (e?.subcomponent?.desc ||
+                    e?.recoverData?.subcomponent?.desc) ??
+                  "-",
+                price:
+                  (e?.subcomponent?.company?.price ||
+                    e.recoverData?.subcomponent?.company?.price) ??
+                  "-",
+                title:
+                  (e?.subcomponent?.title ||
+                    e?.recoverData?.subcomponent?.title) ??
+                  "-",
+                catalog_number:
+                  (e?.subcomponent?.catalog_number ||
+                    e?.recoverData?.subcomponent?.catalog_number) ??
+                  "-",
+                rating_value:
+                  (e?.subcomponent?.rating_value ||
+                    e?.recoverData?.subcomponent?.rating_value) ??
+                  "-",
+                quantity:
+                  (e?.quantity ||
+                    e?.recoverData?.quantity ||
+                    e?.recoverData?.quantityOrdered) ??
+                  "-",
+              };
             })}
+          />
+          ;
+          {data.items.map((e) => {
+            console.log(e);
+            return;
+          })}
         </div>
       )}
     </div>

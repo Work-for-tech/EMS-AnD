@@ -25,10 +25,10 @@ import { IndentOffers } from "./Components/Indent/IndentOffers";
 import { BulkIndent } from "./Components/BulkIndent/BulkIndent";
 import { IndentList } from "./Components/Lists/IndentList";
 import { Purchase } from "./Components/Purchase/Purchase";
-import { PurchaseMail } from "./Components/Purchase/PurchaseMail";
 import { CreateGRN } from "./Components/GRN/page";
 import { ListGRN } from "./Components/GRN/list";
 import { GRNApproval } from "./Components/GRN/GRNApproval";
+import { BulkPurchase } from "./Components/Purchase/BulkPurchase";
 
 function App() {
   const dispatch = useDispatch();
@@ -68,7 +68,7 @@ function App() {
           <Route path="/bulkindent" element={<BulkIndent />} />
           <Route path="/indentlist" element={<IndentList />} />
           <Route path="/purchase" element={<Purchase />} />
-          <Route path="/purchasemail" element={<PurchaseMail />} />
+          <Route path="/bulkpurchase" element={<BulkPurchase />} />
           <Route path="/creategrn" element={<CreateGRN />} />
           <Route path="/listgrn" element={<ListGRN />} />
           <Route path="/grnapproval" element={<GRNApproval />} />
