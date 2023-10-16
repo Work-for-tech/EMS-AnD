@@ -44,15 +44,19 @@ exports.getGrnApprovalPending = async (request, response) => {
   try {
     const { purchase_id } = request.body;
 
-    console.log("purchase_id", purchase_id);
+    console.log(purchase_id)
 
     var grn_data = await grnApprovalPendingSchema
       .find({
         purchase_id: purchase_id,
+      }).populate({
+        path: 'items',
+        populate: {
+          path: 'sub_component_id',
+        },
       })
-      .populate("items")
       .exec();
-    console.log("grn_data", grn_data);
+
 
     if (grn_data.length != 0 && grn_data != []) {
       return response.status(200).json({
@@ -79,7 +83,7 @@ exports.getGrnApprovalPending = async (request, response) => {
         );
 
         const _ids = saved_received_data.map((received_item_data) => {
-          return received_item_data._id;
+          return received_item_data;
         });
 
         const saved_data = await grnApprovalPendingSchema.create({
@@ -89,7 +93,7 @@ exports.getGrnApprovalPending = async (request, response) => {
         });
 
         return response.status(200).json({
-          data: purchase_data,
+          data: saved_data,
           message: "GRN Approval Pendings fetched successfully!!!",
         });
       } else {
@@ -135,6 +139,7 @@ exports.getGrnApprovalPending = async (request, response) => {
       }
     }
   } catch (error) {
+    console.log(error)
     response.status(500).json({
       message: error.message,
     });

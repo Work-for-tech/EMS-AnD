@@ -8,8 +8,7 @@ export const AddSubComp = ({
   data,
   setNewSubComponents,
 }) => {
-  const [quantityRequired, setQuantityReq] = useState(data.quantityRequired);
-  const [quantityOrd, setquantityOrd] = useState(0);
+  const [quantityOrd, setquantityOrd] = useState(data.quantityRequired);
   const [showContent, setShowContent] = useState(true);
 
   console.log(data);
@@ -79,7 +78,6 @@ export const AddSubComp = ({
         ...prev,
         {
           ...data,
-          quantityRequired,
           quantity_ordered: quantityOrd,
         },
       ];
@@ -95,19 +93,8 @@ export const AddSubComp = ({
       {showContent ? (
         <>
           <Table columns={columns} dataSource={[data]} pagination={false} />
-          <div className="w-full flex flex-row gap-4">
-            <div className="w-full flex flex-col">
-              <div className="text-gray-500 font-semibold p-2">
-                Quantity Available
-              </div>
-              <Input
-                className="w-full"
-                value={quantityRequired}
-                onChange={(e) => setQuantityReq(e.target.value)}
-                placeholder="Quantity Required"
-              />
-            </div>
-            <div className="w-full flex flex-col">
+          <div className="w-full flex flex-row items-center justify-center gap-4">
+            <div className="w-1/2 flex flex-col">
               <div className="text-gray-500 font-semibold p-2">
                 Quantity Ordered
               </div>

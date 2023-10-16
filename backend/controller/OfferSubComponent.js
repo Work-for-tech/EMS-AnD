@@ -16,5 +16,22 @@ exports.add = async (req, res) => {
   }
 };
 
+exports.getOne = async (req, res) => {
+  try {
+    const offer_sub_component = await offerSubComponentSchema.findById(
+      req.params.id
+    );
+    res.status(200).json({
+      message: "offer_sub_component fetched successfully.",
+      data: offer_sub_component,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error in fetching offer_sub_component",
+      data: err,
+    });
+  }
+};
+
 
 

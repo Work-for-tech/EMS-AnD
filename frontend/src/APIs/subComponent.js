@@ -53,6 +53,7 @@ export const getOneSubComponent = async (id) => {
       data: response.data,
     };
   } catch (err) {
+    console.log(err)
     return {
       type: "error",
       message: "Network Error",

@@ -18,6 +18,25 @@ export const createPurchase = async (purchase) => {
   }
 };
 
+export const purchaseList = async () => {
+  try {
+    const response = await axios.get(
+      "inverntoryManagment/api/v1/public/purchase/"
+    );
+    console.log(response);
+
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
 export const getPurchaseList = async (id) => {
   try {
     const response = await axios.get(
@@ -58,17 +77,37 @@ export const sendMail = async (data) => {
   try {
     const response = await axios.post(
       "inverntoryManagment/api/v1/public/purchase/sendmail",
-      data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
-    }
     );
     return {
       type: "success",
       data: response.data,
     };
   } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const getPurchaseSubComponent = async (id) => {
+  try {
+    const response = await axios.get(
+      "inverntoryManagment/api/v1/public/receiveditem/get/" + id,
+    );
+    console.log(response);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    console.log(error);
     return {
       type: "error",
       message: "Network Error",

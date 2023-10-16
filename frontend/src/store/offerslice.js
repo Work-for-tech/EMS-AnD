@@ -57,6 +57,9 @@ const offerSlice = createSlice({
       state.id = action.payload.id;
       state.projectId = action.payload.projectId;
     },
+    setProjectId(state, action) {
+      state.projectId = action.payload;
+    },
     setPanelsData(state, action) {
       state.panelsData.push(action.payload);
     },

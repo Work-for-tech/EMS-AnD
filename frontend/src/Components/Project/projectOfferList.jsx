@@ -207,12 +207,16 @@ export const ProjectOfferList = ({ projectId, setProjectId }) => {
 
   useEffect(() => {
     getAllOffers();
-    if (!offer.id) {
+    if (offer.id) {
       setOfferId(offer.id);
       setRecentData(offer);
       setAddRevision(offer.id);
+      console.log(offer.id);
+      setProjectId(offer.project_id);
     }
-  }, [OfferId]);
+  }, []);
+
+  console.log(offer.project_id, offer.id);
 
   var dateOptions = {
     year: "numeric",

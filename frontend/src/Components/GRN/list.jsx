@@ -42,23 +42,40 @@ export const ListGRN = () => {
     },
   ];
 
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+
   const dataSource = grn.map((item) => {
     console.log(item);
     return {
-      key: item.id,
+      key: item._id,
       invoice_number: item.invoice_number,
-      received_date: item.received_date,
-      vendor: item.vender_id,
+      received_date: new Date(item.received_date).toLocaleString(
+        undefined,
+        options
+      ),
+      vendor: item.vender_id.vendorName,
       truck_pic: item.truck_pic_url,
       bill_pic: item.bill_pic_url,
     };
   });
 
   return (
-    <div className="w-full">
-      <div className="w-full p-5">
-        <p className="p-5 text-xl text-center">GRN List</p>
-        <Table columns={columns} dataSource={dataSource} />
+    <div className="w-full min-h-screen bg-[#f3f7ff]">
+      <p className="text-3xl text-blue-800 font-semibold p-4">GRN List</p>
+      <div className="rounded-md bg-white flex flex-col m-4">
+        <>
+          <p className="text-blue-800 font-semibold text-xl p-5">GRN List</p>
+          <div className="w-full p-4">
+            <Table columns={columns} dataSource={dataSource} />
+          </div>
+        </>
       </div>
     </div>
   );

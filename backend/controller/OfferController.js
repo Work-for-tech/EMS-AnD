@@ -3,24 +3,24 @@ const RevisionSchema = require("../models/OfferRevisionSchema");
 const projectSchema = require("../models/projectSchema");
 
 exports.newOffer = async (req, res) => {
-  try {
-    const offer = await offerSchema.create(req.body);
-    const revision = await RevisionSchema.create({
-      project_id: req.body.project_id,
-      offer_id: offer._id,
-    });
+  // try {
+  const offer = await offerSchema.create(req.body);
+  const revision = await RevisionSchema.create({
+    project_id: req.body.project_id,
+    offer_id: offer._id,
+  });
 
-    res.status(200).json({
-      message: "Offer added successfully.",
-      data: offer,
-      revision: revision,
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: "Error in adding offer",
-      data: err,
-    });
-  }
+  res.status(200).json({
+    message: "Offer added successfully.",
+    data: offer,
+    revision: revision,
+  });
+  // } catch (err) {
+  //   res.status(500).json({
+  //     message: "Error in adding offer",
+  //     data: err,
+  //   });
+  // }
 };
 
 exports.getOffers = async (req, res) => {

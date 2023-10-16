@@ -3,6 +3,7 @@ import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { createPurchase } from "../../APIs/purchase";
 import { PurchaseMail } from "./PurchaseMail";
+import { set } from "lodash";
 
 export const VendorData = ({
   index,
@@ -78,6 +79,7 @@ export const VendorData = ({
     if (!data.emailSent) {
       setEmailPurchaseId(data._id);
     } else {
+      setEmailPurchaseId(data._id);
       setSentEmail(true);
     }
   }, []);
@@ -302,7 +304,7 @@ export const VendorData = ({
           </Button>
         </div>
       )}
-      {emailpurchaseId && (
+      {(emailpurchaseId || sentEmail) && (
         <div className="p-4">
           <PurchaseMail
             sentEmail={sentEmail}
@@ -314,7 +316,7 @@ export const VendorData = ({
       {sentEmail && (
         <div className="p-4 text-center">
           <p className="font-bold text-green-500 p-4">
-            Email Sent to {data.vendorId.vendorName} of Subcomponents:
+            Email Sent to {data.vendorId.vendorName} of Subcomponents
           </p>
           <Table
             className="table-auto w-full"
@@ -382,7 +384,7 @@ export const VendorData = ({
               };
             })}
           />
-          ;
+
           {data.items.map((e) => {
             console.log(e);
             return;

@@ -5,12 +5,14 @@ import { ArrowBigLeftDash, MoreHorizontal } from "lucide-react";
 import { finalProjects } from "../../APIs/offer";
 import { useNavigate } from "react-router-dom";
 import { ProjectOfferList } from "../Project/projectOfferList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { offerActions } from "../../store/offerslice";
 
 export const ProjectList = () => {
   const offer = useSelector((state) => state.offer);
   const update = useSelector((state) => state.updatepanel);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [projectData, setProjectData] = useState([]);
   const [projectId, setProjectId] = useState(offer.projectId || update.type);
   const [offersData, setOffersData] = useState([]);
@@ -76,8 +78,13 @@ export const ProjectList = () => {
   };
 
   useEffect(() => {
+    if (offer.projectId !== "") {
+      setProjectId(offer.projectId);
+    }
     getProjects();
   }, []);
+
+  console.log(projectId);
 
   const columns = [
     {
@@ -105,6 +112,7 @@ export const ProjectList = () => {
               className="text-blue-800 hover:text-gray-600"
               onClick={() => {
                 setProjectId(record.key);
+                dispatch(offerActions.setProjectId(record.key));
               }}
             >
               <MoreHorizontal />
