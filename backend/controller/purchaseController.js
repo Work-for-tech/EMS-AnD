@@ -205,3 +205,30 @@ module.exports.sendMail = async (req, res) => {
     });
   }
 };
+module.exports.upadatePurchase = (async(req, res) => {
+  try {
+    var pData=await purchaseSchema.findById(req.params.Id).exec()
+    if(pData)
+    {
+      var data=await purchaseSchema.findByIdAndUpdate(req.params.Id,req.body).exec()
+      res.status(200).json({message:"Purchase Updated Sucessfully"})
+    }
+    else{
+      var bpData=await bulkpurchase.findById(req.params.Id).exec()
+      if(bpData)
+      {
+        var data=await bulkpurchase.findByIdAndUpdate(req.params.Id,req.body).exec()
+        res.status(200).json({message:"Bulk Purchase Updated Sucessfully"})
+      }
+      else{
+        res.status(400).json({message:"No Id Found"})
+      }
+    }
+  }
+  catch (error) {
+    res.status(500).json({
+      message: "Error in updating purchase",
+      data: error,
+    });
+  }
+})

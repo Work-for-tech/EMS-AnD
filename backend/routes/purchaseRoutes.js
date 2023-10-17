@@ -15,4 +15,6 @@ router.get("/", purchaseController.getPurchase);
 router.post("/sendmail", purchaseController.sendMail);
 router.post("/bulkindent", purchaseController.addBulkPurchase);
 
+router.put('/:Id',purchaseController.upadatePurchase)
+
 module.exports = router;
