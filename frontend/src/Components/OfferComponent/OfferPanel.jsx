@@ -116,7 +116,10 @@ export const OfferPanel = () => {
     };
 
     panel.forEach((e) => {
-      e.components.forEach((e) => (sendData.price += e.totalPrice));
+      e.components.forEach((e) => {
+        console.log(e.totalPrice);
+        sendData.price += Number(e.totalPrice);
+      });
     });
 
     console.log(sendData);

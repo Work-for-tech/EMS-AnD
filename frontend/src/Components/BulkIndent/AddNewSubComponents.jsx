@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getOneSubComponent } from "../../APIs/subComponent";
 import { offerSubComponent } from "../../APIs/offer";
 import { panelActions } from "../../store/panelslice";
+import { getStoreDataById } from "../../APIs/store";
 
 export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
   const dispatch = useDispatch();
@@ -106,21 +107,36 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
 
   const setPriceAndDiscount = () => {
     console.log(nowData, company);
-    const companyData = nowData[0].companies.filter((e) => {
+    const companyData = nowData[0]?.companies.filter((e) => {
       if (e.company_id._id === company) {
         return e;
       }
     });
     console.log(companyData);
-    setPrice(Number(companyData[0].price));
-    setDiscount(Number(companyData[0].discount));
+    setPrice(Number(companyData[0]?.price));
+    setDiscount(Number(companyData[0]?.discount));
     setTotalPrice(
       Number(
-        (companyData[0].price -
-          (companyData[0].discount * companyData[0].price) / 100) *
+        (companyData[0]?.price -
+          (companyData[0]?.discount * companyData[0]?.price) / 100) *
           quantity
       )
     );
+  };
+
+  const setQuantityFromStore = async () => {
+    const response = await getStoreDataById({
+      desc: data.desc,
+      catalog_number: catalogNo,
+      rating_value: rating,
+      company_id: company,
+    });
+    if (response.type === "error") {
+      message.error(response.message);
+    } else {
+      console.log(response.data.data);
+      setQuantity(response.data?.data[0]?.quantity ?? 0);
+    }
   };
 
   useEffect(() => {
@@ -131,12 +147,13 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
     ) {
       return;
     }
+    setQuantityFromStore();
     setPriceAndDiscount();
   }, [company]);
 
   useEffect(() => {
-    setTotalPrice(Number((price - (discount * price) / 100) * quantity));
-  }, [quantity]);
+    setTotalPrice(Number((price - (discount * price) / 100) * quantityOrdered));
+  }, [quantityOrdered]);
 
   const submitHandler = async () => {
     const submitData = {
@@ -148,7 +165,7 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
         price: price,
         discount: discount,
       },
-      quantity: quantity,
+      quantity: quantityOrdered,
     };
 
     const response = await offerSubComponent(submitData);
@@ -234,24 +251,22 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
           )}
           <Input
             type="number"
-            onChange={(e) => setQuantity(e.target.value)}
-            className=""
-            placeholder="Quantity Required"
-          />
-          <Input
-            type="number"
             onChange={(e) => setQuantityOrdered(e.target.value)}
             className=""
             placeholder="Quantity Ordered"
           />
-          {company !== "Select Company" && quantity >= 0 && (
+          {company !== "Select Company" && (
             <div className="flex flex-row items-center justify-between gap-2">
               <div className="flex flex-col items-start justify-center gap-2">
+                <div className="font-semibold text-gray-500">
+                  Store Quantity
+                </div>
                 <div className="font-semibold text-gray-500">Price</div>
                 <div className="font-semibold text-gray-500">Discount</div>
                 <div className="font-semibold text-gray-500">Total Price</div>
               </div>
               <div className="flex flex-col items-start justify-center gap-2">
+                <div className="font-semibold text-gray-500">{quantity}</div>
                 <div className="font-semibold text-gray-500">{price}</div>
                 <div className="font-semibold text-gray-500">{discount}</div>
                 <div className="font-semibold text-gray-500">{totalPrice}</div>

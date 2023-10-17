@@ -38,3 +38,22 @@ export const getStoreData = async () => {
     };
   }
 };
+
+export const getStoreDataById = async (data) => {
+  try {
+    const response = await axios.put(
+      `inverntoryManagment/api/v1/public/store/getstoredata`,
+      data
+    );
+
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};

@@ -62,7 +62,7 @@ exports.createGrn = async (req, res) => {
 // Controller to get all GRN records
 exports.getGrns = async (req, res) => {
   try {
-    const grns = await grnSchema.find();
+    const grns = await grnSchema.find().populate("vender_id");
     return res.status(200).json({
       message: "GRNs fetched successfully!!!",
       grns: grns,

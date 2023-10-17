@@ -20,8 +20,26 @@ exports.createAndUpdateReceivedItem = async (request, response) => {
       });
     }
   } catch (err) {
+    console.log(err)
     response.status(500).json({
       message: err.message,
     });
   }
 };
+
+exports.getReceivedItem = async (req, res) => {
+  try {
+    const receivedItem = await receivedItemSchema.findById(
+      req.params.id,
+    );
+
+    return res.status(200).json({
+      data: receivedItem,
+      message: "Received Item List",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+}

@@ -61,3 +61,21 @@ export const createGRNApproval = async (data) => {
         };
     }
 }
+
+export const getGRNApproval = async (data ) => {
+    try {
+        const response = await axios.post(
+            `inverntoryManagment/api/v1/public/grn/approval/pending/get`,
+            data
+        );
+        return {
+            type: "success",
+            data: response.data,
+        };
+    } catch (err) {
+        return {
+            type: "error",
+            message: err.message,
+        };
+    }
+}

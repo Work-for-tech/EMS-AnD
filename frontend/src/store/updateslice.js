@@ -7,6 +7,7 @@ const updatepanelSlice = createSlice({
     name: "",
     part_name: "",
     components: [],
+    sub_components: [],
     completed_components: [],
     profit_percentage: 0,
     price: 0,

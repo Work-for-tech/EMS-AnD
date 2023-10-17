@@ -11,6 +11,7 @@ router.get(
   "/particularbulklist/:id",
   purchaseController.getParticularBulkPurchase
 );
+router.get("/", purchaseController.getPurchase);
 router.post("/sendmail", purchaseController.sendMail);
 router.post("/bulkindent", purchaseController.addBulkPurchase);
 

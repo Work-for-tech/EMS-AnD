@@ -17,6 +17,7 @@ export const OfferRevision = ({
   setOfferId,
   OfferId,
   recentData,
+  getAllOffers,
   setAddRevision,
 }) => {
   const navigate = useNavigate();
@@ -132,6 +133,7 @@ export const OfferRevision = ({
       setRecentData({});
       setOfferId("");
       dispatch(offerActions.setInitials());
+      getAllOffers();
     } else if (response.type === "error") {
       message.error(response.message);
     }
@@ -202,6 +204,7 @@ export const OfferRevision = ({
                     });
 
                     const data = await Promise.all(dataPromises);
+                    console.log(data);
                     const completed_components = [];
                     data.map((e) => {
                       e.completed_subcomponents = e.sub_components.map(
@@ -224,9 +227,11 @@ export const OfferRevision = ({
                         profit_percentage: record.profit_percentage,
                         components: data,
                         id: record.id,
+
                         type: "revision",
                       })
                     );
+
                     navigate("/updateoffer");
                   } catch (error) {
                     console.error("Error:", error);

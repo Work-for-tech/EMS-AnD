@@ -22,20 +22,21 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
 
   console.log(component);
 
-  const dataSource = component.map((e, i) => {
-    return {
-      _id: e._id,
-      key: i,
-      design: e.desc,
-      title: e.title,
-      qty: e.quantity,
-      rate: e.company.price,
-      discount: e.company.discount,
-    };
-  });
+  const dataSource =
+    component?.map((e, i) => {
+      return {
+        _id: e._id,
+        key: i,
+        design: e.desc,
+        title: e.title,
+        qty: e.quantity,
+        rate: e.company.price,
+        discount: e.company.discount,
+      };
+    }) || [];
 
   const [subComponentIDS, setSubComponentIDS] = useState(
-    component.map((e) => e._id)
+    component?.map((e) => e._id) || []
   );
   const [completed, setCompleted] = useState(false);
 
@@ -57,19 +58,20 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
     const rate = RateRef.current.input.value;
     const dis = DisRef.current.input.value;
     const obj = {
-      key: lo.uniqueId(),
+      key: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
       design: design,
       title: title,
       qty: qty,
       rate: rate,
       discount: dis,
     };
+    console.log(Consumable);
 
-    const array = Consumable.filter((e) => {
+    const array = Consumable?.filter((e) => {
       return e.design === design;
     });
 
-    if (array.length !== 0) {
+    if (array?.length !== 0 && Consumable?.length !== 0) {
       message.error("Already Added, Delete First");
       return;
     }
@@ -99,6 +101,14 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
 
       console.log(response.data.data._id);
       setSubComponentIDS([...subComponentIDS, response.data.data._id]);
+
+      console.log({
+        data: response.data.data,
+        _id: response.data.data._id,
+        component_index: index,
+        price:
+          (Number(rate) - (Number(rate) * Number(dis)) / 100) * Number(qty),
+      });
 
       dispatch(
         updatepanelActions.addCompletedConsumables({
@@ -233,44 +243,46 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
           </h3>
           <Table dataSource={Consumable} columns={columns} />
           <div className="flex flex-col gap-4">
-            {Details.map((e, i) => {
+            {Details?.map((e, i) => {
               return (
-                <Collapse
-                  items={[
-                    {
-                      key: i.toString(),
-                      label: e,
-                      children: (
-                        <div className="flex flex-col gap-2" key={i}>
-                          <Input ref={TitleRef} placeholder="Enter Title" />
-                          <Input
-                            ref={QtyRef}
-                            placeholder="Enter Quantity"
-                            type="number"
-                          />
-                          <Input
-                            ref={RateRef}
-                            placeholder="Enter Rate"
-                            type="number"
-                          />
-                          <Input
-                            ref={DisRef}
-                            placeholder="Enter Discount"
-                            type="number"
-                          />
-                          <Button
-                            onClick={() => addConsu(e)}
-                            className="bg-blue-700 text-white"
-                            type="primary"
-                          >
-                            Add
-                          </Button>
-                        </div>
-                      ),
-                    },
-                  ]}
-                  defaultActiveKey={[]}
-                />
+                <div key={i}>
+                  <Collapse
+                    items={[
+                      {
+                        key: i,
+                        label: e,
+                        children: (
+                          <div className="flex flex-col gap-2" key={i}>
+                            <Input ref={TitleRef} placeholder="Enter Title" />
+                            <Input
+                              ref={QtyRef}
+                              placeholder="Enter Quantity"
+                              type="number"
+                            />
+                            <Input
+                              ref={RateRef}
+                              placeholder="Enter Rate"
+                              type="number"
+                            />
+                            <Input
+                              ref={DisRef}
+                              placeholder="Enter Discount"
+                              type="number"
+                            />
+                            <Button
+                              onClick={() => addConsu(e)}
+                              className="bg-blue-700 text-white"
+                              type="primary"
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        ),
+                      },
+                    ]}
+                    defaultActiveKey={[]}
+                  />
+                </div>
               );
             })}
 
@@ -285,7 +297,7 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
         </>
       ) : (
         <h3 className="w-full text-center p-2 m-2 font-semibold text-2xl">
-          Component {component.component_id} Created Successfully
+          Component {component?.component_id} Created Successfully
         </h3>
       )}
     </div>

@@ -168,7 +168,7 @@ export const StoreList = () => {
               <div className="w-full flex justify-evenly">
                 <section className="w-3/4 p-4">
                   <div className="font-semibold p-2 text-gray-500">
-                    Quantity
+                    Add Quantity
                   </div>
                   <Input
                     value={quantity}

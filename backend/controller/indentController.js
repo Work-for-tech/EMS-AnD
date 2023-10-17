@@ -14,21 +14,21 @@ module.exports.addIndentUsingPid = async (req, res) => {
     // }
     // ]
     // }
-    console.log(req.body);
+    // console.log(req.body);
     var data = await indentSchema.findOne({
       projectId: req.body.projectId,
       clientId: req.body.clientId,
     });
-    console.log(data);
+    // console.log(data);
     if (data != null) {
       var upd = await indentSchema
         .updateOne({ _id: data?._id }, { $push: { items: req.body.items } })
         .exec();
       res.status(200).json({ message: "Items in indent Added" });
     } else {
-      console.log(22);
+      // console.log(22);
       var create = await indentSchema.create(req.body);
-      console.log(create);
+      // console.log(create);
       res.status(200).json({ message: "Items in indent Added" });
     }
   } catch (error) {
@@ -64,6 +64,25 @@ module.exports.addBulkIndent = async (req, res) => {
   }
 };
 
+module.exports.getonebulkindent = async (req, res) => {
+  try {
+    var data = await bulkIndentSchema
+      .findById(req.params.id)
+      .populate({ path: "items.subcomponent" });
+    if (data != null) {
+      res.status(200).json({ message: "Indent fetched", data: data });
+    } else {
+      res.status(400).json({ message: "required data not found" });
+    }
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({
+      message: "Error in updating indent",
+      data: error,
+    });
+  }
+};
+
 module.exports.getIndentbypid = async (req, res) => {
   try {
     var data = await indentSchema
@@ -75,13 +94,14 @@ module.exports.getIndentbypid = async (req, res) => {
       .populate("projectId")
       .populate("clientId")
       .populate({ path: "items.subcomponent" });
+
     if (data != null) {
       res.status(200).json({ message: "Indent fetched", data: data });
     } else {
       res.status(400).json({ message: "required data not found" });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({
       message: "Error in updating indent",
       data: error,
@@ -100,7 +120,7 @@ module.exports.getBulkIndentForPurchase = async (req, res) => {
       res.status(400).json({ message: "required data not found" });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({
       message: "Error in updating indent",
       data: error,
@@ -112,26 +132,30 @@ module.exports.GetBothIndentForList = async (req, res) => {
   try {
     var bulkData = await bulkIndentSchema
       .find()
-      .populate({ path: "items.subcomponent" });
+      .populate({
+        path: "items.subcomponent",
+        populate: { path: "company.company_name" },
+      });
     var indentDataByPid = await indentSchema
       .find()
       .populate("projectId")
       .populate("clientId")
-      .populate({ path: "items.subcomponent" });
+      .populate({
+        path: "items.subcomponent",
+        populate: { path: "company.company_name" },
+      });
 
     if (bulkData != null && indentDataByPid != null) {
-      res
-        .status(200)
-        .json({
-          message: "Indent fetched",
-          bulkData: bulkData,
-          indentDataByPid: indentDataByPid,
-        });
+      res.status(200).json({
+        message: "Indent fetched",
+        bulkData: bulkData,
+        indentDataByPid: indentDataByPid,
+      });
     } else {
-      res.status(400).json({ message: "required data not found" });
+      res.status(400).json({ message: "Required data not found" });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({
       message: "Error in updating indent",
       data: error,

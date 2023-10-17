@@ -93,6 +93,23 @@ module.exports.getBothDetails = async (req, res) => {
   }
 };
 
+module.exports.getPurchase = async (req, res) => {
+  try {
+    var data = await purchaseSchema
+      .find({})
+      .populate("indentId")
+      .populate("vendorId")
+      .populate({ path: "items.subcomponent" });
+    // console.log(data);
+    res.status(200).json({ message: "fetched", data: data });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error in fetching purchase",
+      data: error,
+    });
+  }
+};
+
 module.exports.getPurchaseList = async (req, res) => {
   try {
     var data = await purchaseSchema
@@ -100,7 +117,7 @@ module.exports.getPurchaseList = async (req, res) => {
       .populate({ path: "indentId", select: "clientId projectId" })
       .populate("vendorId")
       .populate({ path: "items.subcomponent" });
-    console.log(data);
+    // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
     res.status(500).json({
@@ -117,7 +134,7 @@ module.exports.getBulkPurchaseList = async (req, res) => {
       .populate("indentId")
       .populate("vendorId")
       .populate({ path: "items.subcomponent" });
-    console.log(data);
+    // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
     res.status(500).json({
@@ -134,7 +151,7 @@ module.exports.getParticularPurchase = async (req, res) => {
       .populate("indentId")
       .populate("vendorId")
       .populate({ path: "items.subcomponent" });
-    console.log(data);
+    // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
     res.status(500).json({
@@ -151,7 +168,7 @@ module.exports.getParticularBulkPurchase = async (req, res) => {
       .populate("indentId")
       .populate("vendorId")
       .populate({ path: "items.subcomponent" });
-    console.log(data);
+    // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
     res.status(500).json({
@@ -164,13 +181,13 @@ module.exports.getParticularBulkPurchase = async (req, res) => {
 module.exports.sendMail = async (req, res) => {
   try {
     upload(req, res, async (error) => {
-      console.log(req.body);
-      console.log(req.file);
+      // console.log(req.body);
+      // console.log(req.file);
       var data = await purchaseSchema
         .findByIdAndUpdate(req.body.purchaseId, { emailSent: true })
         .populate("vendorId")
         .exec();
-      console.log(data);
+      // console.log(data);
       mail(data.vendorId.email1, req.file.path, req.file.originalname, data._id)
         .then((data) => {
           res

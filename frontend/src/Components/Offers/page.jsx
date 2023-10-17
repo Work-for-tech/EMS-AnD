@@ -87,7 +87,7 @@ export const Offer = () => {
           total_price: e.total_price,
           components: e.panel,
         });
-        SendData.price += e.total_price;
+        SendData.price += Number(e.total_price);
       } else {
         // If no matching element is found, create a new one
         SendData.panels_to_be_created.push({
@@ -98,12 +98,12 @@ export const Offer = () => {
               price: e.price,
               profit_percentage: e.profit_percentage,
               profit: e.profit,
-              total_price: e.total_price,
+              total_price: Number(e.total_price),
               components: e.panel,
             },
           ],
         });
-        SendData.price += e.total_price;
+        SendData.price += Number(e.total_price);
       }
     });
 

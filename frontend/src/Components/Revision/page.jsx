@@ -347,6 +347,7 @@ export const Revision = () => {
           setAddRevision={setAddRevision}
           setOfferId={setOfferId}
           setRecentData={setRecentData}
+          getAllOffers={getAllOffers}
         />
       )}
     </>

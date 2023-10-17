@@ -11,6 +11,7 @@ export const IndentList = () => {
   const [subcomponentData, setSubcomponentData] = useState([]);
   const [indentData, setIndentData] = useState([]);
   const [isIndent, setIsIndent] = useState(false);
+  const [bulkData, setBulkData] = useState([]);
   const [arrow, setArrow] = useState("Show");
   const mergedArrow = useMemo(() => {
     if (arrow === "Hide") {
@@ -63,7 +64,60 @@ export const IndentList = () => {
                       desc: e.subcomponent.desc,
                       catalog_number: e.subcomponent.catalog_number,
                       rating_value: e.subcomponent.rating_value,
-                      company: e.subcomponent.company.company_name,
+                      company: e.subcomponent.company.company_name.name,
+                      price: e.subcomponent.company.price,
+                      discount: e.subcomponent.company.discount,
+                      quantityRequired: e.quantityRequired,
+                      quantityOrdered: e.quantityOrdered,
+                    };
+                  })
+                );
+                console.log(record.items);
+              }}
+            >
+              <MoreHorizontal />
+            </button>
+          </Tooltip>
+        </div>
+      ),
+    },
+  ];
+
+  const bulkcolumns = [
+    {
+      title: "id",
+      dataIndex: "_id",
+      key: "_id",
+    },
+    {
+      title: "no. of items",
+      dataIndex: "noofitems",
+      key: "noofitems",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text, record) => (
+        <div className="flex flex-row gap-2">
+          <Tooltip
+            placement="top"
+            title={"See More Details"}
+            arrow={mergedArrow}
+          >
+            <button
+              className="text-blue-600 hover:text-blue-300"
+              onClick={() => {
+                console.log(record);
+                setIsIndent(true);
+                setSubcomponentData(
+                  record.items.map((e) => {
+                    return {
+                      key: e.subcomponent._id,
+                      desc: e.subcomponent.desc,
+                      catalog_number: e.subcomponent.catalog_number,
+                      rating_value: e.subcomponent.rating_value,
+                      company: e.subcomponent.company.company_name.name,
                       price: e.subcomponent.company.price,
                       discount: e.subcomponent.company.discount,
                       quantityRequired: e.quantityRequired,
@@ -108,7 +162,7 @@ export const IndentList = () => {
       dataIndex: "discount",
     },
     {
-      title: "Quantity Required",
+      title: "Quantity Available",
       dataIndex: "quantityRequired",
     },
     {
@@ -120,6 +174,16 @@ export const IndentList = () => {
   const getAllIndents = async () => {
     const response = await getAllIndent();
     console.log(response.data);
+    setBulkData(
+      response.data.bulkData.map((e) => {
+        return {
+          key: e._id,
+          _id: e._id,
+          noofitems: e.items.length,
+          items: e.items,
+        };
+      })
+    );
     setIndentData(
       response.data.indentDataByPid.map((e) => ({
         key: e._id,
@@ -160,6 +224,12 @@ export const IndentList = () => {
             </p>
             <div className="w-full">
               <Table columns={columns} dataSource={indentData} />
+            </div>
+            <p className="text-blue-800 font-semibold text-xl p-5">
+              Bulk Indent List
+            </p>
+            <div className="w-full">
+              <Table columns={bulkcolumns} dataSource={bulkData} />
             </div>
           </>
         </div>
