@@ -211,14 +211,16 @@ module.exports.upadatePurchase = (async(req, res) => {
     if(pData)
     {
       var data=await purchaseSchema.findByIdAndUpdate(req.params.Id,req.body).exec()
-      res.status(200).json({message:"Purchase Updated Sucessfully"})
+      var data=await purchaseSchema.findById(req.params.Id)
+      res.status(200).json({message:"Purchase Updated Sucessfully",data:data})
     }
     else{
       var bpData=await bulkpurchase.findById(req.params.Id).exec()
       if(bpData)
       {
         var data=await bulkpurchase.findByIdAndUpdate(req.params.Id,req.body).exec()
-        res.status(200).json({message:"Bulk Purchase Updated Sucessfully"})
+        data=await bulkpurchase.findById(req.params.Id)
+        res.status(200).json({message:"Bulk Purchase Updated Sucessfully",data:data})
       }
       else{
         res.status(400).json({message:"No Id Found"})
