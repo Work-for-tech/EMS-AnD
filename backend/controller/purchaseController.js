@@ -81,7 +81,9 @@ module.exports.getBothDetails = async (req, res) => {
       .find({})
       .populate("indentId")
       .populate("vendorId")
-      .populate({ path: "items.subcomponent" });
+      .populate({
+        path: "items.subcomponent",
+      });
     res
       .status(200)
       .json({ message: "fetched", pidData: pidData, bulkData: bulkData });
@@ -99,7 +101,9 @@ module.exports.getPurchase = async (req, res) => {
       .find({})
       .populate("indentId")
       .populate("vendorId")
-      .populate({ path: "items.subcomponent" });
+      .populate({
+        path: "items.subcomponent",
+      });
     // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
@@ -116,7 +120,13 @@ module.exports.getPurchaseList = async (req, res) => {
       .find({ indentId: req.params.indentId })
       .populate({ path: "indentId", select: "clientId projectId" })
       .populate("vendorId")
-      .populate({ path: "items.subcomponent" });
+      .populate({
+        path: "items.subcomponent",
+        populate: {
+          path: "company.company_name",
+          model: "Companies",
+        },
+      });
     // console.log(data);
     res.status(200).json({ message: "fetched", data: data });
   } catch (error) {
@@ -205,30 +215,29 @@ module.exports.sendMail = async (req, res) => {
     });
   }
 };
-module.exports.upadatePurchase = (async(req, res) => {
+module.exports.upadatePurchase = async (req, res) => {
   try {
-    var pData=await purchaseSchema.findById(req.params.Id).exec()
-    if(pData)
-    {
-      var data=await purchaseSchema.findByIdAndUpdate(req.params.Id,req.body).exec()
-      res.status(200).json({message:"Purchase Updated Sucessfully"})
-    }
-    else{
-      var bpData=await bulkpurchase.findById(req.params.Id).exec()
-      if(bpData)
-      {
-        var data=await bulkpurchase.findByIdAndUpdate(req.params.Id,req.body).exec()
-        res.status(200).json({message:"Bulk Purchase Updated Sucessfully"})
+    var pData = await purchaseSchema.findById(req.params.Id).exec();
+    if (pData) {
+      var data = await purchaseSchema
+        .findByIdAndUpdate(req.params.Id, req.body)
+        .exec();
+      res.status(200).json({ message: "Purchase Updated Sucessfully" });
+    } else {
+      var bpData = await bulkpurchase.findById(req.params.Id).exec();
+      if (bpData) {
+        var data = await bulkpurchase
+          .findByIdAndUpdate(req.params.Id, req.body)
+          .exec();
+        res.status(200).json({ message: "Bulk Purchase Updated Sucessfully" });
+      } else {
+        res.status(400).json({ message: "No Id Found" });
       }
-      else{
-        res.status(400).json({message:"No Id Found"})
-      }
     }
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
       message: "Error in updating purchase",
       data: error,
     });
   }
-})
+};

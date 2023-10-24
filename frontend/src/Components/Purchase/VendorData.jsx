@@ -347,6 +347,11 @@ export const VendorData = ({
                 key: "rating_value",
               },
               {
+                title: "Company",
+                dataIndex: "company",
+                key: "company",
+              },
+              {
                 title: "Quantity",
                 dataIndex: "quantity",
                 key: "quantity",
@@ -380,6 +385,11 @@ export const VendorData = ({
                   (e?.quantity ||
                     e?.recoverData?.quantity ||
                     e?.recoverData?.quantityOrdered) ??
+                  "-",
+                company:
+                  (e?.subcomponent?.company?.company_name?.name ||
+                    e?.recoverData?.subcomponent?.company?.company_name
+                      ?.name) ??
                   "-",
               };
             })}

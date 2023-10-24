@@ -114,3 +114,25 @@ export const getPurchaseSubComponent = async (id) => {
     };
   }
 };
+
+export const updatePurchaseAPI = async (id, data) => {
+  console.log(id, data);
+  try {
+    const response = await axios.put(
+      "inverntoryManagment/api/v1/public/purchase/" + id,
+      data
+    );
+    console.log(response);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+
+}

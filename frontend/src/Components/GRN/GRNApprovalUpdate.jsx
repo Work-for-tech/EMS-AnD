@@ -2,7 +2,7 @@ import { Input, Button, message } from 'antd'
 import React from 'react'
 import { createRecievedItem } from '../../APIs/receiveditems'
 
-export const GRNApprovalUpdate = ({ data, setGrnApprovalUpdate, setGrnApprovalList }) => {
+export const GRNApprovalUpdate = ({ data, setGrnApprovalUpdate, setGrnApprovalList, getGRNApprovalListInit }) => {
     console.log(data)
 
     const quanityReceivedRef = React.useRef()
@@ -33,7 +33,7 @@ export const GRNApprovalUpdate = ({ data, setGrnApprovalUpdate, setGrnApprovalLi
         if (response.type === "success") {
             message.success("Received Item Updated Successfully")
             setGrnApprovalUpdate({})
-            setGrnApprovalList([])
+            getGRNApprovalListInit()
         }
     }
 

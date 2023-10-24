@@ -27,14 +27,28 @@ export const BulkPurchase = () => {
   const [purchaseData, setPurchaseData] = useState([]);
   const [allVendorsOptions, setAllVendorsOptions] = useState([]);
 
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+
   const getAllIndents = async () => {
     const response = await getAllBulkIndent();
     console.log(response.data.data);
     if (response.type === "success") {
-      const data = response.data.data.map((e, i) => ({
-        label: "Indent " + Number(i + 1),
-        value: e._id,
-      }));
+      const data = response.data.data.map((e, i) => {
+        return {
+          label:
+            e?.createdAt !== undefined
+              ? new Date(e?.createdAt).toLocaleString(undefined, options)
+              : "Indent " + Number(i + 1),
+          value: e._id,
+        };
+      });
       setProjectData(data);
     } else if (response.type === "error") {
       message.error(response.message);

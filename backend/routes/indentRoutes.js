@@ -6,6 +6,7 @@ router.post("/addindentusingpid", indentController.addIndentUsingPid);
 router.get("/getindents/:clientId/:projectId", indentController.getIndentbypid);
 router.post("/addbulkindent", indentController.addBulkIndent);
 // Deokumar
+router.get("/getindent/:id", indentController.getindentByProjectId);
 router.get("/getonebulkindent/:id", indentController.getonebulkindent);
 
 router.get("/getbulkindent", indentController.getBulkIndentForPurchase);

@@ -29,6 +29,9 @@ import { CreateGRN } from "./Components/GRN/page";
 import { ListGRN } from "./Components/GRN/list";
 import { GRNApproval } from "./Components/GRN/GRNApproval";
 import { BulkPurchase } from "./Components/Purchase/BulkPurchase";
+import { AddIssue } from "./Components/Issue/AddIssue";
+import { IssueList } from "./Components/Issue/IssueList";
+import { IssueSubcomponent } from "./Components/Issue/Subcomponent";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,6 +75,9 @@ function App() {
           <Route path="/creategrn" element={<CreateGRN />} />
           <Route path="/listgrn" element={<ListGRN />} />
           <Route path="/grnapproval" element={<GRNApproval />} />
+          <Route path="/addissue" element={<AddIssue />} />
+          <Route path="/issuelist" element={<IssueList />} />
+          <Route path="/issueSubcomponent" element={<IssueSubcomponent />} />
         </Routes>
       </Router>
     </div>

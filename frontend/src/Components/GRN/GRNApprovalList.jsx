@@ -41,6 +41,11 @@ export const GRNApprovalList = () => {
 
   const columns = [
     {
+      title: "Company Name",
+      dataIndex: "company_name",
+      key: "company_name",
+    },
+    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -84,7 +89,7 @@ export const GRNApprovalList = () => {
         onChange={(e) => setPurchaseId(e)}
         className="w-1/5"
         options={Purchase.map((e, i) => {
-          return { label: "Purchase " + (i + 1), value: e.value };
+          return { label: "Purchase " + (i + 1) + " | " + (e.createdAt ?? "-"), value: e.value };
         })}
       />
       <Button onClick={() => {
@@ -93,18 +98,20 @@ export const GRNApprovalList = () => {
       }}>GET LIST</Button>
     </div>
     {grnApprovalList.items && <Table className="p-5" columns={columns} dataSource={grnApprovalList.items.map((e) => {
+      console.log(e)
       return {
         key: e._id,
         description: e.sub_component_id.desc ?? "None",
         rating: e.sub_component_id.rating_value ?? "None",
         catalog_number: e.sub_component_id.catalog_number ?? "None",
         quantity_expected: e.quantity_expected ?? "-",
-        quantity_received: e.quantity_received ?? "-"
+        quantity_received: e.quantity_received ?? "-",
+        company_name : e.sub_component_id.company.company_name ?? "-"
       }
     })} />}
 
     {
-      grnApprovalUpdate.key && <GRNApprovalUpdate setGrnApprovalList={setGrnApprovalList} setGrnApprovalUpdate={setGrnApprovalUpdate} data={grnApprovalUpdate} />
+      grnApprovalUpdate.key && <GRNApprovalUpdate getGRNApprovalListInit={getGRNApprovalListInit} setGrnApprovalList={setGrnApprovalList} setGrnApprovalUpdate={setGrnApprovalUpdate} data={grnApprovalUpdate} />
     }
 
 

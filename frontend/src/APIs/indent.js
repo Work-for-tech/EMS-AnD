@@ -103,3 +103,20 @@ export const getIndentbyClientProject = async (clientId, projectId) => {
     };
   }
 };
+
+export const getIndentbyProjectId = async (id) => {
+  try {
+    const response = await axios.get(
+      `inverntoryManagment/api/v1/public/indent/getindent/${id}`
+    );
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};

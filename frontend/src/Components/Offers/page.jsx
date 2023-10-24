@@ -347,7 +347,7 @@ export const Offer = () => {
                   value={DescriptionOfPanel}
                   type="text"
                   className="w-full border-2 border-gray-200 rounded-md p-1 hover:border-blue-300 focus:border-blue-300"
-                  placeholder="Enter Discription"
+                  placeholder="Enter Description"
                 />
               </section>
             </div>

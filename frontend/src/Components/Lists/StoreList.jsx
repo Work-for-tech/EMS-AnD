@@ -30,14 +30,15 @@ export const StoreList = () => {
 
     if (response.type === "success") {
       const newStoreData = response.data.data.map((e) => {
+        console.log(e);
         return {
-          key: e._id,
-          desc: e.desc,
-          catalog_number: e.catalog_number,
-          rating_value: e.rating_value,
-          company: e.companyId.name,
-          companyId: e.companyId._id,
-          quantity: e.quantity,
+          key: e?._id || "",
+          desc: e?.desc || "",
+          catalog_number: e?.catalog_number || "",
+          rating_value: e?.rating_value || "",
+          company: e?.companyId?.name || "",
+          companyId: e?.companyId?._id || "",
+          quantity: e?.quantity || 0,
         };
       });
 
