@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const rootSubmenuKeys = ["sub1", "sub2", "sub4"];
+const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4", "sub5", "sub6"];
 
 export const Navigator = () => {
   const navigate = useNavigate();

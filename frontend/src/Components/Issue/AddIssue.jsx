@@ -1,44 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getAllProjects } from "../../APIs/project";
-import { Button, Input, Select, Table, message } from "antd";
+import { Button, Input, Select, Table, Tooltip, message } from "antd";
 import { finalProjects } from "../../APIs/offer";
 import { getIndentbyProjectId } from "../../APIs/indent";
 import { addIssues } from "../../APIs/issue";
-
-const columns = [
-  {
-    title: "Description",
-    dataIndex: "desc",
-  },
-  {
-    title: "Catalog Number",
-    dataIndex: "catalog_number",
-  },
-  {
-    title: "Rating",
-    dataIndex: "rating_value",
-  },
-  {
-    title: "Company",
-    dataIndex: "company",
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-  },
-  {
-    title: "Discount",
-    dataIndex: "discount",
-  },
-  {
-    title: "Quantity Required",
-    dataIndex: "quantityRequired",
-  },
-  {
-    title: "Quantity Ordered",
-    dataIndex: "quantity_ordered",
-  },
-];
+import { DeleteIcon, Trash2 } from "lucide-react";
+import { getStoreDataById } from "../../APIs/store";
 
 export const AddIssue = () => {
   const [Project, setProject] = useState({
@@ -61,9 +28,93 @@ export const AddIssue = () => {
     label: "Select Subcomponent",
     value: "",
   });
+
+  const [quantityInput, setQuantityInput] = useState({
+    quantity: 0,
+    completed: false,
+    _id: "",
+  });
   const [subcomponentsOptions, setSubcomponentsOptions] = useState([]);
   const [subComponentData, setSubComponentData] = useState([]);
   const [AddedSubcomponents, setAddedSubcomponents] = useState([]);
+  const [arrow, setArrow] = React.useState("Show");
+  const mergedArrow = React.useMemo(() => {
+    if (arrow === "Hide") {
+      return false;
+    }
+    if (arrow === "Show") {
+      return true;
+    }
+    return {
+      pointAtCenter: true,
+    };
+  }, [arrow]);
+
+  const columns = [
+    {
+      title: "Description",
+      dataIndex: "desc",
+    },
+    {
+      title: "Catalog Number",
+      dataIndex: "catalog_number",
+    },
+    {
+      title: "Rating",
+      dataIndex: "rating_value",
+    },
+    {
+      title: "Company",
+      dataIndex: "company",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+    },
+    {
+      title: "Quantity Issued",
+      dataIndex: "quantityIssued",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text, record) => (
+        <Tooltip placement="top" title={"Delete"} arrow={mergedArrow}>
+          <button
+            className="text-red-800"
+            onClick={() => {
+              console.log(record.key, quantityInput._id);
+              if (quantityInput._id === record.key) {
+                setQuantityInput({
+                  quantity: 0,
+                  completed: false,
+                  _id: "",
+                });
+              }
+              setAddedSubcomponents((prev) => {
+                return prev.filter((e) => e.key !== record.key);
+              });
+              setSubcomponentsOptions((prev) => {
+                return [
+                  ...prev,
+                  {
+                    label: record.desc,
+                    value: record.key,
+                  },
+                ];
+              });
+            }}
+          >
+            <Trash2 />
+          </button>
+        </Tooltip>
+      ),
+    },
+  ];
 
   const getProjects = async () => {
     const allProjects = [];
@@ -89,23 +140,26 @@ export const AddIssue = () => {
     // console.log(response1);
     const response = await finalProjects({ project_id: Project.value });
     if (response.type === "success") {
+      let objectToAdd;
       const newSubcomponentsData = new Set();
       response.data.data.map((e) => {
         e.panels_to_be_created.map((e) => {
           e.parts.map((e) => {
             e.components.map((e) => {
               e.sub_components.map(async (e) => {
-                const objectToAdd = {
+                console.log(e);
+                objectToAdd = {
                   company: e.company.company_name?.name || "",
                   companyId: e.company.company_name?._id || "",
                   price: e.company.price,
                   discount: e.company.discount,
                   desc: e.desc,
-                  quantityRequired: e.quantity,
+                  quantityIssued: e.quantity,
                   rating_value: e.rating_value,
                   catalog_number: e.catalog_number,
                   key: e._id,
                 };
+                console.log(objectToAdd);
 
                 newSubcomponentsData.add(objectToAdd);
               });
@@ -170,27 +224,91 @@ export const AddIssue = () => {
     setAddedDetails(false);
   };
 
-  const AddSubcomponentHandler = () => {
-    subComponentData.map((e) => {
+  const AddSubcomponentHandler = async () => {
+    if (quantityInput.completed) {
+      message.error("Confirm Quantity Issued");
+      return;
+    }
+
+    let addedData = subComponentData.filter((e) => {
       if (selectSubcomponents.value === e.key) {
-        setAddedSubcomponents((prev) => {
-          return [...prev, e];
-        });
+        return e;
       }
+    })[0];
+
+    const getStoreDetails = await getStoreDataById({
+      desc: addedData.desc,
+      catalog_number: addedData.catalog_number,
+      rating_value: addedData.rating_value,
+      companyId: addedData.companyId,
     });
+
+    console.log(getStoreDetails.data?.data[0]?.quantity);
+
+    addedData.quantityIssued =
+      getStoreDetails.data?.data[0]?.quantity === undefined
+        ? 0
+        : getStoreDetails.data?.data[0]?.quantity;
+
+    setQuantityInput({
+      quantity: addedData.quantityIssued,
+      completed: true,
+      _id: addedData.key,
+    });
+
+    setAddedSubcomponents((prev) => {
+      return [...prev, addedData];
+    });
+
     // remove option from options
     setSubcomponentsOptions((prev) => {
       return prev.filter((e) => e.value !== selectSubcomponents.value);
     });
   };
 
+  const ConfirmHandler = () => {
+    const checkData = AddedSubcomponents.filter((e) => {
+      if (e.key === quantityInput._id) {
+        return e;
+      }
+    });
+
+    console.log(checkData, quantityInput.quantity, AddedSubcomponents);
+
+    if (Number(checkData[0].quantityIssued) < Number(quantityInput.quantity)) {
+      message.error("Quantity Issued cannot be greater than Quantity");
+      return;
+    }
+
+    setQuantityInput({
+      quantity: quantityInput.quantity,
+      completed: false,
+      _id: "",
+    });
+    setAddedSubcomponents((prev) => {
+      return prev.map((e) => {
+        if (e.key === selectSubcomponents.value) {
+          return {
+            ...e,
+            quantityIssued: quantityInput.quantity,
+          };
+        }
+        return e;
+      });
+    });
+  };
+
   const SubmitHandler = async () => {
+    if (quantityInput.completed) {
+      message.error("Confirm Quantity Issued");
+      return;
+    }
     const items = AddedSubcomponents.map((e) => {
       return {
         ...e,
         subComponent: e.key,
-        quantity: e.quantityRequired,
-        qty_issued: e.quantityRequired,
+        quantity: e.quantityIssued,
+        qty_issued: e.quantityIssued,
       };
     });
 
@@ -397,6 +515,37 @@ export const AddIssue = () => {
                   </div>
                 </div>
               </div>
+              {quantityInput.completed && (
+                <div>
+                  <div className="w-full flex flex-row gap-4 p-2 my-2">
+                    <section className="w-full">
+                      <div className="font-semibold p-2 text-gray-500">
+                        Quantity Issued
+                      </div>
+                      <Input
+                        type="number"
+                        className="w-full border-2 rounded-md"
+                        placeholder="Enter Quantity Issued"
+                        value={quantityInput.quantity}
+                        onChange={(e) =>
+                          setQuantityInput((prevQuantityInput) => ({
+                            ...prevQuantityInput, // Copy the existing state
+                            quantity: e.target.value, // Update only the 'quantity' property
+                          }))
+                        }
+                      />
+                    </section>
+                  </div>
+                  <div className="flex items-center justify-center p-2">
+                    <Button
+                      onClick={ConfirmHandler}
+                      className="bg-blue-700 text-white"
+                    >
+                      Confirm
+                    </Button>
+                  </div>
+                </div>
+              )}
               {AddedSubcomponents.length !== 0 && (
                 <>
                   <Table columns={columns} dataSource={AddedSubcomponents} />

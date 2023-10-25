@@ -85,9 +85,9 @@ export const IndentList = () => {
 
   const bulkcolumns = [
     {
-      title: "id",
-      dataIndex: "_id",
-      key: "_id",
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
     },
     {
       title: "no. of items",
@@ -112,6 +112,7 @@ export const IndentList = () => {
                 setIsIndent(true);
                 setSubcomponentData(
                   record.items.map((e) => {
+                    console.log(e);
                     return {
                       key: e.subcomponent._id,
                       desc: e.subcomponent.desc,
@@ -171,6 +172,15 @@ export const IndentList = () => {
     },
   ];
 
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+
   const getAllIndents = async () => {
     const response = await getAllIndent();
     console.log(response.data);
@@ -180,6 +190,7 @@ export const IndentList = () => {
           key: e._id,
           _id: e._id,
           noofitems: e.items.length,
+          date: new Date(e.createdAt).toLocaleString(undefined, options),
           items: e.items,
         };
       })

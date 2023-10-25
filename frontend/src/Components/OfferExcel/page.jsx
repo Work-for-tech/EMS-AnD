@@ -11,11 +11,13 @@ export const OfferExcel = () => {
     value: "",
   });
   const [projectData, setProjectData] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [offerData, setOfferData] = useState([]);
   const [offer, setOffer] = useState();
-  const [partData, setPartData] = useState([]);
+  const [panelData, setPanelData] = useState([]);
+  const [panel, setPanel] = useState({ label: "Select Panel", value: "" });
   const [part, setPart] = useState({ label: "Select Part", value: "" });
+  const [partData, setPartData] = useState([]);
 
   const [arrow, setArrow] = useState("Show");
   const mergedArrow = useMemo(() => {
@@ -84,7 +86,7 @@ export const OfferExcel = () => {
                   };
                 });
                 console.log(panelsData);
-                setPartData(panelsData);
+                setPanelData(panelsData);
               }}
             >
               <ArrowUpRightFromCircle />
@@ -131,12 +133,29 @@ export const OfferExcel = () => {
     fetchOffer();
   }, [project.value]);
 
+  useEffect(() => {
+    if (!panel.value) return;
+    let partData = [];
+    offer.panels_to_be_created.map((e) => {
+      if (e._id.toString() === panel.value.toString()) {
+        e.parts.map((e) => {
+          partData.push({
+            label: e.part_name,
+            value: e._id,
+          });
+        });
+      }
+    });
+    console.log(partData);
+    setPartData(partData);
+  }, [panel.value]);
+
   return (
     <div className="w-full h-screen bg-[#f3f7ff]">
       <p className="text-3xl text-blue-800 font-semibold p-4">
         Export Offer's Part
       </p>
-      {partData.length === 0 ? (
+      {panelData.length === 0 ? (
         <div className="m-4 flex flex-col items-center justify-center">
           <div className="w-full bg-white flex flex-col rounded-md">
             <p className="text-blue-800 font-semibold text-xl p-4">
@@ -187,7 +206,60 @@ export const OfferExcel = () => {
         </div>
       ) : (
         <div className="m-4 flex flex-col items-center justify-center">
-          {part.value === "" ? (
+          {panel.value === "" && (
+            <div className="w-full bg-white flex flex-col rounded-md">
+              <p className="text-blue-800 font-semibold text-xl p-4">
+                Enter Panel Details
+              </p>
+              <div className="bg-white flex items-center justify-center flex-row w-full px-4 pb-10 gap-4 rounded-md">
+                <div className="w-1/2">
+                  <div className="font-semibold p-2 text-gray-500">
+                    Select Panel
+                  </div>
+                  <Select
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    className="w-full"
+                    placeholder="Select panel Name"
+                    name="project"
+                    options={panelData}
+                    value={panel.label}
+                    onChange={(value) => {
+                      console.log(panelData);
+                      panelData.map((item) => {
+                        console.log(item.value, value);
+                        if (item.value === value) {
+                          setPanel(item);
+                          return;
+                        }
+                      });
+
+                      console.log(panelData);
+                      console.log(panel);
+                      console.log(offer);
+
+                      const printData = offer.panels_to_be_created.filter(
+                        (e, i) => {
+                          console.log(e._id, value);
+                          if (e._id.toString() === value.toString()) {
+                            return e;
+                          }
+                        }
+                      );
+
+                      console.log(printData);
+                      setData(printData);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          {part.label === "Select Part" ? (
             <div className="w-full bg-white flex flex-col rounded-md">
               <p className="text-blue-800 font-semibold text-xl p-4">
                 Enter Part Details
@@ -205,26 +277,28 @@ export const OfferExcel = () => {
                         .includes(input.toLowerCase())
                     }
                     className="w-full"
-                    placeholder="Select Part Name"
+                    placeholder="Select panel Name"
                     name="project"
                     options={partData}
                     value={part.label}
                     onChange={(value) => {
+                      let nowData;
                       partData.map((item) => {
                         if (item.value === value) {
-                          setPart(item);
+                          offer.panels_to_be_created.map((e) => {
+                            if (e._id.toString() === panel.value.toString()) {
+                              console.log(e);
+                              e.parts.map((er) => {
+                                if (er._id.toString() === value.toString()) {
+                                  setPart(er);
+                                  return;
+                                }
+                              });
+                            }
+                          });
                           return;
                         }
                       });
-
-                      const printData = offer.panels_to_be_created.map((e) => {
-                        if (e._id === value) {
-                          return e;
-                        }
-                      });
-
-                      console.log(printData);
-                      setData(printData);
                     }}
                   />
                 </div>
@@ -233,7 +307,7 @@ export const OfferExcel = () => {
           ) : (
             <>
               <div>
-                <OfferTable offer={offer} />
+                <OfferTable offer={offer} part={part} />
               </div>
             </>
           )}

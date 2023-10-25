@@ -4,6 +4,8 @@ import { Button, message, Input, Select } from "antd";
 import { getParticularPurchase, sendMail, updatePurchaseAPI } from "../../APIs/purchase";
 import { getClientById } from "../../APIs/client";
 import { getEmployeeList } from "../../APIs/employee";
+import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
 
 export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   const [data, setData] = useState([]);
@@ -22,13 +24,26 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   const otherCostRef = React.useRef();
   const transportationCostRef = React.useRef();
 
+  const paymentT = {
+    1: "1 Day",
+    7: "1 Week",
+    14: "2 Weeks",
+    21: "3 Weeks",
+    180: "6 Months"
+  }
+
+
   const updatePurchase = async () => {
+
+
+
+
     const data = {
       sGst: Number(sGstRef.current.input.value),
       cGst: Number(cGstRef.current.input.value),
       paymentTerms: paymentTerms,
-      tandc: tandcRef.current.input.value,
-      deliveryAddress: deliveryAddressRef.current.input.value,
+      tandc: tandcRef.current.resizableTextArea.textArea.value,
+      deliveryAddress: deliveryAddressRef.resizableTextArea.textArea.value,
       transportationCost: Number(transportationCostRef.current.input.value),
       packingCost: Number(packingCostRef.current.input.value),
       otherCost: Number(otherCostRef.current.input.value),
@@ -36,8 +51,6 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
       preparedBy: preparedBy,
       authorizedBy: authorizedBy,
     };
-
-    console.log(data)
 
     const response = await updatePurchaseAPI(emailpurchaseId, data);
     console.log(response);
@@ -87,6 +100,8 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
     }
   };
 
+  const { TextArea } = Input;
+
   useEffect(() => {
     getPurchaseData();
   }, []);
@@ -110,13 +125,150 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
     return csv.join("\n");
   }
 
+  const contentRef = React.useRef();
+  console.log(data)
+
   if (data.length !== 0)
     return (
       <>
+        <Button onClick={async () => {
+          const opt = {
+            margin: 0,
+            filename: 'myfile.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+          };
+
+          const pdf = await html2pdf().from(contentRef.current).set(opt).output('blob')
+          const blob = new Blob([pdf], { type: "application/pdf" });
+
+          const file = new File([blob], "Report.pdf", {
+            type: "application/pdf",
+          });
+
+
+          const response = await sendMail({
+            purchaseId: data._id,
+            file: file,
+          });
+
+          if (response.type === "success") {
+            setSentEmail(true);
+            message.success("Successfully Sent Email");
+          } else if (response.type === "error") {
+            message.error("Failed to Send Email");
+          }
+        }} className="w-full flex justify-center text-white bg-blue-600">Send Mail</Button>
+        <div>
+          <div ref={contentRef} className="w-full p-10">
+            <section className="w-full flex justify-evenly">
+              <p className="w-3/5 p-4 border-b-0 text-3xl font-semibold border-2 border-zinc-400">EMS PROJECTS PVT. LTD.</p>
+              <p className="w-2/5 p-4 border-l-0 border-b-0 text-3xl font-semibold border-2 border-zinc-400">PURCHASE ORDER</p>
+            </section>
+            <section className="flex w-full">
+              <div className="w-3/5 border-2 border-zinc-400 p-2">
+                <p>Factory : Survey No.-478, Near Kuha Bus Stand, Village Kuha, Ta. Dascroi, Ahmedabad 382433.</p>
+                <p>Survey No.-478, Near Kuha Bus Stand, Village Kuha, Ta. Dascroi, Ahmedabad 382433.</p>
+                <p>Contact - 0909906028O, Email id - info@emsgroup.net, Web site :- www.emsgroup.net</p>
+              </div>
+              <div className="w-2/5 border-2 border-l-0 border-zinc-400 p-2">
+                <p className="font-semibold">PROJECT DETAIL : PAO78</p>
+              </div>
+            </section>
+            <section className="flex justify-evenly w-full">
+              <div className="w-1/3 p-2 border-2 border-r-0 border-t-0 border-zinc-400">
+                <p>Purchase No:- EMSPL/272/2022-23</p>
+                <p>Indent No. NA</p>
+              </div>
+              <div className="w-1/3 p-2 border-2 border-zinc-400 border-r-0 border-t-0">
+                <p>Order Date :- 10/10/2022</p>
+                <p> Material Indent Date :- 08/10/2022</p>
+              </div>
+              <div className="w-1/3 border-2 p-2 border-zinc-400 border-t-0">
+                <p>Delivery Days/Date :- 4 to 5 Days</p>
+                <p>Department :- Mechanial</p>
+              </div>
+            </section>
+            <section className="flex w-full">
+              <div className="w-2/3 p-2 border-2 border-zinc-400 border-t-0">
+                <p>To,</p>
+                <p>Name : {data.vendorId.vendorName}</p>
+                <p>Add :- {data.vendorId.address}</p>
+                <p>Phone No. - {data.vendorId.phoneNumber1}</p>
+                <p>Contact Person :- {data.vendorId.phoneNumber2} </p>
+                <p>Email-id :- {data.vendorId.email1} </p>
+              </div>
+              <div className="w-1/3 p-2 border-2 border-zinc-400 border-t-0 border-l-0">
+                <p>GST No. :- {data.vendorId.gst} </p>
+                <p>PAN No. :- {data.vendorId.panNo} </p>
+              </div>
+            </section>
+            <section className="w-full text-center ">
+              <div className="flex font-semibold ">
+                <p className="w-1/12 border-2 border-zinc-400">Sr.No.</p>
+                <p className="w-1/12 border-2 border-zinc-400">HSN Code</p>
+                <p className="w-1/12 border-2 border-zinc-400">Product Description</p>
+                <p className="w-1/12 border-2 border-zinc-400">Size</p>
+                <p className="w-1/12 border-2 border-zinc-400">Qty</p>
+                <p className="w-1/12 border-2 border-zinc-400">UOM</p>
+                <p className="w-1/12 border-2 border-zinc-400">Rate</p>
+                <p className="w-1/12 border-2 border-zinc-400">Unit</p>
+                <p className="w-1/12 border-2 border-zinc-400">Net Amount</p>
+                <p className="w-1/12 border-2 border-zinc-400">SGST</p>
+                <p className="w-1/12 border-2 border-zinc-400">CGST</p>
+              </div>
+              {
+                data.items.map((item, index) => (
+                  <div className="flex w-full">
+                    <p className="w-1/12 border-2 border-zinc-400">{index + 1}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.catalog_number}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.desc}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.rating_value}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{item.quantity}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">NOs</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.company.price}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">Kgs.</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{index + 1 === ((data.items.length + 1) / 2) ? "As Per Actual Weight" : ""}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{data.sGst}</p>
+                    <p className="w-1/12 border-2 border-zinc-400">{data.cGst}</p>
+                  </div>
+                ))
+              }
+            </section>
+            <section>Transportation : F.O.R Kuna</section>
+            <section>Payment Terms : {paymentT[data.paymentTerms]}</section>
+            <section className="w-full flex">
+              <div className="w-3/5">
+                <p className="border-2 border-zinc-400">Terms and Conditions</p>
+                <p className="border-2 border-zinc-400">{data.tandc}</p>
+              </div>
+              <div className="w-2/5 flex">
+                <div className="w-2/3">
+                  <p className="border-2 border-zinc-400">Total Amount Before Tax </p>
+                  <p className="border-2 border-zinc-400">Transportation Cost : </p>
+                  <p className="border-2 border-zinc-400">Packaging Cost : </p>
+                  <p className="border-2 border-zinc-400">Other Cost : </p>
+                  <p className="border-2 border-zinc-400">SGST : </p>
+                  <p className="border-2 border-zinc-400">CGST :</p>
+                  <p className="border-2 border-zinc-400">Grand Total : </p>
+                </div>
+                <div className="w-1/3 text-center">
+                  <p className="border-2 border-zinc-400">{data.sum ?? "-"} </p>
+                  <p className="border-2 border-zinc-400">{data.transportationCost} </p>
+                  <p className="border-2 border-zinc-400">{data.packingCost} </p>
+                  <p className="border-2 border-zinc-400">{data.otherCost} </p>
+                  <p className="border-2 border-zinc-400">{data.sGst} </p>
+                  <p className="border-2 border-zinc-400">{data.cGst}</p>
+                  <p className="border-2 border-zinc-400">{data.grandTotal} </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
         {emailpurchaseId && (
           <div>
             {
-              inputs &&
               <div className="flex flex-col gap-5">
                 <p>
                   <span className="font-semibold">State Gst</span>
@@ -159,13 +311,13 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
                 </p>
                 <p>
                   <span className="font-semibold">Terms and Conditions</span>
-                  <Input
+                  <TextArea rows={4}
                     ref={tandcRef}
                     placeholder="tandc" />
                 </p>
                 <p>
                   <span className="font-semibold">Delivery Address</span>
-                  <Input
+                  <TextArea rows={4}
                     ref={deliveryAddressRef}
                     placeholder="delivery Address" />
                 </p>
@@ -214,163 +366,10 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
                 }}>Update</Button>
               </div>
             }
-            {
-              !inputs &&
-              <div>
-                <Button
-                  className="bg-blue-700 text-white w-full flex items-center justify-center m-3"
-                  onClick={async () => {
-                    const csvData = tableToCSV(tableRef.current);
-                    const blob = new Blob([csvData], { type: "text/csv" });
-                    const file = new File([blob], "Purchase.csv", {
-                      type: "text/csv",
-                    });
-                    const response = await sendMail({
-                      purchaseId: data._id,
-                      file: file,
-                    });
-
-                    if (response.type === "success") {
-                      setSentEmail(true);
-                      message.success("Successfully Sent Email");
-                    } else if (response.type === "error") {
-                      message.error("Failed to Send Email");
-                    }
-                  }}
-                >
-                  Send Email
-                </Button>
-                <table key={data._id} ref={tableRef} className="text-left">
-                  <tbody>
-                    <tr>
-                      <td className="font-semibold text-xl" colSpan={9}>
-                        EMS Project Pvt. Ltd.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-semibold" colSpan={9}>
-                        Factory : {data.vendorId.address}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-semibold" colSpan={9}>
-                        OFF : {clientData.address}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-semibold" colSpan={9}>
-                        Contact - {clientData.phoneNumber} Email id -{" "}
-                        {clientData.email}
-                        Website :- emsgroup.net
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="p-2" colSpan={3}>
-                        Purchase Order No. : EMSPL/933/2383/3234
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        Order Date : 10/10/2023
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        Delivery : Days/Date - 4 to 5 Days
-                      </th>
-                    </tr>
-                    <tr>
-                      <th className="p-2" colSpan={3}>
-                        Indent No. : {data.indentId._id}
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        Material Indent Date : 08/10/2023
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        Department : Mechanial
-                      </th>
-                    </tr>
-                    <tr>
-                      <th className="p-2" colSpan={6}>
-                        To,
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        COMPANY COMMERCIAL DETAIL
-                      </th>
-                    </tr>
-                    <tr>
-                      <th className="p-2" colSpan={6}>
-                        Name : {data.vendorId.vendorName},
-                      </th>
-                      <th className="p-2" colSpan={3}>
-                        GST No : {data.vendorId.gst}
-                      </th>
-                    </tr>
-                    <tr>
-                      <td className="p-2" colSpan={6}>
-                        Address : {data.vendorId.address}
-                      </td>
-                      <td></td>
-                      <td className="p-2" colSpan={3}>
-                        PAN No : {data.vendorId.panNo}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2" colSpan={6}>
-                        Phone No : {data.vendorId.phoneNumber1}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2" colSpan={6}>
-                        Contact Person :- Rahul Kamble (9823475827)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2" colSpan={6}>
-                        Email Id :
-                        <a className="underline" href="mailto:dummymail@gmail.com">
-                          {data.vendorId.email1}
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="p-2">Sr.No.</th>
-                      <th className="p-2">Catalog Number</th>
-                      <th className="p-2" colSpan={2}>
-                        Description
-                      </th>
-                      <th className="p-2">Rating Value</th>
-                      <th className="p-2">Qty</th>
-                      <th className="p-2">Net Amount</th>
-                      <th className="p-2">S GST</th>
-                      <th className="p-2">C GST</th>
-                      <th className="p-2">Transportation Cost</th>
-                      <th className="p-2">Packing Cost</th>
-                      <th className="p-2">Other Cost</th>
-                      <th className="p-2">Grand Total</th>
-                    </tr>
-                    {data.items.map((item, index) => (
-                      <tr key={index}>
-                        <td className="p-2">{index + 1}</td>
-                        <td className="p-2">{item.subcomponent.catalog_number ?? "-"}</td>
-                        <td className="p-2" colSpan={2}>
-                          {item.subcomponent.desc ?? "-"}
-                        </td>
-                        <td className="p-2">{item.subcomponent.rating_value ?? "-"}</td>
-                        <td className="p-2">{item.quantity ?? "-"}</td>
-                        <td className="p-2">{item.subcomponent.company.price ?? "-"}</td>
-                        <td className="p-2">{data.sGst ?? "-"}</td>
-                        <td className="p-2">{data.cGst ?? "-"}</td>
-                        <td className="p-2">{data.transportationCost ?? "-"}</td>
-                        <td className="p-2">{data.packingCost ?? "-"}</td>
-                        <td className="p-2">{data.otherCost ?? "-"}</td>
-                        <td className="p-2">{data.grandTotal ?? "-"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            }
-
           </div>
 
         )}
       </>
     );
 };
+

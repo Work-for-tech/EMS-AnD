@@ -100,11 +100,22 @@ export const VendorData = ({
       return;
     }
 
-    console.log([
-      ...subcomponentsData,
+    const d =
       itemsData.filter(
         (e) => e.subcomponent._id === selectSubcomponents.value
-      )[0],
+      )[0]
+
+    setItems([
+      ...items,
+      {
+        key: d?._id,
+        recoverData: d,
+        subcomponent: d?.subcomponent?._id,
+        desc: d?.subcomponent?.desc,
+        quantityRequired: d?.quantityRequired || d?.subcomponent?.quantity,
+        quantityOrdered: d?.quantityOrdered || d?.subcomponent?.quantity,
+        quantity: d?.quantityOrdered || d?.subcomponent?.quantity,
+      },
     ]);
 
     setSubcomponentsData([
@@ -123,6 +134,8 @@ export const VendorData = ({
     );
 
     setSelectSubcomponents({ label: "Select Subcomponent", value: "" });
+
+
   };
 
   const SubmitSubcomponentHandler = (e) => {
@@ -150,8 +163,6 @@ export const VendorData = ({
 
     console.log(e);
   };
-
-  console.log(items);
 
   const FinalSubmissionHandler = async () => {
     console.log(subcomponentsData);
@@ -184,7 +195,7 @@ export const VendorData = ({
 
   return (
     <div className="flex flex-col items-center justify-center">
-      {!emailpurchaseId && !sentEmail && (
+      {(!emailpurchaseId) && (
         <div className="w-full bg-white flex flex-col rounded-md">
           <p className="text-blue-800 font-semibold text-xl p-4">
             Vendor: {data.vendorName}
@@ -235,17 +246,17 @@ export const VendorData = ({
         </div>
       )}
 
-      {subcomponentsData.map((e, i) => {
+      {/* {subcomponentsData.map((e, i) => {
         if (items.map((t) => t.subcomponent).includes(e.subcomponent._id))
           return (
             <div
               key={i}
               className="w-full bg-white flex items-center rounded-md"
             >
-              {/* <p className="text-blue-800 font-semibold text-xl p-4 mx-32">
+              <p className="text-blue-800 font-semibold text-xl p-4 mx-32">
                 {e.subcomponent.desc}
               </p>
-              <p>Added</p> */}
+              <p>Added</p>
             </div>
           );
         else
@@ -260,7 +271,7 @@ export const VendorData = ({
               <div className="bg-[#f3f7ff] flex flex-col gap-10">
                 <div className="bg-white flex items-center justify-center flex-row w-full p-4 gap-4 rounded-md">
                   <div className="w-1/2">
-                    {/* <div className="w-full flex flex-row gap-4 p-2 my-2">
+                    <div className="w-full flex flex-row gap-4 p-2 my-2">
                       <section className="w-full">
                         <div className="font-semibold p-2 text-gray-500">
                           Add Quantity
@@ -272,7 +283,7 @@ export const VendorData = ({
                           type="number"
                         />
                       </section>
-                    </div> */}
+                    </div>
                     <div className="flex items-center justify-center p-2">
                       <Button
                         onClick={() => SubmitSubcomponentHandler(e)}
@@ -286,7 +297,8 @@ export const VendorData = ({
               </div>
             </div>
           );
-      })}
+      })} */}
+
       {!emailpurchaseId && items.length !== 0 && (
         <Table
           columns={columns}
@@ -294,6 +306,7 @@ export const VendorData = ({
           className="table-auto w-full"
         />
       )}
+
       {!emailpurchaseId && items.length !== 0 && (
         <div className="m-4">
           <Button
@@ -304,6 +317,7 @@ export const VendorData = ({
           </Button>
         </div>
       )}
+
       {(emailpurchaseId || sentEmail) && (
         <div className="p-4">
           <PurchaseMail
@@ -313,6 +327,7 @@ export const VendorData = ({
           />
         </div>
       )}
+
       {sentEmail && (
         <div className="p-4 text-center">
           <p className="font-bold text-green-500 p-4">
@@ -395,12 +410,13 @@ export const VendorData = ({
             })}
           />
 
-          {data.items.map((e) => {
+          {/* {data.items.map((e) => {
             console.log(e);
             return;
-          })}
+          })} */}
         </div>
       )}
+
     </div>
   );
 };
