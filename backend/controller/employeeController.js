@@ -1,7 +1,9 @@
-const EmployeeSchema = require("../models/EmployeeSchema");
+const EmployeeSchema = require("../models/employeeSchema");
+const bcrypt = require('../util/passwordGen')
 
 module.exports.addEmployee = async (request, response) => {
   try {
+    request.body.password = bcrypt.hashSync(request.body.password)
     const employee = EmployeeSchema.create(request.body);
     response.status(200).json({
       message: "Employee added successfully.",

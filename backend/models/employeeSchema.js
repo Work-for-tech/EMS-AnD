@@ -36,6 +36,11 @@ const employee = new mongoose.Schema({
         required: true,
         type: String,
         message: "Department is required."
+    },
+    password:{
+        type:"String",
+        required:true,
+        message: "Password is required."
     }
 })
 
