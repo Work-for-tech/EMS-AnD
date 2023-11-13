@@ -31,6 +31,7 @@ export const UpdateOfferCompanies = ({
   );
   const [companyOptions, setCompanyOptions] = useState([]);
   const [companyData, setCompanyData] = useState([]);
+  const [submittedData, setSubmittedData] = useState();
 
   const [quantity, setQuantity] = useState(data.quantity || 0);
   const [nowData, setNowData] = useState([]);
@@ -49,6 +50,44 @@ export const UpdateOfferCompanies = ({
       (data.company?.price * data.company?.discount) / 100) *
       quantity || 0
   );
+
+  const column = [
+    {
+      title: "Description",
+      dataIndex: "desc",
+      key: "desc",
+    },
+    {
+      title: "Catalog Number",
+      dataIndex: "catalog_number",
+      key: "catalog_number",
+    },
+    {
+      title: "Rating Value",
+      dataIndex: "rating_value",
+      key: "rating_value",
+    },
+    {
+      title: "Company",
+      dataIndex: "company_name",
+      key: "company_name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -212,6 +251,17 @@ export const UpdateOfferCompanies = ({
           data: response.data.data,
         })
       );
+      setSubmittedData({
+        key: response.data.data._id,
+        _id: response.data.data._id,
+        desc: data.desc,
+        catalog_number: catalogNo,
+        rating_value: rating,
+        company_name: company,
+        price: price,
+        discount: discount,
+        quantity: quantity,
+      });
     }
   };
 
@@ -226,29 +276,46 @@ export const UpdateOfferCompanies = ({
     setSubmitted(false);
   };
 
+  console.log(submitted);
+
   return (
     <div className="w-full border-2 border-gray-300 p-4 mb-4">
       <div className="font-semibold p-2 text-gray-500 mt-2">
-        <span className="font-bold p-2 text-blue-700 mt-2">
-          {submitted === true && "Submitted: "}
-        </span>
-        {data.desc}
+        {submitted === true && (
+          <div className="m-2">
+            <Table
+              columns={column}
+              dataSource={[submittedData]}
+              pagination={false}
+            />
+          </div>
+        )}
+
+        {/* {submitted === true && (
+          <div className="w-full flex items-center justify-center m-2">
+            <Button
+              className="w-fit bg-blue-700 text-white"
+              onClick={() => {
+                setSubmitted(false);
+                dispatch(
+                  updatepanelActions.removeCompletedSubComponent({
+                    index: panel_index,
+                    component_index: component_index,
+                    sub_index: sub_index,
+                    _id: submittedData._id,
+                    totalPrice: totalPrice,
+                  })
+                );
+              }}
+            >
+              Edit
+            </Button>
+          </div>
+        )} */}
       </div>
       {submitted === false && (
         <div className="w-full flex flex-col justify-center gap-2">
-          <Select
-            showSearch
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            className="w-full"
-            options={catalogNoOptions}
-            value={catalogNo}
-            onChange={(e) => {
-              setCatalogNo(e);
-            }}
-          />
-          {catalogNo !== "Select catalog No" && (
+          <div className="w-full flex flex-row justify-center gap-2">
             <Select
               showSearch
               filterOption={(input, option) =>
@@ -257,37 +324,53 @@ export const UpdateOfferCompanies = ({
                   .includes(input.toLowerCase())
               }
               className="w-full"
-              options={ratingOptions}
-              value={rating}
+              options={catalogNoOptions}
+              value={catalogNo}
               onChange={(e) => {
-                setRating(e);
+                setCatalogNo(e);
               }}
             />
-          )}
-          {rating !== "Select Rating" && (
-            <Select
-              showSearch
-              filterOption={(input, option) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              className="w-full"
-              options={companyOptions}
-              value={company}
-              onChange={(e) => {
-                console.log(e);
-                setCompany(e);
-              }}
+            {catalogNo !== "Select catalog No" && (
+              <Select
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                className="w-full"
+                options={ratingOptions}
+                value={rating}
+                onChange={(e) => {
+                  setRating(e);
+                }}
+              />
+            )}
+            {rating !== "Select Rating" && (
+              <Select
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                className="w-full"
+                options={companyOptions}
+                value={company}
+                onChange={(e) => {
+                  console.log(e);
+                  setCompany(e);
+                }}
+              />
+            )}
+            <Input
+              type="number"
+              onChange={(e) => setQuantity(e.target.value)}
+              value={quantity}
+              className=""
+              placeholder="Quantity"
             />
-          )}
-          <Input
-            type="number"
-            onChange={(e) => setQuantity(e.target.value)}
-            value={quantity}
-            className=""
-            placeholder="Quantity"
-          />
+          </div>
           {company !== "Select Company" && quantity >= 0 && (
             <div className="flex flex-row items-center justify-between gap-2">
               <div className="flex flex-col items-start justify-center gap-2">

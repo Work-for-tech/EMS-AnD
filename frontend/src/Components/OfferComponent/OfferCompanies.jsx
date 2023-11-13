@@ -6,7 +6,7 @@ import { getOneSubComponent } from "../../APIs/subComponent";
 import { offerSubComponent } from "../../APIs/offer";
 import { panelActions } from "../../store/panelslice";
 
-const OfferCompanies = ({ data, panel_index, index }) => {
+const OfferCompanies = ({ data, panel_index, index, completed }) => {
   const dispatch = useDispatch();
   const [catalogNo, setCatalogNo] = useState("Select catalog No");
   const [catalogNoOptions, setCatalogNoOptions] = useState([]);
@@ -17,6 +17,7 @@ const OfferCompanies = ({ data, panel_index, index }) => {
   const [company, setCompany] = useState("Select Company");
   const [companyOptions, setCompanyOptions] = useState([]);
   const [companyData, setCompanyData] = useState([]);
+  const [submittedData, setSubmittedData] = useState();
 
   const [quantity, setQuantity] = useState(0);
   const [nowData, setNowData] = useState([]);
@@ -25,6 +26,44 @@ const OfferCompanies = ({ data, panel_index, index }) => {
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+
+  const column = [
+    {
+      title: "Description",
+      dataIndex: "desc",
+      key: "desc",
+    },
+    {
+      title: "Catalog Number",
+      dataIndex: "catalog_number",
+      key: "catalog_number",
+    },
+    {
+      title: "Rating Value",
+      dataIndex: "rating_value",
+      key: "rating_value",
+    },
+    {
+      title: "Company",
+      dataIndex: "company_name",
+      key: "company_name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+  ];
 
   useEffect(() => {
     if (catalogNo === "Select catalog No") {
@@ -173,6 +212,18 @@ const OfferCompanies = ({ data, panel_index, index }) => {
           component_index: index,
         })
       );
+
+      setSubmittedData({
+        key: response.data.data._id,
+        _id: response.data.data._id,
+        desc: data.desc,
+        catalog_number: catalogNo,
+        rating_value: rating,
+        company_name: company,
+        price: price,
+        discount: discount,
+        quantity: quantity,
+      });
     }
   };
 
@@ -189,27 +240,49 @@ const OfferCompanies = ({ data, panel_index, index }) => {
 
   return (
     <div className="w-full border-2 border-gray-300 p-4 mb-4">
-      <div className="font-semibold p-2 text-gray-500 mt-2">
-        <span className="font-bold p-2 text-blue-700 mt-2">
-          {submitted === true && "Submitted: "}
-        </span>
-        {data.desc}
+      <div className="flex flex-col font-semibold p-2 text-gray-500 text-center mt-2">
+        {submitted === true && (
+          <div className="m-2">
+            <Table
+              columns={column}
+              dataSource={[submittedData]}
+              pagination={false}
+            />
+          </div>
+        )}
+
+        {submitted === true && (
+          <div className="w-full items-center m-2">
+            <Button
+              className="w-fit bg-blue-700 text-white"
+              onClick={() => {
+                setSubmitted(false);
+
+                dispatch(
+                  panelActions.removeCompletedSubComponent({
+                    index: panel_index,
+                    component_index: index,
+                    totalPrice: totalPrice,
+                  })
+                );
+
+                dispatch(
+                  panelActions.removeCompletedComponentSubComponent({
+                    data: submittedData._id,
+                    index: panel_index,
+                    component_index: index,
+                  })
+                );
+              }}
+            >
+              Edit
+            </Button>
+          </div>
+        )}
       </div>
       {submitted === false && (
         <div className="w-full flex flex-col justify-center gap-2">
-          <Select
-            showSearch
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            className="w-full"
-            options={catalogNoOptions}
-            value={catalogNo}
-            onChange={(e) => {
-              setCatalogNo(e);
-            }}
-          />
-          {catalogNo !== "Select catalog No" && (
+          <div className="w-full flex flex-row justify-center gap-2">
             <Select
               showSearch
               filterOption={(input, option) =>
@@ -217,38 +290,54 @@ const OfferCompanies = ({ data, panel_index, index }) => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              className="w-full"
-              options={ratingOptions}
-              value={rating}
+              className="w-full m-2"
+              options={catalogNoOptions}
+              value={catalogNo}
               onChange={(e) => {
-                setRating(e);
+                setCatalogNo(e);
               }}
             />
-          )}
-          {rating !== "Select Rating" && (
-            <Select
-              showSearch
-              filterOption={(input, option) =>
-                (option?.label ?? "")
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-              className="w-full"
-              options={companyOptions}
-              value={company}
-              onChange={(e) => {
-                console.log(e);
-                setCompany(e);
-              }}
+            {catalogNo !== "Select catalog No" && (
+              <Select
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                className="w-full m-2"
+                options={ratingOptions}
+                value={rating}
+                onChange={(e) => {
+                  setRating(e);
+                }}
+              />
+            )}
+            {rating !== "Select Rating" && (
+              <Select
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                className="w-full m-2"
+                options={companyOptions}
+                value={company}
+                onChange={(e) => {
+                  console.log(e);
+                  setCompany(e);
+                }}
+              />
+            )}
+            <Input
+              type="number"
+              onChange={(e) => setQuantity(e.target.value)}
+              value={quantity}
+              className=" m-2"
+              placeholder="Quantity"
             />
-          )}
-          <Input
-            type="number"
-            onChange={(e) => setQuantity(e.target.value)}
-            value={quantity}
-            className=""
-            placeholder="Quantity"
-          />
+          </div>
           {company !== "Select Company" && quantity >= 0 && (
             <div className="flex flex-row items-center justify-between gap-2">
               <div className="flex flex-col items-start justify-center gap-2">

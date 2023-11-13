@@ -94,11 +94,11 @@ app.use(base_url + "/receiveditem", receivedItemRoutes);
 const issueRoutes = require("./routes/issueRoutes");
 app.use(base_url + "/issue", issueRoutes);
 
-const loginRoutes=require('./routes/loginRoutes')
-app.use(base_url+"/login",loginRoutes)
+const loginRoutes = require("./routes/loginRoutes");
+app.use(base_url + "/login", loginRoutes);
 
-const accessRoutes=require('./routes/accessRoutes')
-app.use(base_url+'/access',accessRoutes)
+const accessRoutes = require("./routes/accessRoutes");
+app.use(base_url + "/access", accessRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

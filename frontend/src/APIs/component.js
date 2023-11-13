@@ -25,6 +25,7 @@ export const getComponents = async () => {
       "inverntoryManagment/api/v1/public/component/all"
     );
 
+    console.log(response);
     return {
       type: "success",
       data: response.data,
@@ -41,6 +42,43 @@ export const getOneComponent = async (id) => {
   try {
     const response = await axios.get(
       `inverntoryManagment/api/v1/public/component/get/${id}`
+    );
+
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const deleteComponent = async (id) => {
+  try {
+    const response = await axios.delete(
+      `inverntoryManagment/api/v1/public/component/delete/${id}`
+    );
+
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const updateComponent = async (id, data) => {
+  try {
+    const response = await axios.put(
+      `inverntoryManagment/api/v1/public/component/update/${id}`,
+      data
     );
 
     return {

@@ -7,7 +7,7 @@ router.post("/add", subcomponentController.add);
 router.get("/all", subcomponentController.getAllSubComponents);
 router.get("/get/:id", subcomponentController.getOneSubComponent);
 router.delete("/delete/:id", subcomponentController.deleteById);
-router.post("/update/:id", subcomponentController.updateById);
+router.put("/update/:id", subcomponentController.updateById);
 router.post("/getOne", subcomponentController.getOneSubComponentByDesc);
 
 module.exports = router;

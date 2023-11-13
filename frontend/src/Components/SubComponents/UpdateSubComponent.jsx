@@ -1,13 +1,14 @@
 import { Button, Input, Select, Space, Table, Tooltip, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { getCompanies } from "../../APIs/company";
-import { postSubComponents } from "../../APIs/subComponent";
+import { postSubComponents, updateSubComponent } from "../../APIs/subComponent";
 import { useNavigate } from "react-router-dom";
 
-export const SubComponant = () => {
+export const UpdateSubComponent = () => {
   const navigate = useNavigate();
+  const [id, setId] = useState("");
   const [data, setData] = useState([]);
   const [description, setDescription] = useState("");
   const descriptionRef = useRef(null);
@@ -125,6 +126,52 @@ export const SubComponant = () => {
     setPrice("");
     setDiscount("");
   };
+
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("SubComponentData")));
+    const SubComponentData = JSON.parse(
+      localStorage.getItem("SubComponentData")
+    );
+    setDescription(SubComponentData.desc);
+    setId(SubComponentData._id);
+    const oldData = [];
+    SubComponentData.catalog.map((e) => {
+      e.rating.map((rating) => {
+        rating.companies.map((company) => {
+          console.log({
+            key: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
+            catalog_number: e.catalog_number,
+            rating_value: rating.rating_value,
+            company: {
+              label: company.company_id.name,
+              value: company.company_id._id,
+            },
+            price: company.price,
+            discount: company.discount,
+            amount:
+              Number(company.price) -
+              Number((company.discount * company.price) / 100),
+          });
+          oldData.push({
+            key: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
+            catalog_number: e.catalog_number,
+            rating_value: rating.rating_value,
+            company: {
+              label: company.company_id.name,
+              value: company.company_id._id,
+            },
+            price: company.price,
+            discount: company.discount,
+            amount:
+              Number(company.price) -
+              Number((company.discount * company.price) / 100),
+          });
+        });
+      });
+    });
+    console.log(oldData);
+    setData(oldData);
+  }, []);
 
   const Handle$OnClick$Submit = () => {
     const newData = {
@@ -263,12 +310,14 @@ export const SubComponant = () => {
     });
 
     try {
-      const response = await postSubComponents(sendData);
+      const response = await updateSubComponent(sendData, id);
       if (response.type === "success") {
         message.success("Subcomponent Added Successfully");
         ResetHandler();
         setDescription("");
         setData([]);
+        localStorage.setItem("SubComponentData", JSON.stringify({}));
+        navigate("/offersubcomponentlist");
       } else if (response.type === "error") {
         message.error(response.message);
       }
@@ -280,13 +329,13 @@ export const SubComponant = () => {
   return (
     <div className="bg-[#f3f7ff] w-full min-h-screen flex flex-col">
       <p className="text-3xl text-blue-800 font-semibold p-4 ">
-        Add Subcomponent
+        Update Subcomponent
       </p>
       <div className="w-[99%]">
         {description !== "" ? (
           <div className="m-5 p-5 bg-white">
             <p className="text-blue-800 font-semibold text-xl p-2">
-              Add SubComponent
+              Update SubComponent
             </p>
             <div className="flex flex-col justify-center gap-3 items-center">
               <div className="flex flex-row gap-3">
@@ -304,7 +353,7 @@ export const SubComponant = () => {
         ) : (
           <div className="p-5 m-5 bg-white">
             <p className="text-blue-800 font-semibold text-xl p-2">
-              Add SubComponent
+              Update SubComponent
             </p>
             <p className="py-2 px-4 text-lg font-semibold text-gray-500 ">
               Description
@@ -416,7 +465,7 @@ export const SubComponant = () => {
               onClick={Handle$OnClick$Purchase}
               className="bg-blue-700 text-white"
             >
-              Proceed to purchase
+              Update the Subcomponent
             </Button>
           </section>
           <section className=" bg-white m-7 ">

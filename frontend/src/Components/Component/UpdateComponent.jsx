@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo } from "react";
 import { Button, Input, Select, Table, Tooltip, message } from "antd";
-import { getSubComponents } from "../../APIs/subComponent";
-import { postComponents } from "../../APIs/component";
 import { Trash2 } from "lucide-react";
+import React, { useEffect, useMemo } from "react";
+import { getSubComponents } from "../../APIs/subComponent";
+import { useNavigate } from "react-router-dom";
+import { updateComponent } from "../../APIs/component";
 
-export const ComponentPage = () => {
+export const UpdateComponent = () => {
+  const navigate = useNavigate();
+  const [id, setId] = React.useState("");
   const [data, setData] = React.useState([]);
   const [Name, setName] = React.useState("");
   const [SubComponent, setSubComponent] = React.useState(
@@ -113,6 +116,7 @@ export const ComponentPage = () => {
 
     console.log(newData);
 
+    // check if sub component already exists
     for (let i = 0; i < data.length; i++) {
       if (data[i].sub_component === SubComponent) {
         message.error("Sub component already exists");
@@ -141,20 +145,48 @@ export const ComponentPage = () => {
 
     console.log(sendData);
 
-    const response = await postComponents(sendData);
+    const response = await updateComponent(id, sendData);
 
     if (response.type === "success") {
       message.success(response.data.message);
       HandleReset();
       setData([]);
+      localStorage.removeItem("ComponentData");
+      navigate("/componentlist");
     } else if (response.type === "error") {
       message.error(response.message);
     }
   };
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("ComponentData")));
+    const data = JSON.parse(localStorage.getItem("ComponentData"));
+    setId(data._id);
+    setName(data.name);
+    console.log(
+      data.sub_components.map((e) => {
+        return {
+          key: e._id,
+          sub_component: e.subcomponent_id._id,
+          quantity: e.quantity,
+        };
+      })
+    );
+    setData(
+      data.sub_components.map((e) => {
+        return {
+          key: e._id,
+          sub_component: e.subcomponent_id._id,
+          quantity: e.quantity,
+        };
+      })
+    );
+  }, []);
 
   return (
     <div className="w-full h-screen bg-[#f3f7ff]">
-      <p className="text-3xl text-blue-800 font-semibold p-4">Add Component</p>
+      <p className="text-3xl text-blue-800 font-semibold p-4">
+        Update Component
+      </p>
       <div className="m-4 flex items-center justify-center">
         <div className="bg-white flex flex-col w-full p-2 rounded-md">
           <p className="text-blue-800 font-semibold text-xl p-2">

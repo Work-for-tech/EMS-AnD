@@ -38,6 +38,22 @@ const panelSlice = createSlice({
         action.payload.index
       ].components.filter((item, i) => i !== action.payload.component_index);
     },
+    removeCompletedSubComponent(state, action) {
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed =
+        state.panel[action.payload.index].components[
+          action.payload.component_index
+        ].completed - 1;
+
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].totalPrice =
+        state.panel[action.payload.index].components[
+          action.payload.component_index
+        ].totalPrice - action.payload.totalPrice;
+    },
+
     addCompletedSubComponent(state, action) {
       state.panel[action.payload.index].components[
         action.payload.component_index
@@ -82,6 +98,20 @@ const panelSlice = createSlice({
       state.panel[action.payload.index].components[
         action.payload.component_index
       ].completed_subcomponents.push(action.payload.data);
+    },
+    removeCompletedComponentSubComponent(state, action) {
+      console.log(
+        action.payload.index,
+        action.payload.data,
+        action.payload.component_index
+      );
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed_subcomponents = state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed_subcomponents.filter(
+        (item, i) => item !== action.payload.data
+      );
     },
     deleteCompletedComponentSubComponent(state, action) {
       state.panel[action.payload.index].components[

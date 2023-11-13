@@ -72,6 +72,7 @@ export const OfferSubComponent = ({ subcomponents, index, panel_index }) => {
                     data={e}
                     panel_index={panel_index}
                     index={index}
+                    completed={completed}
                   />
                 </div>
               );

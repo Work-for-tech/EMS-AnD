@@ -15,13 +15,13 @@ export const OfferComponent = ({ part_name, index }) => {
   const [componentOptions, setComponentOptions] = useState([]);
 
   const items = components.map((e, i) => {
-    console.log(e)
+    console.log(e);
     return {
       key: i,
       label: e.component_id,
       children: (
         <>
-          {(
+          {
             <div className="w-full">
               <div
                 onClick={() => {
@@ -37,20 +37,21 @@ export const OfferComponent = ({ part_name, index }) => {
                 <Trash2 className="cursor-pointer" />
                 <p className="p-2 font-semibold">Delete this Component</p>
               </div>
-              {
-                e.component_id === "Add Consumables" ? <Consumables
-                  panel_index={index}
-                  index={i}
-                  subcomponents={e.subcomponents}
-                /> : <OfferSubComponent
+              {e.component_id === "Add Consumables" ? (
+                <Consumables
                   panel_index={index}
                   index={i}
                   subcomponents={e.subcomponents}
                 />
-              }
-
+              ) : (
+                <OfferSubComponent
+                  panel_index={index}
+                  index={i}
+                  subcomponents={e.subcomponents}
+                />
+              )}
             </div>
-          )}
+          }
         </>
       ),
     };
@@ -131,13 +132,12 @@ export const OfferComponent = ({ part_name, index }) => {
     };
     setComponentName("Select Component");
     dispatch(panelActions.setComponents({ index: 0, data: newData }));
-
   };
 
   return (
     <div className="w-full flex flex-col items-center">
       <h3 className="p-4 font-semibold text-2xl">Add Component</h3>
-      <div className="w-3/6 ">
+      <div className="w-11/12">
         <div className="w-full flex flex-col justify-center gap-2">
           <Select
             showSearch

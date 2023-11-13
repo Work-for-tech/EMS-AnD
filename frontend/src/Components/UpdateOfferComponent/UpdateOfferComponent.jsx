@@ -121,7 +121,7 @@ export const UpdateOfferComponent = ({ index }) => {
   return (
     <div className="w-full flex flex-col items-center">
       <h3 className="p-4 font-semibold text-2xl">Add Component</h3>
-      <div className="w-3/6 ">
+      <div className="w-11/12">
         <div className="w-full flex flex-col justify-center gap-2">
           <Select
             showSearch

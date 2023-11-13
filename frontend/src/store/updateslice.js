@@ -87,23 +87,19 @@ const updatepanelSlice = createSlice({
         action.payload.newPrice;
     },
 
-    addCompletedConsumables(state, action) {
-      state.components[action.payload.component_index].sub_components.push(
-        action.payload.data
-      );
+    removeCompletedSubComponent(state, action) {
+      state.components[action.payload.component_index].sub_components[
+        action.payload.sub_index
+      ] = action.payload.data;
 
-      state.components[
-        action.payload.component_index
-      ].completed_subcomponents.push(action.payload._id);
+      state.components[action.payload.component_index].completed_subcomponents[
+        action.payload.sub_index
+      ] = action.payload._id;
 
-      state.components[action.payload.component_index].price +=
-        action.payload.price;
-    },
-
-    addCompletedComponentSubComponent(state, action) {
-      state.panel[action.payload.index].components[
-        action.payload.component_index
-      ].completed_subcomponents.push(action.payload.data);
+      state.components[action.payload.component_index].price =
+        state.components[action.payload.component_index].price -
+        action.payload.newPrice +
+        action.payload.oldPrice;
     },
 
     deleteCompletedSubComponent(state, action) {
@@ -126,6 +122,25 @@ const updatepanelSlice = createSlice({
         ].completed_subcomponents.filter(
           (item, i) => i !== action.payload.sub_index
         );
+    },
+
+    addCompletedConsumables(state, action) {
+      state.components[action.payload.component_index].sub_components.push(
+        action.payload.data
+      );
+
+      state.components[
+        action.payload.component_index
+      ].completed_subcomponents.push(action.payload._id);
+
+      state.components[action.payload.component_index].price +=
+        action.payload.price;
+    },
+
+    addCompletedComponentSubComponent(state, action) {
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed_subcomponents.push(action.payload.data);
     },
 
     addCompletedComponent(state, action) {

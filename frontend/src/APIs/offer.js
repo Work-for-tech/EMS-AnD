@@ -94,6 +94,45 @@ export const offerSubComponent = async (data) => {
   }
 };
 
+export const offerSubComponentGetAll = async () => {
+  try {
+    const response = await axios.get(
+      "inverntoryManagment/api/v1/public/offerSubComponent/getAll"
+    );
+
+    console.log(response.data);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const offerSubComponentUpdate = async (data, id) => {
+  try {
+    const response = await axios.put(
+      `inverntoryManagment/api/v1/public/offerSubComponent/update/${id}`,
+      data
+    );
+
+    console.log(response.data);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
 export const offerComponent = async (data) => {
   try {
     const response = await axios.post(

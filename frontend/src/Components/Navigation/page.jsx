@@ -23,7 +23,9 @@ export const Navigator = () => {
     getItem("Offer", "sub1", [
       getItem("Companies", "companies"),
       getItem("Add SubComponent", "subComponent"),
+      getItem("Subcomponent List", "offersubcomponentlist"),
       getItem("Add Component", "component"),
+      getItem("Component List", "componentlist"),
       getItem("Add Offer", "offer"),
       getItem("Offers List", "offerlist"),
       getItem("Export Offer", "export"),
@@ -73,6 +75,13 @@ export const Navigator = () => {
     ]),
   ];
 
+  const item7 = [
+    getItem("Employee", "sub7", [
+      getItem("Add Employee", "addemployee"),
+      getItem("Employee List", "employeelist"),
+    ]),
+  ];
+
   const [openKeys, setOpenKeys] = useState(["sub1"]);
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -101,6 +110,14 @@ export const Navigator = () => {
         onOpenChange={onOpenChange}
         onClick={(e) => navigate(`/${e.key}`)}
         items={item2}
+      />
+      <Menu
+        mode="inline"
+        className=""
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        onClick={(e) => navigate(`/${e.key}`)}
+        items={item7}
       />
       <Menu
         mode="inline"

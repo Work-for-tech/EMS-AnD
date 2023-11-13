@@ -1,31 +1,36 @@
-const mongoose = require("mongoose")
-const scehma = mongoose.Schema
+const mongoose = require("mongoose");
+const scehma = mongoose.Schema;
 
-const indentSchema = new scehma({
+const indentSchema = new scehma(
+  {
     clientId: {
-        type: scehma.Types.ObjectId,
-        ref: 'client'
+      type: scehma.Types.ObjectId,
+      ref: "client",
     },
     projectId: {
-        type: scehma.Types.ObjectId,
-        ref: 'project'
+      type: scehma.Types.ObjectId,
+      ref: "project",
     },
-    items: [{
+    items: [
+      {
         subcomponent: {
-            type: scehma.Types.ObjectId,
-            ref: 'offersubcomponent'
+          type: scehma.Types.ObjectId,
+          ref: "offersubcomponent",
         },
         quantityRequired: {
-            type:"Number"
+          type: "Number",
         },
-        quantityOrdered:{
-            type:"Number"
+        quantityOrdered: {
+          type: "Number",
         },
-        purchased:{
-            type:Boolean,
-            default:false
-        }
-    }],
-})
+        purchased: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-module.exports =mongoose.model('indent',indentSchema)
+module.exports = mongoose.model("indent", indentSchema);

@@ -32,6 +32,14 @@ import { BulkPurchase } from "./Components/Purchase/BulkPurchase";
 import { AddIssue } from "./Components/Issue/AddIssue";
 import { IssueList } from "./Components/Issue/IssueList";
 import { IssueSubcomponent } from "./Components/Issue/Subcomponent";
+import { AddEmployee } from "./Components/Employee/addEmployee";
+import { Employeelist } from "./Components/Employee/Employeelist";
+import { UpdateEmployee } from "./Components/Employee/UpdateEmployee";
+import { Access } from "./Components/Login/access";
+import { OfferSubComponentList } from "./Components/SubComponents/OfferSubComponentList";
+import { UpdateSubComponent } from "./Components/SubComponents/UpdateSubComponent";
+import { ComponentList } from "./Components/Component/ComponentList";
+import { UpdateComponent } from "./Components/Component/UpdateComponent";
 
 function App() {
   const dispatch = useDispatch();
@@ -78,6 +86,20 @@ function App() {
           <Route path="/addissue" element={<AddIssue />} />
           <Route path="/issuelist" element={<IssueList />} />
           <Route path="/issueSubcomponent" element={<IssueSubcomponent />} />
+          <Route path="/addemployee" element={<AddEmployee />} />
+          <Route path="/employeelist" element={<Employeelist />} />
+          <Route path="/updateemployee" element={<UpdateEmployee />} />
+          <Route path="/addaccess" element={<Access />} />
+          <Route
+            path="/offersubcomponentlist"
+            element={<OfferSubComponentList />}
+          />
+          <Route
+            path="/offersubcomponentupdate"
+            element={<UpdateSubComponent />}
+          />
+          <Route path="/componentlist" element={<ComponentList />} />
+          <Route path="/componentupdate" element={<UpdateComponent />} />
         </Routes>
       </Router>
     </div>

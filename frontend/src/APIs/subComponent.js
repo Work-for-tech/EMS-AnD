@@ -53,7 +53,28 @@ export const getOneSubComponent = async (id) => {
       data: response.data,
     };
   } catch (err) {
-    console.log(err)
+    console.log(err);
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
+export const updateSubComponent = async (data, id) => {
+  try {
+    const response = await axios.put(
+      `inverntoryManagment/api/v1/public/subcomponent/update/${id}`,
+      data
+    );
+
+    console.log(response.data);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    console.log(err);
     return {
       type: "error",
       message: "Network Error",

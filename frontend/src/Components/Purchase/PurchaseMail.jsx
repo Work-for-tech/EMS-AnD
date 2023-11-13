@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import XLSX from "xlsx";
-import { Button, message, Input, Select } from "antd";
-import { getParticularPurchase, sendMail, updatePurchaseAPI } from "../../APIs/purchase";
+import { Button, message, Input, Select, Table } from "antd";
+import {
+  getParticularPurchase,
+  sendMail,
+  updatePurchaseAPI,
+} from "../../APIs/purchase";
 import { getClientById } from "../../APIs/client";
 import { getEmployeeList } from "../../APIs/employee";
-import html2pdf from 'html2pdf.js';
-import html2canvas from 'html2canvas';
+import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
+import { List, Typography } from "antd";
 
 export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   const [data, setData] = useState([]);
@@ -14,7 +19,7 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   const [employee, setEmployee] = useState([]);
   const [preparedBy, setPreparedBy] = useState([]);
   const [authorizedBy, setAuthorizedBy] = useState([]);
-  const [paymentTerms, setPaymentTerms] = useState("")
+  const [paymentTerms, setPaymentTerms] = useState("");
 
   const sGstRef = React.useRef();
   const cGstRef = React.useRef();
@@ -29,38 +34,42 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
     7: "1 Week",
     14: "2 Weeks",
     21: "3 Weeks",
-    180: "6 Months"
-  }
-
+    180: "6 Months",
+  };
 
   const updatePurchase = async () => {
-
-
-
-
     const data = {
       sGst: Number(sGstRef.current.input.value),
       cGst: Number(cGstRef.current.input.value),
       paymentTerms: paymentTerms,
-      tandc: tandcRef.current.resizableTextArea.textArea.value,
-      deliveryAddress: deliveryAddressRef.resizableTextArea.textArea.value,
+      tandc: tandcRef.current
+        ? tandcRef.current.resizableTextArea?.textArea?.value
+        : "",
+      deliveryAddress: deliveryAddressRef
+        ? deliveryAddressRef.resizableTextArea?.textArea?.value
+        : "",
       transportationCost: Number(transportationCostRef.current.input.value),
       packingCost: Number(packingCostRef.current.input.value),
       otherCost: Number(otherCostRef.current.input.value),
-      grandTotal: Number(transportationCostRef.current.input.value) + Number(packingCostRef.current.input.value) + Number(otherCostRef.current.input.value),
+      grandTotal:
+        Number(transportationCostRef.current.input.value) +
+        Number(packingCostRef.current.input.value) +
+        Number(otherCostRef.current.input.value),
       preparedBy: preparedBy,
       authorizedBy: authorizedBy,
     };
+
+    console.log(data);
 
     const response = await updatePurchaseAPI(emailpurchaseId, data);
     console.log(response);
     if (response.type === "success") {
       message.success("Successfully Updated Purchase");
-      setInputs(false)
+      setInputs(false);
     } else if (response.type === "error") {
       message.error("Failed to Update Purchase");
     }
-  }
+  };
 
   const getemployeeList = async () => {
     const response = await getEmployeeList();
@@ -77,9 +86,6 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
     getemployeeList();
   }, []);
 
-
-
-
   const tableRef = React.useRef();
 
   const getPurchaseData = async () => {
@@ -93,7 +99,7 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
       );
       setClientData(clientData.data.data);
       if (response.data.data.sGst) {
-        setInputs(false)
+        setInputs(false);
       }
     } else if (response.type === "error") {
       console.log(response.message);
@@ -101,6 +107,66 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   };
 
   const { TextArea } = Input;
+
+  const columns = [
+    {
+      title: "Sr.No.",
+      dataIndex: "srNo",
+      key: "srNo",
+    },
+    {
+      title: "HSN Code",
+      dataIndex: "hsnCode",
+      key: "hsnCode",
+    },
+    {
+      title: "Product Description",
+      dataIndex: "productDescription",
+      key: "productDescription",
+    },
+    {
+      title: "Size",
+      dataIndex: "size",
+      key: "size",
+    },
+    {
+      title: "Qty",
+      dataIndex: "qty",
+      key: "qty",
+    },
+    {
+      title: "UOM",
+      dataIndex: "uom",
+      key: "uom",
+    },
+    {
+      title: "Rate",
+      dataIndex: "rate",
+      key: "rate",
+    },
+    {
+      title: "Unit",
+      dataIndex: "unit",
+      key: "unit",
+    },
+    {
+      title: "Net Amount",
+      dataIndex: "netAmount",
+      key: "netAmount",
+    },
+    {
+      title: "SGST",
+      dataIndex: "sGst",
+      key: "sGst",
+    },
+    {
+      title: "CGST",
+      dataIndex: "cGst",
+      key: "cGst",
+    },
+  ];
+
+
 
   useEffect(() => {
     getPurchaseData();
@@ -126,142 +192,229 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
   }
 
   const contentRef = React.useRef();
-  console.log(data)
+  console.log(data);
 
   if (data.length !== 0)
     return (
       <>
-        <Button onClick={async () => {
-          const opt = {
-            margin: 0,
-            filename: 'myfile.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
-          };
+        <Button
+          onClick={async () => {
+            const opt = {
+              margin: 0,
+              filename: "myfile.pdf",
+              image: { type: "jpeg", quality: 0.98 },
+              html2canvas: { scale: 2 },
+              jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+            };
 
-          const pdf = await html2pdf().from(contentRef.current).set(opt).output('blob')
-          const blob = new Blob([pdf], { type: "application/pdf" });
+            const pdf = await html2pdf()
+              .from(contentRef.current)
+              .set(opt)
+              .output("blob");
+            const blob = new Blob([pdf], { type: "application/pdf" });
 
-          const file = new File([blob], "Report.pdf", {
-            type: "application/pdf",
-          });
+            const file = new File([blob], "Report.pdf", {
+              type: "application/pdf",
+            });
 
+            const response = await sendMail({
+              purchaseId: data._id,
+              file: file,
+            });
 
-          const response = await sendMail({
-            purchaseId: data._id,
-            file: file,
-          });
-
-          if (response.type === "success") {
-            setSentEmail(true);
-            message.success("Successfully Sent Email");
-          } else if (response.type === "error") {
-            message.error("Failed to Send Email");
-          }
-        }} className="w-full flex justify-center text-white bg-blue-600">Send Mail</Button>
+            if (response.type === "success") {
+              setSentEmail(true);
+              message.success("Successfully Sent Email");
+            } else if (response.type === "error") {
+              message.error("Failed to Send Email");
+            }
+          }}
+          className="w-full flex justify-center text-white bg-blue-600"
+        >
+          Send Mail
+        </Button>
         <div>
-          <div ref={contentRef} className="w-full p-10">
+          <div ref={contentRef} className="w-full p-5">
             <section className="w-full flex justify-evenly">
-              <p className="w-3/5 p-4 border-b-0 text-3xl font-semibold border-2 border-zinc-400">EMS PROJECTS PVT. LTD.</p>
-              <p className="w-2/5 p-4 border-l-0 border-b-0 text-3xl font-semibold border-2 border-zinc-400">PURCHASE ORDER</p>
+              <p className="w-3/5 p-4 border-b-0 text-3xl font-semibold border-2 border-zinc-400">
+                EMS PROJECTS PVT. LTD.
+              </p>
+              <p className="w-2/5 p-4 border-l-0 border-b-0 text-3xl font-semibold border-2 border-zinc-400">
+                PURCHASE ORDER
+              </p>
             </section>
             <section className="flex w-full">
               <div className="w-3/5 border-2 border-zinc-400 p-2">
-                <p>Factory : Survey No.-478, Near Kuha Bus Stand, Village Kuha, Ta. Dascroi, Ahmedabad 382433.</p>
-                <p>Survey No.-478, Near Kuha Bus Stand, Village Kuha, Ta. Dascroi, Ahmedabad 382433.</p>
-                <p>Contact - 0909906028O, Email id - info@emsgroup.net, Web site :- www.emsgroup.net</p>
+                <List className="">
+                  <List.Item>
+                    <p className="bg-yellow-300 p-3">Factory : Survey No.-478, Near Kuha Bus Stand, Village Kuha, Ta.Dascroi, Ahmedabad 382433.</p>
+                  </List.Item>
+                  <List.Item>
+                    <p className="">Office : 2nd Floor, 3rd Eye Vision, Opp. Parimal Garden, C.G.Road, Ahmedabad 380006.</p>
+                  </List.Item>
+                  <List.Item>
+                    <p className="">Contact - 0909906028O, Email id - info@emsgroup.net, Web site:- www.emsgroup.net</p>
+                  </List.Item>
+
+                </List>
+
               </div>
               <div className="w-2/5 border-2 border-l-0 border-zinc-400 p-2">
-                <p className="font-semibold">PROJECT DETAIL : PAO78</p>
+                <List
+                  dataSource={["PROJECT DETAIL : PAO78"]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
             </section>
             <section className="flex justify-evenly w-full">
               <div className="w-1/3 p-2 border-2 border-r-0 border-t-0 border-zinc-400">
-                <p>Purchase No:- EMSPL/272/2022-23</p>
-                <p>Indent No. NA</p>
+                <List
+                  dataSource={[
+                    "Purchase No:- EMSPL/272/2022-23",
+                    "Indent No. NA",
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
               <div className="w-1/3 p-2 border-2 border-zinc-400 border-r-0 border-t-0">
-                <p>Order Date :- 10/10/2022</p>
-                <p> Material Indent Date :- 08/10/2022</p>
+                <List
+                  dataSource={[
+                    "Order Date :- 10/10/2022",
+                    "Material Indent Date :- 08/10/2022",
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
               <div className="w-1/3 border-2 p-2 border-zinc-400 border-t-0">
-                <p>Delivery Days/Date :- 4 to 5 Days</p>
-                <p>Department :- Mechanial</p>
+                <List
+                  dataSource={[
+                    "Delivery Days/Date :- 4 to 5 Days",
+                    "Department :- Mechanial",
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
             </section>
             <section className="flex w-full">
               <div className="w-2/3 p-2 border-2 border-zinc-400 border-t-0">
-                <p>To,</p>
-                <p>Name : {data.vendorId.vendorName}</p>
-                <p>Add :- {data.vendorId.address}</p>
-                <p>Phone No. - {data.vendorId.phoneNumber1}</p>
-                <p>Contact Person :- {data.vendorId.phoneNumber2} </p>
-                <p>Email-id :- {data.vendorId.email1} </p>
+                <List
+                  dataSource={["To", "Name : " + data.vendorId.vendorName, "Add : " + data.vendorId.address, "Phone No. : " + data.vendorId.phoneNumber1, "Contact Person :" + data.vendorId.phoneNumber2, "Email-id : " + data.vendorId.email1]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
               <div className="w-1/3 p-2 border-2 border-zinc-400 border-t-0 border-l-0">
-                <p>GST No. :- {data.vendorId.gst} </p>
-                <p>PAN No. :- {data.vendorId.panNo} </p>
+                <List
+                  dataSource={["GST No. :- " + data.vendorId.gst, "PAN No. :- " + data.vendorId.panNo]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
             </section>
             <section className="w-full text-center ">
-              <div className="flex font-semibold ">
-                <p className="w-1/12 border-2 border-zinc-400">Sr.No.</p>
-                <p className="w-1/12 border-2 border-zinc-400">HSN Code</p>
-                <p className="w-1/12 border-2 border-zinc-400">Product Description</p>
-                <p className="w-1/12 border-2 border-zinc-400">Size</p>
-                <p className="w-1/12 border-2 border-zinc-400">Qty</p>
-                <p className="w-1/12 border-2 border-zinc-400">UOM</p>
-                <p className="w-1/12 border-2 border-zinc-400">Rate</p>
-                <p className="w-1/12 border-2 border-zinc-400">Unit</p>
-                <p className="w-1/12 border-2 border-zinc-400">Net Amount</p>
-                <p className="w-1/12 border-2 border-zinc-400">SGST</p>
-                <p className="w-1/12 border-2 border-zinc-400">CGST</p>
-              </div>
-              {
-                data.items.map((item, index) => (
-                  <div className="flex w-full">
-                    <p className="w-1/12 border-2 border-zinc-400">{index + 1}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.catalog_number}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.desc}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.rating_value}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{item.quantity}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">NOs</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{item.subcomponent.company.price}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">Kgs.</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{index + 1 === ((data.items.length + 1) / 2) ? "As Per Actual Weight" : ""}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{data.sGst}</p>
-                    <p className="w-1/12 border-2 border-zinc-400">{data.cGst}</p>
-                  </div>
-                ))
-              }
+              <Table columns={columns} dataSource={data.items.map((item, index) => ({
+                key: index,
+                srNo: index + 1,
+                hsnCode: item.subcomponent.catalog_number,
+                productDescription: item.subcomponent.desc,
+                size: item.subcomponent.rating_value,
+                qty: item.quantity,
+                uom: "NOs",
+                rate: item.subcomponent.company.price,
+                unit: "Kgs.",
+                netAmount: index + 1 === (data.items.length + 1) / 2 ? "As Per Actual Weight" : "",
+                sGst: data.sGst,
+                cGst: data.cGst,
+              }))} />
             </section>
-            <section>Transportation : F.O.R Kuna</section>
-            <section>Payment Terms : {paymentT[data.paymentTerms]}</section>
+            <List
+              dataSource={[
+                "Transportation : F.O.R Kuna",
+                "Payment Terms : " + paymentT[data.paymentTerms],
+              ]}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text mark></Typography.Text> {item}
+                </List.Item>
+              )}
+            />
+            <section></section>
+            <section></section>
             <section className="w-full flex">
               <div className="w-3/5">
-                <p className="border-2 border-zinc-400">Terms and Conditions</p>
-                <p className="border-2 border-zinc-400">{data.tandc}</p>
+                <List
+                  dataSource={[
+                    "Terms and Conditions",
+                    data.tandc ?? "-",
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      {item}
+                    </List.Item>
+                  )}
+                />
               </div>
-              <div className="w-2/5 flex">
-                <div className="w-2/3">
-                  <p className="border-2 border-zinc-400">Total Amount Before Tax </p>
-                  <p className="border-2 border-zinc-400">Transportation Cost : </p>
-                  <p className="border-2 border-zinc-400">Packaging Cost : </p>
-                  <p className="border-2 border-zinc-400">Other Cost : </p>
-                  <p className="border-2 border-zinc-400">SGST : </p>
-                  <p className="border-2 border-zinc-400">CGST :</p>
-                  <p className="border-2 border-zinc-400">Grand Total : </p>
-                </div>
-                <div className="w-1/3 text-center">
-                  <p className="border-2 border-zinc-400">{data.sum ?? "-"} </p>
-                  <p className="border-2 border-zinc-400">{data.transportationCost} </p>
-                  <p className="border-2 border-zinc-400">{data.packingCost} </p>
-                  <p className="border-2 border-zinc-400">{data.otherCost} </p>
-                  <p className="border-2 border-zinc-400">{data.sGst} </p>
-                  <p className="border-2 border-zinc-400">{data.cGst}</p>
-                  <p className="border-2 border-zinc-400">{data.grandTotal} </p>
-                </div>
+              <div className="w-1/2">
+                <List
+                  dataSource={[
+                    {
+                      vkey: "Total Amount Before Tax",
+                      value: data.sum ?? "-",
+                    },
+                    {
+                      vkey: "Transportation Cost",
+                      value: data.transportationCost,
+                    },
+                    {
+                      vkey: "Packing Cost",
+                      value: data.packingCost,
+                    },
+                    {
+                      vkey: "Other Cost",
+                      value: data.otherCost,
+                    },
+                    {
+                      vkey: "SGST",
+                      value: data.sGst,
+                    },
+                    {
+                      vkey: "CGST",
+                      value: data.cGst,
+                    },
+                    {
+                      vkey: "Grand Total",
+                      value: data.grandTotal,
+                    },
+                  ]}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <span className="pr-5">{item.vkey}</span>
+                      {item.value}
+                    </List.Item>
+                  )}
+                />
               </div>
             </section>
           </div>
@@ -272,9 +425,7 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
               <div className="flex flex-col gap-5">
                 <p>
                   <span className="font-semibold">State Gst</span>
-                  <Input
-                    ref={sGstRef}
-                    placeholder="sGst" />
+                  <Input ref={sGstRef} placeholder="sGst" />
                 </p>
                 <p>
                   <span className="font-semibold">Central Gst</span>
@@ -284,92 +435,95 @@ export const PurchaseMail = ({ sentEmail, emailpurchaseId, setSentEmail }) => {
                   <span className="font-semibold">Payment Terms</span>
                   <Select
                     onChange={(value) => setPaymentTerms(value)}
-                    className="w-full" placeholder="Prepared By" options={
-                      [
-                        {
-                          value: 1,
-                          label: "1 Day",
-                        },
-                        {
-                          value: 7,
-                          label: "1 Week",
-                        },
-                        {
-                          value: 14,
-                          label: "2 Weeks",
-                        },
-                        {
-                          value: 21,
-                          label: "3 Weeks",
-                        },
-                        {
-                          label: "6 Months",
-                          value: 180
-                        }
-                      ]
-                    } />
+                    className="w-full"
+                    placeholder="Prepared By"
+                    options={[
+                      {
+                        value: 1,
+                        label: "1 Day",
+                      },
+                      {
+                        value: 7,
+                        label: "1 Week",
+                      },
+                      {
+                        value: 14,
+                        label: "2 Weeks",
+                      },
+                      {
+                        value: 21,
+                        label: "3 Weeks",
+                      },
+                      {
+                        label: "6 Months",
+                        value: 180,
+                      },
+                    ]}
+                  />
                 </p>
                 <p>
                   <span className="font-semibold">Terms and Conditions</span>
-                  <TextArea rows={4}
-                    ref={tandcRef}
-                    placeholder="tandc" />
+                  <TextArea rows={4} ref={tandcRef} placeholder="tandc" />
                 </p>
                 <p>
                   <span className="font-semibold">Delivery Address</span>
-                  <TextArea rows={4}
+                  <TextArea
+                    rows={4}
                     ref={deliveryAddressRef}
-                    placeholder="delivery Address" />
+                    placeholder="delivery Address"
+                  />
                 </p>
                 <p>
                   <span className="font-semibold">Transportation Cost</span>
                   <Input
                     ref={transportationCostRef}
-                    placeholder="Transportation Cost " />
+                    placeholder="Transportation Cost "
+                  />
                 </p>
                 <p>
                   <span className="font-semibold">Packing Cost</span>
-                  <Input
-                    ref={packingCostRef}
-                    placeholder="Packing Cost" />
+                  <Input ref={packingCostRef} placeholder="Packing Cost" />
                 </p>
                 <p>
                   <span className="font-semibold">Other Cost</span>
-                  <Input
-                    ref={otherCostRef}
-                    placeholder="Other Cost" />
+                  <Input ref={otherCostRef} placeholder="Other Cost" />
                 </p>
                 <p>
                   <div className="font-semibold">Prepared By</div>
                   <Select
                     onChange={(value) => setPreparedBy(value)}
-                    className="w-full" placeholder="Prepared By" options={
-                      employee.map((item) => ({
-                        value: item._id,
-                        label: item.name,
-                      }))
-                    } />
+                    className="w-full"
+                    placeholder="Prepared By"
+                    options={employee.map((item) => ({
+                      value: item._id,
+                      label: item.name,
+                    }))}
+                  />
                 </p>
                 <p>
                   <div className="font-semibold">Authorized By</div>
                   <Select
                     onChange={(value) => setAuthorizedBy(value)}
-                    className="w-full" placeholder="Authorized By" options={
-                      employee.map((item) => ({
-                        value: item._id,
-                        label: item.name,
-                      }))
-                    } />
+                    className="w-full"
+                    placeholder="Authorized By"
+                    options={employee.map((item) => ({
+                      value: item._id,
+                      label: item.name,
+                    }))}
+                  />
                 </p>
-                <Button className="bg-blue-700 m-5 text-white" onClick={() => {
-                  updatePurchase()
-                }}>Update</Button>
+                <Button
+                  className="bg-blue-700 m-5 text-white"
+                  onClick={() => {
+                    updatePurchase();
+                  }}
+                >
+                  Update
+                </Button>
               </div>
             }
           </div>
-
         )}
       </>
     );
 };
-
