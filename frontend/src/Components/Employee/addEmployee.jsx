@@ -2,8 +2,10 @@ import { Button, Input, message } from "antd";
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { addEmployee } from "../../APIs/employee";
+import { useNavigate } from "react-router-dom";
 
 export const AddEmployee = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -47,6 +49,12 @@ export const AddEmployee = () => {
     if (response.type === "success") {
       message.success("Employee Added Successfully");
       resetValue();
+      console.log(response.data.data._id);
+      localStorage.setItem(
+        "employeeId",
+        JSON.stringify(response.data.data._id)
+      );
+      navigate("/addAccess");
     } else {
       message.error("Something went wrong");
     }

@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getAccess } from "../../APIs/access";
+import { addAccess, getAccess } from "../../APIs/access";
 import { Button, Input, Select, Table, Tooltip, message } from "antd";
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Access = () => {
+  const navigate = useNavigate();
   const [accessSelect, setAccessSelect] = useState({
     label: "Select Module",
     value: "",
   });
   const [access, setAccess] = useState([]);
-
+  const [id, setId] = useState("");
   const [options, setOptions] = useState([
     {
       label: "Read Offer Only",
@@ -29,19 +31,43 @@ export const Access = () => {
     },
     {
       label: "Read Indent Only",
-      value: "Indent",
+      value: "RIndent",
     },
     {
-      label: "Purchase",
-      value: "Purchase",
+      label: "Read and Write Indent",
+      value: "RWIndent",
     },
     {
-      label: "GRN",
-      value: "GRN",
+      label: "Read Purchase Only",
+      value: "RPurchase",
     },
     {
-      label: "Issue",
-      value: "Issue",
+      label: "Read and Write Purchase",
+      value: "RWPurchase",
+    },
+    {
+      label: "Read GRN Only",
+      value: "RGRN",
+    },
+    {
+      label: "Read and Write GRN",
+      value: "RWGRN",
+    },
+    {
+      label: "Read Issue Only",
+      value: "RIssue",
+    },
+    {
+      label: "Read and Write Issue",
+      value: "RWIssue",
+    },
+    {
+      label: "Read Employee Only",
+      value: "REmployee",
+    },
+    {
+      label: "Read and Write Employee",
+      value: "RWEmployee",
     },
   ]);
   const [arrow, setArrow] = React.useState("Show");
@@ -96,8 +122,21 @@ export const Access = () => {
   ];
 
   useEffect((e) => {
+    console.log(JSON.parse(localStorage.getItem("employeeId")));
+    setId(JSON.parse(localStorage.getItem("employeeId")));
     getAccess(JSON.parse(localStorage.getItem("employeeId"))).then((res) => {
-      console.log(res);
+      const accessdata = [];
+      const optionsdata = [];
+      res.data.user.moduleName.map((e) => {
+        accessdata.push({ key: e, access: e });
+      });
+      options.map((e) => {
+        if (!res.data.user.moduleName.includes(e.value)) {
+          optionsdata.push(e);
+        }
+      });
+      setOptions(optionsdata);
+      setAccess(accessdata);
     });
   }, []);
 
@@ -110,12 +149,31 @@ export const Access = () => {
       message.error("Please Select Options");
     }
     const newOptions = options.filter((e) => {
-      return e.label !== accessSelect;
+      return e.value !== accessSelect;
     });
 
     setAccess([...access, { key: accessSelect, access: accessSelect }]);
     setOptions(newOptions);
     setAccessSelect({ label: "Select Module", value: "" });
+  };
+
+  const HandleSubmit = async () => {
+    const submitData = {
+      userId: id,
+      moduleName: access.map((e) => {
+        return e.access;
+      }),
+    };
+    console.log(access);
+    console.log(submitData);
+    const response = await addAccess(submitData);
+
+    if (response.type === "success") {
+      message.success("added Access Successfully");
+      navigate("/employeelist");
+    } else {
+      message.error("Something went wrong");
+    }
   };
 
   return (
@@ -158,6 +216,11 @@ export const Access = () => {
       </div>
       <div className="m-4">
         <Table columns={columns} dataSource={access} />
+      </div>
+      <div className="pt-6 flex items-center justify-center pb-4 gap-4">
+        <Button onClick={HandleSubmit} className="bg-blue-700 text-white">
+          Submit
+        </Button>
       </div>
     </div>
   );

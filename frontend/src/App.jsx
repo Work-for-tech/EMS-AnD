@@ -40,6 +40,9 @@ import { OfferSubComponentList } from "./Components/SubComponents/OfferSubCompon
 import { UpdateSubComponent } from "./Components/SubComponents/UpdateSubComponent";
 import { ComponentList } from "./Components/Component/ComponentList";
 import { UpdateComponent } from "./Components/Component/UpdateComponent";
+import { Login } from "./Components/Login/Login";
+import { Landing } from "./Components/Landing/Landing";
+import { AccessHandler } from "./Validator/AccessHandler";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,49 +60,290 @@ function App() {
       <Router className="w-full">
         <Navigator />
         <Routes>
-          <Route path="/companies" element={<Companies />} />
-          <Route path="/subComponent" element={<SubComponant />} />
-          <Route path="/component" element={<ComponentPage />} />
-          <Route path="/offer" element={<Offer />} />
-          <Route path="/project" element={<ProjectPage />} />
-          <Route path="/offerlist" element={<Revision />} />
-          <Route path="/client" element={<Client />} />
-          <Route path="/offerpanels" element={<OfferPanel />} />
-          <Route path="/offerdetails" element={<OfferList />} />
-          <Route path="/offercomponents" element={<OfferComponents />} />
-          <Route path="/updateoffer" element={<UpdateOfferPanel />} />
-          <Route path="/projectlist" element={<ProjectList />} />
-          <Route path="/drawing" element={<Drawing />} />
-          <Route path="/export" element={<OfferExcel />} />
-          <Route path="/createvendor" element={<CreateVendor />} />
-          <Route path="/vendorlist" element={<VendorList />} />
-          <Route path="/createstore" element={<CreateStore />} />
-          <Route path="/storelist" element={<StoreList />} />
-          <Route path="/indent" element={<IndentOffers />} />
-          <Route path="/bulkindent" element={<BulkIndent />} />
-          <Route path="/indentlist" element={<IndentList />} />
-          <Route path="/purchase" element={<Purchase />} />
-          <Route path="/bulkpurchase" element={<BulkPurchase />} />
-          <Route path="/creategrn" element={<CreateGRN />} />
-          <Route path="/listgrn" element={<ListGRN />} />
-          <Route path="/grnapproval" element={<GRNApproval />} />
-          <Route path="/addissue" element={<AddIssue />} />
-          <Route path="/issuelist" element={<IssueList />} />
-          <Route path="/issueSubcomponent" element={<IssueSubcomponent />} />
+          <Route path="/" element={<Landing />} />
+          <Route
+            path="/companies"
+            element={
+              <AccessHandler>
+                <Companies />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/subComponent"
+            element={
+              <AccessHandler>
+                <SubComponant />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/component"
+            element={
+              <AccessHandler>
+                <ComponentPage />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/offer"
+            element={
+              <AccessHandler>
+                <Offer />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/project"
+            element={
+              <AccessHandler>
+                <ProjectPage />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/offerlist"
+            element={
+              <AccessHandler>
+                <Revision />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/client"
+            element={
+              <AccessHandler>
+                <Client />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/offerpanels"
+            element={
+              <AccessHandler>
+                <OfferPanel />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/offerdetails"
+            element={
+              <AccessHandler>
+                <OfferList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/offercomponents"
+            element={
+              <AccessHandler>
+                <OfferComponents />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/updateoffer"
+            element={
+              <AccessHandler>
+                <UpdateOfferPanel />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/projectlist"
+            element={
+              <AccessHandler>
+                <ProjectList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/drawing"
+            element={
+              <AccessHandler>
+                <Drawing />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/export"
+            element={
+              <AccessHandler>
+                <OfferExcel />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/createvendor"
+            element={
+              <AccessHandler>
+                <CreateVendor />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/vendorlist"
+            element={
+              <AccessHandler>
+                <VendorList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/createstore"
+            element={
+              <AccessHandler>
+                <CreateStore />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/storelist"
+            element={
+              <AccessHandler>
+                <StoreList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/indent"
+            element={
+              <AccessHandler>
+                <IndentOffers />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/bulkindent"
+            element={
+              <AccessHandler>
+                <BulkIndent />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/indentlist"
+            element={
+              <AccessHandler>
+                <IndentList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/purchase"
+            element={
+              <AccessHandler>
+                <Purchase />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/bulkpurchase"
+            element={
+              <AccessHandler>
+                <BulkPurchase />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/creategrn"
+            element={
+              <AccessHandler>
+                <CreateGRN />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/listgrn"
+            element={
+              <AccessHandler>
+                <ListGRN />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/grnapproval"
+            element={
+              <AccessHandler>
+                <GRNApproval />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/addissue"
+            element={
+              <AccessHandler>
+                <AddIssue />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/issuelist"
+            element={
+              <AccessHandler>
+                <IssueList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/issueSubcomponent"
+            element={
+              <AccessHandler>
+                <IssueSubcomponent />
+              </AccessHandler>
+            }
+          />
           <Route path="/addemployee" element={<AddEmployee />} />
-          <Route path="/employeelist" element={<Employeelist />} />
-          <Route path="/updateemployee" element={<UpdateEmployee />} />
+          <Route
+            path="/employeelist"
+            element={
+              <AccessHandler>
+                <Employeelist />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/updateemployee"
+            element={
+              <AccessHandler>
+                <UpdateEmployee />
+              </AccessHandler>
+            }
+          />
           <Route path="/addaccess" element={<Access />} />
           <Route
             path="/offersubcomponentlist"
-            element={<OfferSubComponentList />}
+            element={
+              <AccessHandler>
+                <OfferSubComponentList />
+              </AccessHandler>
+            }
           />
           <Route
             path="/offersubcomponentupdate"
-            element={<UpdateSubComponent />}
+            element={
+              <AccessHandler>
+                <UpdateSubComponent />
+              </AccessHandler>
+            }
           />
-          <Route path="/componentlist" element={<ComponentList />} />
-          <Route path="/componentupdate" element={<UpdateComponent />} />
+          <Route
+            path="/componentlist"
+            element={
+              <AccessHandler>
+                <ComponentList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/componentupdate"
+            element={
+              <AccessHandler>
+                <UpdateComponent />
+              </AccessHandler>
+            }
+          />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </div>
