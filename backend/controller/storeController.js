@@ -10,7 +10,7 @@ exports.addToStore = async (req, res) => {
             { desc: req.body.desc },
             { catalog_number: req.body.catalog_number },
             { rating_value: req.body.rating_value },
-            { companyId: req.body.companyId },
+            // { companyId: req.body.companyId },
           ],
         },
         { $inc: { quantity: req.body.quantity } },

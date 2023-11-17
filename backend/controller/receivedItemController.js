@@ -25,7 +25,7 @@ exports.createAndUpdateReceivedItem = async (request, response) => {
               { desc: offerData.sub_component_id.desc },
               { catalog_number: offerData.sub_component_id.catalog_number },
               { rating_value: offerData.sub_component_id.rating_value },
-              { companyId: offerData.sub_component_id.companyId },
+              // { companyId: offerData.sub_component_id.company?.company_name},
             ],
           },
           { $inc: { quantity: quantity_received } },
