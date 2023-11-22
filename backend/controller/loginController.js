@@ -13,7 +13,7 @@ module.exports.loginUser = async (req, res) => {
       if (bcrypt.comSync(req.body.password, password) == true) {
         var userAccess = await accessSchema
           .findOne({ userId: user[0]._id })
-          .populate("userId");
+          .populate({path:"userId",select:"-password"});
         var userToken = jwtToken.generateToken({ data: userAccess });
         res.status(200).json({ message: "User Fetched", user: userToken });
       } else {

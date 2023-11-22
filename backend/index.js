@@ -100,6 +100,9 @@ app.use(base_url + "/login", loginRoutes);
 const accessRoutes = require("./routes/accessRoutes");
 app.use(base_url + "/access", accessRoutes);
 
+const prodRoutes=require('./routes/productionRoutes')
+app.use(base_url+"/prod",prodRoutes)
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

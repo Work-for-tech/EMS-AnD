@@ -10,7 +10,7 @@ module.exports.addEmployee = async (request, response) => {
       data: employee,
     });
   } catch (err) {
-    response.status(-9).json({
+    response.status(400).json({
       message: "Error while adding employee.",
       data: err,
     });
