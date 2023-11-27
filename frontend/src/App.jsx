@@ -43,20 +43,21 @@ import { UpdateComponent } from "./Components/Component/UpdateComponent";
 import { Login } from "./Components/Login/Login";
 import { Landing } from "./Components/Landing/Landing";
 import { AccessHandler } from "./Validator/AccessHandler";
+import { Production } from "./Components/Production/Page";
 
 function App() {
   const dispatch = useDispatch();
 
   if (
-    window.location.pathname === "/offer" ||
     window.location.pathname === "/offerlist" ||
-    window.location.pathname === "/projectlist"
+    window.location.pathname === "/projectlist" ||
+    window.location.pathname === "/offer"
   ) {
     dispatch(offerActions.setInitials());
   }
 
   return (
-    <div className="flex">
+    <div className="">
       <Router className="w-full">
         <Navigator />
         <Routes>
@@ -340,6 +341,14 @@ function App() {
             element={
               <AccessHandler>
                 <UpdateComponent />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/production"
+            element={
+              <AccessHandler>
+                <Production />
               </AccessHandler>
             }
           />

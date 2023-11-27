@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { verify } from "../APIs/login";
@@ -7,13 +7,14 @@ import { message } from "antd";
 
 export const AccessHandler = ({ children }) => {
   const loginData = useSelector((state) => state.login);
+  const [verified, setVerified] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getTokenData = async () => {
     const response = await verify();
     if (response.type === "success") {
-      console.log(response.data.user.data);
+      setVerified(true);
       dispatch(
         loginActions.addNameAndAccess({
           name: response.data.user.data.userId.name,
@@ -22,6 +23,7 @@ export const AccessHandler = ({ children }) => {
         })
       );
     } else {
+      setVerified(true);
       message.error("Cannot login");
       navigate("/login");
     }
@@ -33,7 +35,7 @@ export const AccessHandler = ({ children }) => {
     }
   }, []);
 
-  if (loginData.name.length === 0) {
+  if (loginData.name.length === 0 && verified) {
     return <Navigate to={"/login"} />;
   } else {
     return children;

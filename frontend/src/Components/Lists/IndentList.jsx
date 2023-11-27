@@ -60,19 +60,19 @@ export const IndentList = () => {
                 setSubcomponentData(
                   record.items.map((e) => {
                     return {
-                      key: e?.subcomponent?._id,
-                      desc: e?.subcomponent?.desc,
-                      catalog_number: e?.subcomponent?.catalog_number,
-                      rating_value: e?.subcomponent?.rating_value,
-                      company: e?.subcomponent?.company?.company_name?.name,
-                      price: e?.subcomponent?.company?.price,
-                      discount: e?.subcomponent?.company?.discount,
-                      quantityRequired: e?.quantityRequired,
-                      quantityOrdered: e?.quantityOrdered,
+                      key: e.subcomponent._id,
+                      desc: e.subcomponent.desc,
+                      catalog_number: e.subcomponent.catalog_number,
+                      rating_value: e.subcomponent.rating_value,
+                      company: e.subcomponent.company.company_name.name,
+                      price: e.subcomponent.company.price,
+                      discount: e.subcomponent.company.discount,
+                      quantityRequired: e.quantityRequired,
+                      quantityOrdered: e.quantityOrdered,
                     };
                   })
                 );
-                console.log(record?.items);
+                console.log(record.items);
               }}
             >
               <MoreHorizontal />
@@ -114,19 +114,19 @@ export const IndentList = () => {
                   record.items.map((e) => {
                     console.log(e);
                     return {
-                      key: e?.subcomponent?._id,
-                      desc: e?.subcomponent?.desc,
-                      catalog_number: e?.subcomponent?.catalog_number,
-                      rating_value: e?.subcomponent?.rating_value,
-                      company: e?.subcomponent?.company?.company_name?.name,
-                      price: e?.subcomponent?.company?.price,
-                      discount: e?.subcomponent?.company?.discount,
-                      quantityRequired: e?.quantityRequired,
-                      quantityOrdered: e?.quantityOrdered,
+                      key: e.subcomponent._id,
+                      desc: e.subcomponent.desc,
+                      catalog_number: e.subcomponent.catalog_number,
+                      rating_value: e.subcomponent.rating_value,
+                      company: e.subcomponent.company.company_name.name,
+                      price: e.subcomponent.company.price,
+                      discount: e.subcomponent.company.discount,
+                      quantityRequired: e.quantityRequired,
+                      quantityOrdered: e.quantityOrdered,
                     };
                   })
                 );
-                console.log(record?.items);
+                console.log(record.items);
               }}
             >
               <MoreHorizontal />

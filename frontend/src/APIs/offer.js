@@ -94,6 +94,26 @@ export const offerSubComponent = async (data) => {
   }
 };
 
+export const getOneOfferSubComponent = async (id) => {
+  try {
+    const response = await axios.get(
+      `inverntoryManagment/api/v1/public/offerSubComponent/getOne/${id}`
+    );
+
+    console.log(response.data);
+    return {
+      type: "success",
+      data: response.data,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      type: "error",
+      message: "Network Error",
+    };
+  }
+};
+
 export const offerSubComponentGetAll = async () => {
   try {
     const response = await axios.get(

@@ -15,6 +15,9 @@ const panelSlice = createSlice({
       state.panel = [];
       state.price = 0;
     },
+    setPanelsName(state, action) {
+      state.name = action.payload;
+    },
     addPartName(state, action) {
       state.name = action.payload;
     },
@@ -46,6 +49,17 @@ const panelSlice = createSlice({
           action.payload.component_index
         ].completed - 1;
 
+      // remove data from completed_subcomponents_data by id
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed_subcomponents_data = state.panel[
+        action.payload.index
+      ].components[
+        action.payload.component_index
+      ].completed_subcomponents_data.filter(
+        (item, i) => item._id !== action.payload.data
+      );
+
       state.panel[action.payload.index].components[
         action.payload.component_index
       ].totalPrice =
@@ -61,6 +75,10 @@ const panelSlice = createSlice({
         state.panel[action.payload.index].components[
           action.payload.component_index
         ].completed + 1;
+
+      state.panel[action.payload.index].components[
+        action.payload.component_index
+      ].completed_subcomponents_data.push(action.payload.subcomponent_data);
 
       state.panel[action.payload.index].components[
         action.payload.component_index
@@ -134,6 +152,9 @@ const panelSlice = createSlice({
     addCompletedComponentComponent(state, action) {
       state.panel[action.payload.index].completed_components.push(
         action.payload.data
+      );
+      state.panel[action.payload.index].completed_components_data.push(
+        action.payload.completed_data
       );
     },
     addConsumable(state, action) {

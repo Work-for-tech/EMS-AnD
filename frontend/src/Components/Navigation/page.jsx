@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu } from "antd";
+import { Menu, Drawer, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FormItemLabel from "antd/es/form/FormItemLabel";
 import { loginActions } from "../../store/loginslice";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu as Hamberger } from "lucide-react";
 
 const rootSubmenuKeys = ["sub1", "sub2", "sub3", "sub4", "sub5", "sub6"];
 
@@ -13,6 +13,9 @@ export const Navigator = () => {
   const loginData = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+
   const [currentURL, setCurrentURL] = React.useState(
     window.location.href.split("/")[3]
   );
@@ -199,88 +202,103 @@ export const Navigator = () => {
   };
 
   return (
-    <div className="w-[22vw]">
+    <div className="w-full">
       <div className="flex justify-between items-center p-3">
+        <Hamberger className="cursor-pointer" onClick={() => setOpen(true)} />
+        <Drawer
+          title="Drawer"
+          placement={"left"}
+          closable={false}
+          onClose={() => {
+            setOpen(false);
+          }}
+          open={open}
+        >
+          <div className="">
+            {items.Offer !== 0 && (
+              <Menu
+                mode="inline"
+                className=" "
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Offer === 1 ? ROffer : RWOffer}
+              />
+            )}
+            {items.Project !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Project === 1 ? RProject : RWProject}
+              />
+            )}
+            {items.Indent !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Indent === 1 ? RIndent : RWIndent}
+              />
+            )}
+            {items.Purchase !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Purchase === 1 ? RPurchase : RWPurchase}
+              />
+            )}
+            {items.GRN !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.GRN === 1 ? RGRN : RWGRN}
+              />
+            )}
+            {items.Issue !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Issue === 1 ? RIssue : RWIssue}
+              />
+            )}
+            {items.Employee !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Employee === 1 ? REmployee : RWEmployee}
+              />
+            )}
+          </div>
+        </Drawer>
+
         <p className="text-2xl p-3 font-semibold">ERP</p>
         {localStorage.getItem("token") && (
-          <p
-            className="text-2xl p-3 font-semibold cursor-pointer hover:text-red-700"
+          <div
+            className=" border rounded-lg border-zinc-500 flex items-center gap-2 p-2 text-lg font-semibold cursor-pointer hover:text-red-500"
             onClick={LogoutHandler}
           >
             <LogOut />
-          </p>
+            Logout
+          </div>
         )}
       </div>
-      {items.Offer !== 0 && (
-        <Menu
-          mode="inline"
-          className=" "
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Offer === 1 ? ROffer : RWOffer}
-        />
-      )}
-      {items.Project !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Project === 1 ? RProject : RWProject}
-        />
-      )}
-      {items.Indent !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Indent === 1 ? RIndent : RWIndent}
-        />
-      )}
-      {items.Purchase !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Purchase === 1 ? RPurchase : RWPurchase}
-        />
-      )}
-      {items.GRN !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.GRN === 1 ? RGRN : RWGRN}
-        />
-      )}
-      {items.Issue !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Issue === 1 ? RIssue : RWIssue}
-        />
-      )}
-      {items.Employee !== 0 && (
-        <Menu
-          mode="inline"
-          className=""
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          onClick={(e) => navigate(`/${e.key}`)}
-          items={items.Employee === 1 ? REmployee : RWEmployee}
-        />
-      )}
     </div>
   );
 };

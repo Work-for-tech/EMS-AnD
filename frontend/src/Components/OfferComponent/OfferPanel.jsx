@@ -11,6 +11,7 @@ import { Trash2 } from "lucide-react";
 export const OfferPanel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const panelData = useSelector((state) => state.panel);
   const panel = useSelector((state) => state.panel.panel);
   const updatePanel = useSelector((state) => state.updatepanel);
   const offer = useSelector((state) => state.offer);
@@ -29,22 +30,23 @@ export const OfferPanel = () => {
       key: i,
       label: e.part_name,
       children: (
-        <>
-          <div
-            onClick={() => {
-              dispatch(panelActions.deletePanel(i));
-            }}
-            className="cursor-pointer bg-blue-700 w-fit px-2 rounded-xl text-white flex gap-1 items-center hover:bg-blue-500"
-          >
-            <Trash2 className="cursor-pointer" />
-            <p className="p-2 font-semibold">Delete this Panel</p>
+        <div className="w-full">
+          <div className="w-full flex relative justify-end">
+            <div
+              onClick={() => {
+                dispatch(panelActions.deletePanel(i));
+              }}
+              className="absolute -top-[60px] cursor-pointer bg-red-600 w-fit p-2 rounded-full text-white flex gap-1 justify-center items-center hover:bg-blue-500"
+            >
+              <Trash2 className="cursor-pointer" />
+            </div>
           </div>
           <OfferComponent
             part_name={e.part_name}
             index={i}
             components={e.components}
           />
-        </>
+        </div>
       ),
     };
   });
@@ -56,6 +58,7 @@ export const OfferPanel = () => {
         part_name: PartName,
         price: price,
         components: [],
+        completed_components_data: [],
         completed: 0,
         completed_components: [],
       })
@@ -67,6 +70,7 @@ export const OfferPanel = () => {
       message.error("Name is required");
       return;
     }
+    dispatch(panelActions.setPanelsName(Name));
     setConfirmPartName(true);
   };
 
@@ -138,6 +142,14 @@ export const OfferPanel = () => {
   };
 
   useEffect(() => {
+    if (panelData.name) {
+      setName(panelData.name);
+      setConfirmPartName(true);
+    }
+    if (panel[0]?.part_name) {
+      setPartName(panel[0].part_name);
+    }
+    // if(panel[0]?)
     if (panel.length === 0) {
       setValidPanel(false);
     }
@@ -168,8 +180,8 @@ export const OfferPanel = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#f3f7ff]">
-      {ConfirmPartName === true && (
+    <div className="w-full  min-h-screen bg-[#f3f7ff]">
+      {/* {ConfirmPartName === true && (
         <div className="absolute right-[3%] top-[3%] border-red-700 border-2 rounded-lg p-4 bg-white shadow-lg">
           <p className="font-semibold text-gray-700 text-xl">
             Price:
@@ -178,7 +190,7 @@ export const OfferPanel = () => {
             </span>
           </p>
         </div>
-      )}
+      )} */}
 
       {ConfirmPartName === false ? (
         <div className="rounded-md bg-white flex flex-col m-4">
@@ -209,7 +221,7 @@ export const OfferPanel = () => {
         </div>
       ) : (
         <div className="w-full">
-          <div className="m-5 p-5 bg-white">
+          <div className="m-3 p-3 bg-white">
             <p className="text-blue-800 font-semibold text-xl p-2">
               Panel's Name
             </p>
@@ -235,30 +247,34 @@ export const OfferPanel = () => {
               Panel's Details
             </p>
 
-            <div className="p-4">
-              <div className="bg-white p-4">
-                <div className="w-full flex justify-evenly">
-                  <div className="w-1/2 p-4">
-                    <section>
-                      <div className="font-semibold p-2 text-gray-500 mt-2">
-                        Part Name
-                      </div>
-                      <Input
-                        onChange={(e) => setPartName(e.target.value)}
-                        value={PartName}
-                        className=""
-                        placeholder="Enter Part Name"
-                      />
-                    </section>
-                    {validPanel && (
-                      <>
-                        <section>
-                          <div className="font-semibold p-2 text-gray-500">
+            <div className="w-full p-2">
+              <div className="w-full bg-white p-4">
+                <div className={`w-full flex items-center justify-center`}>
+                  <div className="w-full flex items-center justify-center">
+                    <div className="w-full p-4 flex flex-row gap-4">
+                      <section
+                        className={`${
+                          validPanel ? "" : "flex flex-col "
+                        } w-full gap-1`}
+                      >
+                        <div className="font-semibold text-gray-500">
+                          Part Name
+                        </div>
+                        <Input
+                          onChange={(e) => setPartName(e.target.value)}
+                          value={PartName}
+                          className={`${validPanel ? "w-full" : "w-1/2"} `}
+                          placeholder="Enter Part Name"
+                        />
+                      </section>
+                      {validPanel && (
+                        <section className="w-full">
+                          <div className="font-semibold text-gray-500">
                             Profit Percentage
                           </div>
                           <Input
                             type="number"
-                            className=""
+                            className="w-full"
                             placeholder="Profit Percentage"
                             value={profitPercentage}
                             onChange={(e) => {
@@ -268,32 +284,21 @@ export const OfferPanel = () => {
                             }}
                           />
                         </section>
-                      </>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
                 {validPanel && (
                   <div className="w-full flex items-center justify-center">
-                    <div className="w-1/5 flex flex-row items-center justify-between gap-2">
-                      <div className="flex flex-col items-start justify-center gap-2">
-                        <div className="font-semibold text-gray-500">
-                          Profit
-                        </div>
-                        <div className="font-semibold text-gray-500">Price</div>
-                        <div className="font-semibold text-gray-500">
-                          Total Price
-                        </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="text-green-500 font-semibold">
+                        Profit: {profit?.toFixed(2)}
                       </div>
-                      <div className="flex flex-col items-start justify-center gap-2">
-                        <div className="font-semibold text-gray-500">
-                          {profit}
-                        </div>
-                        <div className="font-semibold text-gray-500">
-                          {price}
-                        </div>
-                        <div className="font-semibold text-gray-500">
-                          {totalPrice}
-                        </div>
+                      <div className="text-red-500 font-semibold">
+                        Price: {price?.toFixed(2)}
+                      </div>
+                      <div className="text-purple-700 font-semibold">
+                        Total Price: {totalPrice?.toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -319,7 +324,7 @@ export const OfferPanel = () => {
                   )}
                 </div>
               </div>
-              <div className="p-5">
+              <div className="my-2">
                 <Collapse
                   items={items}
                   bordered={panel.length === 0 ? false : true}

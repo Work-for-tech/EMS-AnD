@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getOneComponent } from "../../APIs/component";
 import { panelActions } from "../../store/panelslice";
 import OfferCompanies from "./OfferCompanies";
-import { offerComponent } from "../../APIs/offer";
+import { getOneOfferSubComponent, offerComponent } from "../../APIs/offer";
 import { offerSubComponent } from "../../APIs/offer";
 export const Consumables = ({ subcomponents, index, panel_index }) => {
   const TitleRef = useRef(null);
@@ -14,13 +14,24 @@ export const Consumables = ({ subcomponents, index, panel_index }) => {
   const DisRef = useRef(null);
 
   const dispatch = useDispatch();
+  const panel = useSelector((state) => state.panel.panel[panel_index]);
   const component = useSelector(
     (state) => state.panel.panel[panel_index].components[index]
   );
-  const consumables = useSelector((state) => state.panel.consumables);
 
   const [subComponent, setSubComponent] = useState([]);
   const [completed, setCompleted] = useState(false);
+
+  useEffect(() => {
+    console.log(component?.component_id);
+    const foundPanel = panel.completed_components_data.find(
+      (e) => e?.name === component?.component_id
+    );
+    if (foundPanel) {
+      setCompleted(true);
+    }
+    setCompleted(false);
+  });
 
   useEffect(() => {
     setSubComponent(component.subcomponents);
@@ -128,39 +139,78 @@ export const Consumables = ({ subcomponents, index, panel_index }) => {
       title: "Action",
       key: "action",
       render: (text, record, index1) => (
-        <Button
-          onClick={() => {
-            console.log(record);
-            dispatch(
-              panelActions.deleteCompletedSubComponent({
-                index: panel_index,
-                component_index: index,
-                totalPrice:
-                  (Number(record.rate) -
-                    (Number(record.rate) * Number(record.discount)) / 100) *
-                  Number(record.qty),
-              })
-            );
-            dispatch(
-              panelActions.deleteCompletedComponentSubComponent({
-                index: panel_index,
-                component_index: index,
-                subcomponent_index: Number(index1),
-              })
-            );
-            const array = Consumable.filter((e) => {
-              return e.design !== record.design;
-            });
-            setConsumables(array);
-          }}
-          className="bg-red-700 text-white"
-          type="primary"
-        >
-          Delete
-        </Button>
+        <>
+          {!completed ? (
+            <Button
+              onClick={() => {
+                console.log(record);
+                dispatch(
+                  panelActions.deleteCompletedSubComponent({
+                    index: panel_index,
+                    component_index: index,
+                    totalPrice:
+                      (Number(record.rate) -
+                        (Number(record.rate) * Number(record.discount)) / 100) *
+                      Number(record.qty),
+                  })
+                );
+                dispatch(
+                  panelActions.deleteCompletedComponentSubComponent({
+                    index: panel_index,
+                    component_index: index,
+                    subcomponent_index: Number(index1),
+                  })
+                );
+                const array = Consumable.filter((e) => {
+                  return e.design !== record.design;
+                });
+                setConsumables(array);
+              }}
+              className="bg-red-700 text-white"
+              type="primary"
+            >
+              Delete
+            </Button>
+          ) : (
+            <>Submitted</>
+          )}
+        </>
       ),
     },
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (
+        component.completed_subcomponents.length !== 0 &&
+        subComponent.length === 0
+      ) {
+        const subComponentDetails = await Promise.all(
+          component.completed_subcomponents.map(async (e) => {
+            const response = await getOneOfferSubComponent(e);
+            return response.data.data;
+          })
+        );
+
+        // Now subComponentDetails is an array containing the details for each completed subcomponent
+        console.log(subComponentDetails);
+
+        // Update Consumables state with the retrieved subcomponent details
+        const consumablesData = subComponentDetails.map((detail) => ({
+          key: lo.uniqueId(),
+          design: detail.desc,
+          title: detail.title,
+          qty: detail.quantity,
+          rate: detail.company.price,
+          discount: detail.company.discount,
+        }));
+
+        setConsumables([...Consumable, ...consumablesData]);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const SubmitComponent = async () => {
     console.log(component);
@@ -196,6 +246,7 @@ export const Consumables = ({ subcomponents, index, panel_index }) => {
         panelActions.addCompletedComponentComponent({
           index: panel_index,
           data: response.data.data._id,
+          completed_data: sendData,
         })
       );
     } else if (response.type === "error") {
@@ -204,67 +255,68 @@ export const Consumables = ({ subcomponents, index, panel_index }) => {
   };
 
   return (
-    <div>
+    <div className="mt-3">
       {completed === false ? (
         <>
-          <h3 className="w-full text-center p-2 m-2 font-semibold text-2xl">
-            Fill The Following Details
-          </h3>
+          <Table dataSource={Consumable} columns={columns} />
           <div className="flex flex-col gap-4">
             {Details.map((e, i) => {
               return (
-                <Collapse
-                  items={[
-                    {
-                      key: i.toString(),
-                      label: e,
-                      children: (
-                        <div className="flex flex-col gap-2" key={i}>
-                          <Input ref={TitleRef} placeholder="Enter Title" />
-                          <Input
-                            ref={QtyRef}
-                            placeholder="Enter Quantity"
-                            type="number"
-                          />
-                          <Input
-                            ref={RateRef}
-                            placeholder="Enter Rate"
-                            type="number"
-                          />
-                          <Input
-                            ref={DisRef}
-                            placeholder="Enter Discount"
-                            type="number"
-                          />
-                          <Button
-                            onClick={() => addConsu(e)}
-                            className="bg-blue-700 text-white"
-                            type="primary"
-                          >
-                            Add
-                          </Button>
-                        </div>
-                      ),
-                    },
-                  ]}
-                  defaultActiveKey={["0"]}
-                />
+                <div key={i}>
+                  {" "}
+                  <Collapse
+                    items={[
+                      {
+                        key: i.toString(),
+                        label: e,
+                        children: (
+                          <div className="flex flex-row gap-2" key={i}>
+                            <Input ref={TitleRef} placeholder="Enter Title" />
+                            <Input
+                              ref={QtyRef}
+                              placeholder="Enter Quantity"
+                              type="number"
+                            />
+                            <Input
+                              ref={RateRef}
+                              placeholder="Enter Rate"
+                              type="number"
+                            />
+                            <Input
+                              ref={DisRef}
+                              placeholder="Enter Discount"
+                              type="number"
+                            />
+                            <Button
+                              onClick={() => addConsu(e)}
+                              className="bg-blue-700 text-white"
+                              type="primary"
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        ),
+                      },
+                    ]}
+                    defaultActiveKey={["0"]}
+                  />
+                </div>
               );
             })}
-            <Table dataSource={Consumable} columns={columns} />
+
             <Button
               className="bg-blue-700 text-white"
               onClick={SubmitComponent}
               type="primary"
             >
-              {component.component_id}
+              {component?.component_id}
             </Button>
           </div>
         </>
       ) : (
-        <h3 className="w-full text-center p-2 m-2 font-semibold text-2xl">
-          Component {component.component_id} Created Successfully
-        </h3>
+        <div className="flex flex-col">
+          <Table dataSource={Consumable} columns={columns} />
+        </div>
       )}
     </div>
   );
