@@ -17,7 +17,7 @@ const prod = new Schema({
     },
     finishedOn: {
         type: "Date",
-        default: new Date.now()
+        default: new Date().getTime()
     },
     report: {
         type: "String"
