@@ -1,30 +1,32 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const prod = new Schema({
+const prod = new Schema(
+  {
     mainSection: {
-        type: "String"
+      type: "String",
     },
     subSection: {
-        type: "String"
+      type: "String",
     },
     approvedBy: {
-        type: "String"
+      type: "String",
     },
     projectId: {
-        type: Schema.Types.ObjectId,
-        ref: 'project'
+      type: Schema.Types.ObjectId,
+      ref: "project",
     },
     finishedOn: {
-        type: "Date",
-        default: new Date.now()
+      type: "Date",
+      default: Date.now(),
     },
     report: {
-        type: "String"
-    }
-},
-    {
-        timestamps: true
-    })
+      type: "String",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('production', prod)
+module.exports = mongoose.model("production", prod);

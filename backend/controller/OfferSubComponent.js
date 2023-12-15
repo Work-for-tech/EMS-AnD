@@ -3,7 +3,9 @@ const offerSubComponentSchema = require("../models/OfferSubComponent");
 
 exports.add = async (req, res) => {
   try {
+    console.log(req.body);
     const offer_sub_component = await offerSubComponentSchema.create(req.body);
+    console.log(offer_sub_component);
     res.status(200).json({
       message: "offer_sub_component added successfully.",
       data: offer_sub_component,

@@ -61,6 +61,13 @@ exports.getOneComponent = async (req, res) => {
     const component = await componentSchema
       .findById(req.params.id)
       .populate("sub_components.subcomponent_id")
+      .populate({
+        path: "sub_components.subcomponent_id",
+        populate: {
+          path: "catalog.rating.companies.company_id",
+          model: "Companies", // Replace with your actual company model name
+        },
+      })
       .exec();
     res.status(200).json({
       message: "Component fetched successfully",
