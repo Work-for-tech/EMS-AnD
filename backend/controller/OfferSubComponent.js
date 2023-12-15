@@ -11,6 +11,7 @@ exports.add = async (req, res) => {
       data: offer_sub_component,
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       message: "Error in adding offer_sub_component",
       data: err,
