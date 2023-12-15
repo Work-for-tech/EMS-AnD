@@ -43,25 +43,17 @@ module.exports.get = (req, res) => {
   }
 };
 
-module.exports.update = (req, res) => {
+module.exports.update = async (req, res) => {
   try {
-    prodSchema
-      .findOneAndUpdate({
-        $and: [
-          { projectId: req.body.projectId },
-          { subSection: req.body.subSection },
-          { mainSection: req.body.mainSection },
-        ],
-      })
-      .then((data) => {
-        console.log(data);
-        res.status(200).json({ message: "Progress updated", data: data });
-      })
-      .catch((error) => {
-        res
-          .status(400)
-          .json({ message: "Progress fail to update", error: error });
-      });
+    const data = await prodSchema.findOneAndUpdate({
+      $and: [
+        { projectId: req.body.projectId },
+        { subSection: req.body.subSection },
+        { mainSection: req.body.mainSection },
+      ],
+    });
+    console.log(data);
+    res.status(200).json({ message: "Progress updated", data: data });
   } catch (err) {
     response.status(500).json({
       message: "Something went wrong",

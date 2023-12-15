@@ -23,6 +23,8 @@ export const Landing = () => {
           email: response.data.user.data.userId.email,
         })
       );
+      console.log(localStorage.getItem("lastpath"));
+      navigate(localStorage.getItem("lastpath"));
     } else {
       message.error("Cannot login");
       navigate("/login");

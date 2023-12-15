@@ -13,11 +13,11 @@ export const UpdateConsumables = ({ subcomponents, index, panel_index }) => {
 
   const dispatch = useDispatch();
   const component = useSelector(
-    (state) => state.updatepanel.components[index].sub_components
+    (state) => state.updatepanel.components[index]?.sub_components
   );
 
   const completed_subcomponents = useSelector(
-    (state) => state.updatepanel.components[index].completed_subcomponents
+    (state) => state.updatepanel.components[index]?.completed_subcomponents
   );
 
   console.log(component);

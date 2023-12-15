@@ -35,6 +35,13 @@ export const AccessHandler = ({ children }) => {
     }
   }, []);
 
+  localStorage.setItem(
+    "lastpath",
+    window.location.pathname === "/"
+      ? localStorage.getItem("lastpath")
+      : window.location.pathname
+  );
+
   if (loginData.name.length === 0 && verified) {
     return <Navigate to={"/login"} />;
   } else {

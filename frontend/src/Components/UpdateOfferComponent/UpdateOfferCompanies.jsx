@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button, Table, Select, message } from "antd";
-import lo from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getOneSubComponent,
@@ -16,7 +15,11 @@ export const UpdateOfferCompanies = ({
   panel_index,
   component_index,
   sub_index,
+  index,
 }) => {
+  const subcomponent_data = useSelector(
+    (state) => state.updatepanel.components[sub_index].sub_components[index]
+  );
   const dispatch = useDispatch();
   const [catalogNo, setCatalogNo] = useState(
     data.catalog_number || "Select catalog No"
@@ -35,6 +38,7 @@ export const UpdateOfferCompanies = ({
 
   const [quantity, setQuantity] = useState(data.quantity || 0);
   const [nowData, setNowData] = useState([]);
+
   const [price, setPrice] = useState(data.company?.price || 0);
   const [discount, setDiscount] = useState(data.company?.discount || 0);
   const [totalPrice, setTotalPrice] = useState(
@@ -50,44 +54,6 @@ export const UpdateOfferCompanies = ({
       (data.company?.price * data.company?.discount) / 100) *
       quantity || 0
   );
-
-  const column = [
-    {
-      title: "Description",
-      dataIndex: "desc",
-      key: "desc",
-    },
-    {
-      title: "Catalog Number",
-      dataIndex: "catalog_number",
-      key: "catalog_number",
-    },
-    {
-      title: "Rating Value",
-      dataIndex: "rating_value",
-      key: "rating_value",
-    },
-    {
-      title: "Company",
-      dataIndex: "company_name",
-      key: "company_name",
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Discount",
-      dataIndex: "discount",
-      key: "discount",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-    },
-  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -279,43 +245,26 @@ export const UpdateOfferCompanies = ({
   console.log(submitted);
 
   return (
-    <div className="w-full border-2 border-gray-300 p-4 mb-4">
-      <div className="font-semibold p-2 text-gray-500 mt-2">
+    <div className="">
+      <div className="flex flex-col font-semibold text-gray-500 text-center ">
         {submitted === true && (
-          <div className="m-2">
-            <Table
+          <div className="m-1">
+            {/* <Table
               columns={column}
               dataSource={[submittedData]}
               pagination={false}
-            />
+            /> */}
           </div>
         )}
 
-        {/* {submitted === true && (
-          <div className="w-full flex items-center justify-center m-2">
-            <Button
-              className="w-fit bg-blue-700 text-white"
-              onClick={() => {
-                setSubmitted(false);
-                dispatch(
-                  updatepanelActions.removeCompletedSubComponent({
-                    index: panel_index,
-                    component_index: component_index,
-                    sub_index: sub_index,
-                    _id: submittedData._id,
-                    totalPrice: totalPrice,
-                  })
-                );
-              }}
-            >
-              Edit
-            </Button>
-          </div>
-        )} */}
+        {submitted === true && <div className="w-full items-center"></div>}
       </div>
-      {submitted === false && (
-        <div className="w-full flex flex-col justify-center gap-2">
-          <div className="w-full flex flex-row justify-center gap-2">
+      {!submitted && (
+        <div className="p-1 w-full flex flex-col items-center gap-2">
+          <div className="p-1 w-full text-blue-800 font-bold text-left">
+            Description: {data.desc}
+          </div>
+          <div className="w-full flex flex-row items-center gap-2">
             <Select
               showSearch
               filterOption={(input, option) =>
@@ -323,12 +272,10 @@ export const UpdateOfferCompanies = ({
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              className="w-full"
+              className="w-1/3"
               options={catalogNoOptions}
               value={catalogNo}
-              onChange={(e) => {
-                setCatalogNo(e);
-              }}
+              onChange={(e) => setCatalogNo(e)}
             />
             {catalogNo !== "Select catalog No" && (
               <Select
@@ -338,12 +285,10 @@ export const UpdateOfferCompanies = ({
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
-                className="w-full"
+                className="w-1/3"
                 options={ratingOptions}
                 value={rating}
-                onChange={(e) => {
-                  setRating(e);
-                }}
+                onChange={(e) => setRating(e)}
               />
             )}
             {rating !== "Select Rating" && (
@@ -354,53 +299,51 @@ export const UpdateOfferCompanies = ({
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
-                className="w-full"
+                className="w-1/3"
                 options={companyOptions}
                 value={company}
-                onChange={(e) => {
-                  console.log(e);
-                  setCompany(e);
-                }}
+                onChange={(e) => setCompany(e)}
               />
             )}
             <Input
               type="number"
               onChange={(e) => setQuantity(e.target.value)}
               value={quantity}
-              className=""
+              className="w-1/3"
               placeholder="Quantity"
             />
-          </div>
-          {company !== "Select Company" && quantity >= 0 && (
-            <div className="flex flex-row items-center justify-between gap-2">
-              <div className="flex flex-col items-start justify-center gap-2">
-                <div className="font-semibold text-gray-500">Price</div>
-                <div className="font-semibold text-gray-500">Discount</div>
-                <div className="font-semibold text-gray-500">Total Price</div>
+            {company !== "Select Company" && quantity >= 0 && (
+              <div className="w-5/12 flex items-center justify-evenly gap-4">
+                <div className="flex flex-col text-green-500 font-semibold">
+                  <p>Price</p>
+                  <p>{price?.toFixed(2)}</p>
+                </div>
+                <div className="text-red-500 font-semibold">
+                  <p>Discount</p>
+                  <p>{discount?.toFixed(2)}</p>
+                </div>
+                <div className="text-purple-700 font-semibold">
+                  <p>Total Price</p>
+                  <p>{totalPrice?.toFixed(2)}</p>
+                </div>
               </div>
-              <div className="flex flex-col items-start justify-center gap-2">
-                <div className="font-semibold text-gray-500">{price}</div>
-                <div className="font-semibold text-gray-500">{discount}</div>
-                <div className="font-semibold text-gray-500">{totalPrice}</div>
-              </div>
+            )}
+            <div className="flex flex-row items-center justify-center gap-3">
+              <Button
+                className="w-fit bg-blue-700 text-white"
+                onClick={submitHandler}
+                type="primary"
+              >
+                Create
+              </Button>
+              <Button
+                className="w-fit bg-gray-700 text-white"
+                onClick={ResetHandler}
+                type="primary"
+              >
+                Reset
+              </Button>
             </div>
-          )}
-
-          <div className="flex flex-row items-center justify-center gap-3 py-2">
-            <Button
-              className="w-fit bg-blue-700 text-white"
-              onClick={submitHandler}
-              type="primary"
-            >
-              Create
-            </Button>
-            <Button
-              className="w-fit bg-gray-700 text-white"
-              onClick={ResetHandler}
-              type="primary"
-            >
-              Reset
-            </Button>
           </div>
         </div>
       )}

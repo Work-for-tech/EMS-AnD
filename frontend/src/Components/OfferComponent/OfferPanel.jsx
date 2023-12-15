@@ -20,7 +20,6 @@ export const OfferPanel = () => {
   const [PartName, setPartName] = useState("");
   const [price, setPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [data, setData] = useState([]);
   const [ConfirmPartName, setConfirmPartName] = useState(false);
   const [profitPercentage, setProfitPercentage] = useState(0);
   const [profit, setProfit] = useState(0);
@@ -263,7 +262,7 @@ export const OfferPanel = () => {
                         <Input
                           onChange={(e) => setPartName(e.target.value)}
                           value={PartName}
-                          className={`${validPanel ? "w-full" : "w-1/2"} `}
+                          className={`w-full`}
                           placeholder="Enter Part Name"
                         />
                       </section>

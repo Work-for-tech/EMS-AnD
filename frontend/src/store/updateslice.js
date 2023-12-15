@@ -7,7 +7,6 @@ const updatepanelSlice = createSlice({
     name: "",
     part_name: "",
     components: [],
-    sub_components: [],
     completed_components: [],
     profit_percentage: 0,
     price: 0,
@@ -55,6 +54,19 @@ const updatepanelSlice = createSlice({
       if (newPrice < 0) newPrice = 0;
       state.price = newPrice;
     },
+
+    editSubComponent(state, action) {
+      state.components[action.payload.index].sub_components = state.components[
+        action.payload.index
+      ].sub_components.map((e) => {
+        console.log(e._id, action.payload.id);
+        if (e._id === action.payload.id) {
+          e.status = "editing";
+        }
+        return e;
+      });
+    },
+
     replaceComponents(state, action) {
       state.panel[action.payload].components = action.payload.data;
     },

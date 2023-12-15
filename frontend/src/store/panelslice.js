@@ -40,6 +40,35 @@ const panelSlice = createSlice({
       state.panel[action.payload.index].components = state.panel[
         action.payload.index
       ].components.filter((item, i) => i !== action.payload.component_index);
+
+      state.panel[action.payload.index].completed_components_data.map(
+        (item, i) => {
+          if (item.name === action.payload.name) {
+            console.log(item.name, action.payload.name);
+            console.log(state.panel[action.payload.index].completed_components);
+            console.log(state.panel[action.payload.index].completed);
+
+            state.panel[action.payload.index].completed_components =
+              state.panel[action.payload.index].completed_components.filter(
+                (iitem, i) => {
+                  console.log(iitem, item._id);
+                  if (iitem !== item._id) {
+                    return iitem;
+                  }
+                }
+              );
+
+            state.panel[action.payload.index].completed =
+              state.panel[action.payload.index].completed - 1;
+          }
+        }
+      );
+
+      state.panel[action.payload.index].completed_components_data = state.panel[
+        action.payload.index
+      ].completed_components_data.filter(
+        (item, i) => item.name !== action.payload.name
+      );
     },
     removeCompletedSubComponent(state, action) {
       state.panel[action.payload.index].components[

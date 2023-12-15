@@ -83,8 +83,6 @@ const offerSlice = createSlice({
           partToUpdate.total_price = action.payload.total_price;
         }
       }
-
-      console.log(state.panels_to_be_created);
     },
     setReplacePanelsData(state, action) {
       state.panelsData.map((element, index) => {

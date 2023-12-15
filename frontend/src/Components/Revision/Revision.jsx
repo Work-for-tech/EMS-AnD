@@ -211,8 +211,8 @@ export const OfferRevision = ({
                         (sub) => sub._id
                       );
                       e.price = 0;
-
                       e.sub_components.map((sub) => {
+                        sub.status = "submitted";
                         e.price +=
                           (sub.company.price -
                             (sub.company.price * sub.company.discount) / 100) *
@@ -227,7 +227,6 @@ export const OfferRevision = ({
                         profit_percentage: record.profit_percentage,
                         components: data,
                         id: record.id,
-
                         type: "revision",
                       })
                     );
@@ -261,6 +260,7 @@ export const OfferRevision = ({
   useEffect(() => {
     getAllClients();
 
+    console.log(recentData);
     if (recentData) {
       setClientName({
         label: recentData.client_name,
@@ -292,6 +292,7 @@ export const OfferRevision = ({
           })
         );
       });
+
       const reduxData = {
         id: OfferId,
         projectName: {
@@ -306,7 +307,6 @@ export const OfferRevision = ({
         DescriptionOfPanel: recentData.description_of_panel,
       };
       setTableData(...dataOfTable);
-      console.log(reduxData);
       dispatch(offerActions.setUpdationData(reduxData));
       dispatch(panelActions.initial());
     } else {
@@ -342,7 +342,7 @@ export const OfferRevision = ({
       setAddedInitialData(true);
       setProjectName(offer.projectName);
       const dataOfTable = [];
-      offer.panels_to_be_created.map((e) => {
+      recentData.panels_to_be_created.map((e) => {
         e.parts.map((part) => {
           console.log(part);
           dataOfTable.push({
@@ -588,6 +588,11 @@ export const OfferRevision = ({
                       id: OfferId,
                     })
                   );
+                  const dispatchData = {
+                    panels_to_be_created: recentData.panels_to_be_created,
+                    id: OfferId,
+                  };
+                  dispatch(offerActions.setPanelsToBeCreated(dispatchData));
                   dispatch(updatepanelActions.addType("revision"));
                   dispatch(panelActions.initial());
                   navigate("/offerpanels");

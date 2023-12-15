@@ -44,6 +44,7 @@ import { Login } from "./Components/Login/Login";
 import { Landing } from "./Components/Landing/Landing";
 import { AccessHandler } from "./Validator/AccessHandler";
 import { Production } from "./Components/Production/Page";
+import { ProductionList } from "./Components/Production/List";
 
 function App() {
   const dispatch = useDispatch();
@@ -55,6 +56,8 @@ function App() {
   ) {
     dispatch(offerActions.setInitials());
   }
+
+  console.log(window.location.pathname === "/");
 
   return (
     <div className="">
@@ -346,6 +349,22 @@ function App() {
           />
           <Route
             path="/production"
+            element={
+              <AccessHandler>
+                <Production />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/productionlist"
+            element={
+              <AccessHandler>
+                <ProductionList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/updateProduction"
             element={
               <AccessHandler>
                 <Production />

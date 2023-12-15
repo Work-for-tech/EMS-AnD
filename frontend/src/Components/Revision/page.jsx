@@ -127,11 +127,7 @@ export const Revision = () => {
               onClick={() => {
                 setRecentData(record);
                 setOfferId(record.key);
-                const dispatchData = {
-                  panels_to_be_created: record.panels_to_be_created,
-                  id: record.key,
-                };
-                dispatch(offerActions.setPanelsToBeCreated(dispatchData));
+                console.log(record);
               }}
             >
               <PlusCircle />
@@ -222,7 +218,6 @@ export const Revision = () => {
   const getAllOffers = async () => {
     const response = await getOffers();
     if (response.type === "success") {
-      console.log(response.data.data);
       const newData = response.data.data.map((e) => ({
         key: e._id,
         status: e.status,
@@ -234,7 +229,6 @@ export const Revision = () => {
         amount: e.price.toFixed(2),
         panels_to_be_created: e.panels_to_be_created,
       }));
-      console.log(response.data.data);
       setOfferData(newData);
     } else if (response.type === "error") {
       console.log(response.message);
@@ -243,7 +237,6 @@ export const Revision = () => {
 
   useEffect(() => {
     getAllOffers();
-    console.log(offer.id);
     if (offer.id && updatePanel.type === "revision") {
       setOfferId(offer.id);
       setRecentData(offer);

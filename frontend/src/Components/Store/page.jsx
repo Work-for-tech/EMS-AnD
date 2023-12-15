@@ -185,7 +185,7 @@ export const CreateStore = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#f3f7ff]">
-      <p className="text-3xl text-blue-800 font-semibold p-4">Add Vendor</p>
+      <p className="text-3xl text-blue-800 font-semibold p-4">Create Store</p>
       <div className="rounded-md bg-white flex flex-col m-4">
         <p className="text-blue-800 font-semibold text-xl px-4 pt-4">
           Add Subcomponent
