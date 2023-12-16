@@ -85,13 +85,28 @@ const updatepanelSlice = createSlice({
     },
 
     addCompletedSubComponent(state, action) {
+      console.log(
+        state.components[action.payload.component_index].sub_components
+      );
       state.components[action.payload.component_index].sub_components[
         action.payload.sub_index
       ] = action.payload.data;
 
+      state.components[action.payload.component_index].sub_components[
+        action.payload.sub_index
+      ].status = "submitted";
+
+      // if present then replace else push
       state.components[action.payload.component_index].completed_subcomponents[
         action.payload.sub_index
-      ] = action.payload._id;
+      ]
+        ? (state.components[
+            action.payload.component_index
+          ].completed_subcomponents[action.payload.sub_index] =
+            action.payload._id)
+        : state.components[
+            action.payload.component_index
+          ].completed_subcomponents.push(action.payload._id);
 
       state.components[action.payload.component_index].price =
         state.components[action.payload.component_index].price -
@@ -175,7 +190,6 @@ const updatepanelSlice = createSlice({
     },
 
     addConsumable(state, action) {
-      console.log(action.payload);
       state.components[action.payload.index2].sub_components =
         action.payload.data;
       state.components[action.payload.index2].completed_subcomponents =

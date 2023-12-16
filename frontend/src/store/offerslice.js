@@ -46,6 +46,7 @@ const offerSlice = createSlice({
         state.clientName = action.payload.clientName;
         state.DescriptionOfPanel = action.payload.DescriptionOfPanel;
         state.QtyOfPanel = action.payload.QtyOfPanel;
+        state.panels_to_be_created = action.payload.panels_to_be_created;
       }
       state.id = action.payload.id;
     },
@@ -67,13 +68,11 @@ const offerSlice = createSlice({
       const panelToUpdate = state.panels_to_be_created.find(
         (panel) => panel.name === action.payload.name
       );
-      console.log(panelToUpdate);
 
       if (panelToUpdate) {
         const partToUpdate = panelToUpdate.parts.find(
           (part) => part.part_name === action.payload.part_name
         );
-        console.log(partToUpdate);
 
         if (partToUpdate) {
           partToUpdate.components = action.payload.components;

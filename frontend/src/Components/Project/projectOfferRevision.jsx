@@ -199,7 +199,9 @@ export const ProjectOfferRevision = ({
                   try {
                     const dataPromises = record.panel.map(async (e) => {
                       console.log(e);
-                      const response = await getRevisionOfferComponent(e._id);
+                      const response = await getRevisionOfferComponent(
+                        e._id || e
+                      );
                       return response.data?.data;
                     });
 
@@ -302,6 +304,7 @@ export const ProjectOfferRevision = ({
         },
         QtyOfPanel: recentData.Qty_of_panel,
         DescriptionOfPanel: recentData.description_of_panel,
+        panels_to_be_created: recentData.panels_to_be_created,
       };
       setTableData(...dataOfTable);
       console.log(reduxData);

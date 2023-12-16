@@ -2,8 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Input, Select, Button, Table, message, Tooltip } from "antd";
 import { getclients } from "../../APIs/client";
 import { getProjects } from "../../APIs/project";
-import { getComponents } from "../../APIs/component";
-import { addOffers } from "../../APIs/offer";
 import { useDispatch, useSelector } from "react-redux";
 import { offerActions } from "../../store/offerslice";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +21,6 @@ export const OfferRevision = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const offer = useSelector((state) => state.offer);
-  const [clientOptions, setClientOptions] = useState([]);
-  const [projectOptions, setProjectOptions] = useState([]);
   const [projectName, setProjectName] = useState({
     label: "Select Project",
     value: "",
@@ -246,22 +242,9 @@ export const OfferRevision = ({
     },
   ];
 
-  const getAllClients = async () => {
-    const response = await getclients();
-    if (response.type === "success") {
-      setClientOptions(
-        response.data.data.map((e) => ({ label: e.name, value: e._id }))
-      );
-    } else if (response.type === "error") {
-      console.log(response.message);
-    }
-  };
-
   useEffect(() => {
-    getAllClients();
-
     console.log(recentData);
-    if (recentData) {
+    if (recentData.client_name) {
       setClientName({
         label: recentData.client_name,
         value: recentData.client_name,
@@ -274,7 +257,7 @@ export const OfferRevision = ({
       setQtyOfPanel(recentData.Qty_of_panel);
       setAddedInitialData(true);
       const dataOfTable = [];
-      recentData.panels_to_be_created.map((e) => {
+      recentData?.panels_to_be_created?.map((e) => {
         dataOfTable.push(
           e.parts.map((part) => {
             console.log(part);
@@ -305,6 +288,7 @@ export const OfferRevision = ({
         },
         QtyOfPanel: recentData.Qty_of_panel,
         DescriptionOfPanel: recentData.description_of_panel,
+        panels_to_be_created: recentData.panels_to_be_created,
       };
       setTableData(...dataOfTable);
       dispatch(offerActions.setUpdationData(reduxData));
@@ -312,24 +296,9 @@ export const OfferRevision = ({
     } else {
       message.error("No data found");
       setAddRevision("");
+      setOfferId("");
     }
   }, [recentData]);
-
-  useEffect(() => {
-    if (clientName.label === "Select Client") return;
-    getProjects({ client_id: clientName.value }).then((response) => {
-      if (response.type === "success") {
-        setProjectOptions(
-          response.data.data.map((e) => ({
-            label: e.project_name,
-            value: e._id,
-          }))
-        );
-      } else if (response.type === "error") {
-        console.log(response.message);
-      }
-    });
-  }, [clientName.label]);
 
   useEffect(() => {
     console.log(offer);
@@ -342,7 +311,7 @@ export const OfferRevision = ({
       setAddedInitialData(true);
       setProjectName(offer.projectName);
       const dataOfTable = [];
-      recentData.panels_to_be_created.map((e) => {
+      recentData?.panels_to_be_created.map((e) => {
         e.parts.map((part) => {
           console.log(part);
           dataOfTable.push({
@@ -374,62 +343,6 @@ export const OfferRevision = ({
     }
   }, [offer]);
 
-  const resetValue = () => {
-    setClientName({ label: "Select Client", value: "" });
-    setProjectName({ label: "Select Project", value: "" });
-    setDescriptionOfPanel("");
-    setQtyOfPanel(1);
-    dispatch(
-      offerActions.setInitialDetails({
-        projectName: {
-          label: "Select Project",
-          value: "",
-        },
-        clientName: {
-          label: "Select Client",
-          value: "",
-        },
-        QtyOfPanel: 0,
-        DescriptionOfPanel: "",
-      })
-    );
-  };
-
-  const resetProfitValue = () => {
-    setProfitPercentage(0);
-    setProfit(0);
-  };
-
-  const HandleAddInitials = () => {
-    // validation
-    if (clientName.label === "Select Client") {
-      message.error("Please select client");
-      return;
-    }
-    if (projectName.label === "Select Project") {
-      message.error("Please select project");
-      return;
-    }
-    if (QtyOfPanel <= 0) {
-      message.error("Please enter quantity of panel");
-      return;
-    }
-    if (DescriptionOfPanel === "") {
-      message.error("Please enter Description of panel");
-      return;
-    }
-    setAddedInitialData(true);
-    dispatch(
-      offerActions.setInitialDetails({
-        projectName: projectName,
-        clientName: clientName,
-        QtyOfPanel: QtyOfPanel,
-        DescriptionOfPanel: DescriptionOfPanel,
-        id: OfferId,
-      })
-    );
-  };
-
   const BackHandler = () => {
     setAddRevision("");
     setRecentData({});
@@ -446,101 +359,7 @@ export const OfferRevision = ({
         </span>
       </div>
       {addedInitialData === false ? (
-        <div className="rounded-md bg-white flex flex-col m-4">
-          <p className="text-blue-800 font-semibold text-xl px-4 pt-4">
-            Enter Offer's Details
-          </p>
-          <div className="w-full flex justify-evenly">
-            <div className="w-3/4 p-4">
-              <section>
-                <div className="font-semibold p-2 text-gray-500">
-                  Select Client
-                </div>
-                <Select
-                  showSearch
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  className="w-full"
-                  placeholder="Select Client"
-                  value={clientName.label}
-                  onChange={(value) => {
-                    clientOptions.map((e) => {
-                      if (value === e.value) {
-                        setClientName({ value: e.value, label: e.label });
-                        setProjectName("Select Project");
-                      }
-                    });
-                    setProjectName({ label: "Select Project", value: "" });
-                  }}
-                  options={clientOptions}
-                />
-              </section>
-              <section>
-                <div className="font-semibold p-2 text-gray-500 mt-2">
-                  Description Of Panel
-                </div>
-                <Input
-                  onChange={(e) => setDescriptionOfPanel(e.target.value)}
-                  value={DescriptionOfPanel}
-                  className=""
-                  placeholder="Enter Quantity"
-                />
-              </section>
-            </div>
-            <div className="bg-white w-3/4 p-4">
-              <section>
-                <div className="font-semibold p-2 text-gray-500">
-                  Select Project
-                </div>
-                <Select
-                  showSearch
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  className="w-full"
-                  placeholder="Select Project"
-                  value={projectName.label}
-                  onChange={(value) => {
-                    projectOptions.map((e) => {
-                      if (value === e.value) {
-                        setProjectName({ value: e.value, label: e.label });
-                      }
-                    });
-                  }}
-                  options={projectOptions}
-                />
-              </section>
-              <section>
-                <div className="font-semibold p-2 text-gray-500 mt-2">
-                  Qty. Of Panel
-                </div>
-                <Input
-                  onChange={(e) => setQtyOfPanel(e.target.value)}
-                  value={QtyOfPanel}
-                  type="number"
-                  className=""
-                  placeholder="Enter Value"
-                />
-              </section>
-            </div>
-          </div>
-          <section className="flex items-center justify-center gap-5 p-4">
-            <Button
-              onClick={HandleAddInitials}
-              className="bg-blue-700 text-white"
-            >
-              Confirm Initials
-            </Button>
-            <Button onClick={resetValue} className="bg-gray-500 text-white">
-              Reset
-            </Button>
-          </section>
-        </div>
+        <div className="rounded-md bg-white flex flex-col m-4"></div>
       ) : (
         <div className="w-full">
           <div className="m-5 p-5 bg-white">
@@ -563,12 +382,6 @@ export const OfferRevision = ({
                   <div className="w-fit">{QtyOfPanel}</div>
                 </div>
               </div>
-              {/* <Button
-                onClick={() => setAddedInitialData(false)}
-                className="bg-blue-700 text-white"
-              >
-                Edit
-              </Button> */}
             </div>
           </div>
 

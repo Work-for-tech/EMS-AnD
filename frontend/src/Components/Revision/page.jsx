@@ -42,6 +42,7 @@ export const Revision = () => {
   }, [arrow]);
 
   const RevisionHandler = () => {
+    console.log(OfferId);
     setAddRevision(OfferId);
   };
 

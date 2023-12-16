@@ -180,17 +180,6 @@ export const OfferPanel = () => {
 
   return (
     <div className="w-full  min-h-screen bg-[#f3f7ff]">
-      {/* {ConfirmPartName === true && (
-        <div className="absolute right-[3%] top-[3%] border-red-700 border-2 rounded-lg p-4 bg-white shadow-lg">
-          <p className="font-semibold text-gray-700 text-xl">
-            Price:
-            <span className="text-blue-800 font-semibold px-2 text-xl">
-              Rs. {price}
-            </span>
-          </p>
-        </div>
-      )} */}
-
       {ConfirmPartName === false ? (
         <div className="rounded-md bg-white flex flex-col m-4">
           <p className="text-blue-800 font-semibold text-xl px-4 pt-4">

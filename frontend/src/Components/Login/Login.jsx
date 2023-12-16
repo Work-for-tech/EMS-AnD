@@ -1,10 +1,13 @@
 import { Button, Input, Select, message } from "antd";
 import { Eye, EyeOff } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { login } from "../../APIs/login";
+import { login, verify } from "../../APIs/login";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginActions } from "../../store/loginslice";
 
 export const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
@@ -12,11 +15,28 @@ export const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
+  const loginThroughToken = async () => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/");
+      const response = await verify();
+      if (response.type === "success") {
+        dispatch(
+          loginActions.addNameAndAccess({
+            name: response.data.user.data.userId.name,
+            access: response.data.user.data.moduleName,
+            email: response.data.user.data.userId.email,
+          })
+        );
+        console.log(localStorage.getItem("lastpath"));
+        navigate(localStorage.getItem("lastpath") || "/");
+      } else {
+        message.error("Cannot login through token");
+      }
     }
+  };
+
+  useEffect(() => {
+    loginThroughToken();
   }, []);
 
   const ChangeHandler = (e) => {

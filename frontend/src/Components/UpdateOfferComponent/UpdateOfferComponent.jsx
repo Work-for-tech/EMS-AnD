@@ -101,22 +101,22 @@ export const UpdateOfferComponent = ({ index }) => {
     }
 
     const response = await getOneComponent(componentName);
-    console.log(response.data);
     if (response.type === "success") {
       let Name = response.data.data.name;
       let newData = {
         component_id: Name,
         name: Name,
         sub_components: [],
+        completed_subcomponents: [],
         price: 0,
       };
       response.data.data.sub_components.map((e) => {
-        console.log(e);
         e.subcomponent_id.quantity = e.quantity;
         e.subcomponent_id.status = "editing";
         newData.sub_components.push(e.subcomponent_id);
       });
 
+      console.log(newData);
       setComponentName("Select Component");
       dispatch(updatepanelActions.setComponents({ data: newData }));
     } else if (response.type === "error") {
@@ -126,17 +126,18 @@ export const UpdateOfferComponent = ({ index }) => {
 
   const addCompaniesWithoutComponent = async () => {
     let newData = {
-      status: "submitted",
       component_id: "Add Consumables",
       name: "Add Consumables",
       sub_components: [],
       price: 0,
       consumables: {},
     };
-    const alreadyConsumables = panel.completed_components_data.find(
-      (e) => e.component_id === "Add Consumables"
+
+    const alreadyConsumables = panel.components.find(
+      (e) => e.name === "Add Consumables"
     );
     if (alreadyConsumables) {
+      console.log("Here");
       return;
     }
     setComponentName("Select Component");

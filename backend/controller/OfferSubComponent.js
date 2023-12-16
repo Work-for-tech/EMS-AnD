@@ -4,11 +4,17 @@ const offerSubComponentSchema = require("../models/OfferSubComponent");
 exports.add = async (req, res) => {
   try {
     console.log(req.body);
+
     const offer_sub_component = await offerSubComponentSchema.create(req.body);
+
+    const populatedOfferSubComponent = await offerSubComponentSchema
+      .findById(offer_sub_component._id)
+      .populate("company.company_name")
+      .exec();
     console.log(offer_sub_component);
     res.status(200).json({
       message: "offer_sub_component added successfully.",
-      data: offer_sub_component,
+      data: populatedOfferSubComponent,
     });
   } catch (err) {
     res.status(500).json({

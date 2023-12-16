@@ -13,7 +13,6 @@ import { FlipVertical } from "lucide-react";
 export const UpdateOfferCompanies = ({
   data,
   panel_index,
-  component_index,
   sub_index,
   index,
 }) => {
@@ -85,6 +84,7 @@ export const UpdateOfferCompanies = ({
     if (!newData || catalogNo === "Select catalog No" || newData.length === 0) {
       return;
     }
+
     const FilteredData = newData.catalog.filter((e) => {
       if (catalogNo === e.catalog_number) {
         return e.catalog_number;
@@ -198,8 +198,8 @@ export const UpdateOfferCompanies = ({
       message.success("subcomponent created successfully");
       setSubmitted(true);
       console.log({
-        index: panel_index,
-        component_index: component_index,
+        index: index,
+        panel_index: panel_index,
         sub_index: sub_index,
         newPrice: totalPrice,
         oldPrice: prevprice,
@@ -208,9 +208,8 @@ export const UpdateOfferCompanies = ({
       });
       dispatch(
         updatepanelActions.addCompletedSubComponent({
-          index: panel_index,
-          component_index: component_index,
-          sub_index: sub_index,
+          component_index: sub_index,
+          sub_index: index,
           newPrice: totalPrice,
           oldPrice: prevprice,
           _id: response.data.data._id,

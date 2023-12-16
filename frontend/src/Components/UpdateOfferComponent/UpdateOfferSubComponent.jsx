@@ -13,7 +13,6 @@ export const UpdateOfferSubComponent = ({
   panel_index,
 }) => {
   const dispatch = useDispatch();
-  const panel = useSelector((state) => state.panel.panel[panel_index]);
   const subcomponent = useSelector(
     (state) => state.updatepanel.components[index]
   );
@@ -91,17 +90,6 @@ export const UpdateOfferSubComponent = ({
   ];
 
   useEffect(() => {
-    const foundSubmitted = panel?.completed_components_data.find(
-      (e) => e?.name === subcomponent?.component_id
-    );
-    if (foundSubmitted) {
-      setCompleted(true);
-      return;
-    }
-    setCompleted(false);
-  });
-
-  useEffect(() => {
     const completed_show_data = [];
     subcomponent?.sub_components.map((e) => {
       if (e?._id && e?.status === "submitted") {
@@ -131,7 +119,7 @@ export const UpdateOfferSubComponent = ({
 
     if (
       subcomponent.completed_subcomponents.length !==
-      subcomponent.subcomponents.length
+      subcomponent.sub_components.length
     ) {
       message.error("Please Create all subcomponents");
       return;
@@ -142,7 +130,6 @@ export const UpdateOfferSubComponent = ({
     if (response.type === "success") {
       message.success("Component Created Successfully");
       setCompleted(true);
-
       if (subcomponent._id) {
         dispatch(
           updatepanelActions.addCompletedComponentOld({
@@ -161,6 +148,8 @@ export const UpdateOfferSubComponent = ({
       message.error("Error Occured");
     }
   };
+
+  console.log(subComponent);
 
   return (
     <div>
