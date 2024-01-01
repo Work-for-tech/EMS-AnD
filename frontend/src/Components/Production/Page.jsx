@@ -8,6 +8,7 @@ import {
   getProductionByProjectId,
 } from "../../APIs/Production";
 import { useNavigate } from "react-router-dom";
+import { ArrowBigLeftDash } from "lucide-react";
 
 export const Production = () => {
   const navigate = useNavigate();
@@ -305,6 +306,17 @@ export const Production = () => {
     <div className="">
       <div className="w-full h-screen bg-[#f3f7ff]">
         <p className="text-3xl text-blue-800 font-semibold p-4">Production</p>
+        <div
+          className="px-4 flex flex-row cursor-pointer"
+          onClick={() => {
+            navigate("/productionlist");
+          }}
+        >
+          <ArrowBigLeftDash className="text-gray-500 hover:text-blue-800" />
+          <span className="font-semibold text-gray-500 hover:text-blue-800">
+            Production List
+          </span>
+        </div>
         <div className="bg-white m-4 flex flex-row rounded-md">
           <div className="h-full w-full p-4 rounded-md">
             <div className="text-blue-800 font-semibold text-xl p-2">

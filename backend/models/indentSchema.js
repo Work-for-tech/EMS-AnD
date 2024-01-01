@@ -17,6 +17,10 @@ const indentSchema = new scehma(
           type: scehma.Types.ObjectId,
           ref: "offersubcomponent",
         },
+        discount: {
+          type: "Number",
+          default: 0,
+        },
         quantityRequired: {
           type: "Number",
         },

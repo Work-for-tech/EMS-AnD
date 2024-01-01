@@ -12,6 +12,10 @@ const bulkIndentSchema = new Schema(
         quantity: {
           type: "Number",
         },
+        discount: {
+          type: "Number",
+          default: 0,
+        },
       },
     ],
     purchased: {

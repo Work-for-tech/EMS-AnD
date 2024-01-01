@@ -11,5 +11,7 @@ router.get("/getonebulkindent/:id", indentController.getonebulkindent);
 
 router.get("/getbulkindent", indentController.getBulkIndentForPurchase);
 router.get("/getbothindentsdata", indentController.GetBothIndentForList);
+router.post("/updatediscount", indentController.updateDiscountIndent);
+router.post("/updatebulkdiscount", indentController.updateDiscountBulkIndent);
 
 module.exports = router;

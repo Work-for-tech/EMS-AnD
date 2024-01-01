@@ -57,8 +57,6 @@ function App() {
     dispatch(offerActions.setInitials());
   }
 
-  console.log(window.location.pathname === "/");
-
   return (
     <div className="">
       <Router className="w-full">

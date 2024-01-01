@@ -171,7 +171,6 @@ export const Purchase = () => {
           </p>
           {selectedData ? (
             <div className="bg-[#f3f7ff] flex flex-col gap-10">
-              
               <div className="bg-white flex items-center justify-center flex-row w-full p-4 gap-4 rounded-md">
                 <div className="w-1/2">
                   <div className="w-full flex flex-row gap-4 p-2 my-2">
@@ -212,7 +211,7 @@ export const Purchase = () => {
               </div>
               {purchaseData.map((e, i) => {
                 return (
-                  <div key={i} className="bg-white w-full gap-4 rounded-md">
+                  <div key={e._id} className="bg-white w-full gap-4 rounded-md">
                     <VendorData
                       index={i}
                       setItemsData={setItemsData}

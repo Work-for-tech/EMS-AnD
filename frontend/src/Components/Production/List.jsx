@@ -97,12 +97,12 @@ export const ProductionList = () => {
   return (
     <div className="w-full min-h-screen bg-[#f3f7ff]">
       <p className="text-3xl text-blue-800 font-semibold p-4">
-        Offer Panel List
+        Production List
       </p>
       <div className="rounded-md bg-white flex flex-col m-4">
         <>
           <p className="text-blue-800 font-semibold text-xl p-5">
-            Offer Panel List
+            Production List
           </p>
           <div className="w-full">
             <Table columns={columns} dataSource={projectData} />

@@ -6,6 +6,7 @@ import { getclients } from "../../APIs/client";
 import { AddSubComp } from "./AddSubComp";
 import { addIndent } from "../../APIs/indent";
 import { getStoreDataById } from "../../APIs/store";
+import { ArrowBigLeftDash } from "lucide-react";
 
 export const IndentOffers = () => {
   const [subComponentsData, setSubComponentsData] = useState([]);
@@ -26,11 +27,15 @@ export const IndentOffers = () => {
     const sendData = {
       clientId: clientName.value,
       projectId: project.value,
-      items: newSubComponents.map((e) => ({
-        subcomponent: e.key,
-        quantityRequired: e.quantityRequired,
-        quantityOrdered: e.quantity_ordered,
-      })),
+      items: newSubComponents.map((e) => {
+        console.log(e);
+        return {
+          subcomponent: e.key,
+          discount: e.discount,
+          quantityRequired: e.quantityRequired,
+          quantityOrdered: e.quantity_ordered,
+        };
+      }),
     };
     console.log(sendData);
     const response = await addIndent(sendData);
@@ -153,6 +158,23 @@ export const IndentOffers = () => {
   return (
     <div className="w-full min-h-screen h-full bg-[#f3f7ff]">
       <p className="text-3xl text-blue-800 font-semibold p-4">Indent</p>
+      {addSubcomponents && (
+        <div
+          className="px-4 flex flex-row cursor-pointer"
+          onClick={() => {
+            setAddSubcomponents(false);
+            setNewSubComponents([]);
+            setSubComponentsData([]);
+            setProject({ label: "Select Project", value: "" });
+            setClientName({ label: "Select Client", value: "" });
+          }}
+        >
+          <ArrowBigLeftDash className="text-gray-500 hover:text-blue-800" />
+          <span className="font-semibold text-gray-500 hover:text-blue-800">
+            Back
+          </span>
+        </div>
+      )}
       <div className="m-4 flex flex-col items-center justify-center">
         <div className="w-full bg-white flex flex-col rounded-md">
           <p className="text-blue-800 font-semibold text-xl p-4">
@@ -226,22 +248,24 @@ export const IndentOffers = () => {
               </div>
             </div>
           ) : (
-            <div className="w-full p-4 gap-4 rounded-md">
-              {subComponentsData.map((e, i) => {
-                return (
-                  <AddSubComp
-                    key={i}
-                    subComponentsData={subComponentsData}
-                    setSubComponentsData={setSubComponentsData}
-                    data={e}
-                    setNewSubComponents={setNewSubComponents}
-                  />
-                );
-              })}
-              {newSubComponents.length !== 0 && (
-                <Table columns={columns} dataSource={newSubComponents} />
-              )}
-            </div>
+            <>
+              <div className="w-full p-4 gap-4 rounded-md">
+                {subComponentsData.map((e, i) => {
+                  return (
+                    <AddSubComp
+                      key={i}
+                      subComponentsData={subComponentsData}
+                      setSubComponentsData={setSubComponentsData}
+                      data={e}
+                      setNewSubComponents={setNewSubComponents}
+                    />
+                  );
+                })}
+                {newSubComponents.length !== 0 && (
+                  <Table columns={columns} dataSource={newSubComponents} />
+                )}
+              </div>
+            </>
           )}
           {subComponentsData.length === newSubComponents.length &&
             subComponentsData.length !== 0 && (

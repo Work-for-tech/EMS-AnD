@@ -2,8 +2,11 @@ import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { getOneCompany } from "../../APIs/company";
 import { getRevisionOfferComponent } from "../../APIs/revision";
+import { useNavigate } from "react-router-dom";
+import { ArrowBigLeftDash } from "lucide-react";
 
 export const IssueSubcomponent = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const components = JSON.parse(localStorage.getItem("issuecomponents"));
 
@@ -74,6 +77,17 @@ export const IssueSubcomponent = () => {
       <p className="text-3xl text-blue-800 font-semibold p-4">
         SubComponents List
       </p>
+      <div
+        className="px-4 flex flex-row cursor-pointer"
+        onClick={() => {
+          navigate("/issuelist");
+        }}
+      >
+        <ArrowBigLeftDash className="text-gray-500 hover:text-blue-800" />
+        <span className="font-semibold text-gray-500 hover:text-blue-800">
+          Issue List
+        </span>
+      </div>
       <div className="rounded-md bg-white flex flex-col m-4">
         <>
           <p className="text-blue-800 font-semibold text-xl p-5">
