@@ -39,7 +39,7 @@ exports.getProject = async (req, res) => {
 exports.getProjects = async (req, res) => {
   try {
     const project = await projectSchema
-      .find({ is_finalized: true })
+      .find({ is_finalized: true,finished:false })
       .populate("client_id")
       .exec();
 
