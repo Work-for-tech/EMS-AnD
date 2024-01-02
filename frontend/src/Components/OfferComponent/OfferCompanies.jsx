@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button, Table, Select, message } from "antd";
-import lo, { set } from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { getOneSubComponent } from "../../APIs/subComponent";
 import { offerSubComponent } from "../../APIs/offer";
@@ -30,80 +29,6 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-
-  // const column = [
-  //   {
-  //     title: "Description",
-  //     dataIndex: "desc",
-  //     key: "desc",
-  //   },
-  //   {
-  //     title: "Catalog Number",
-  //     dataIndex: "catalog_number",
-  //     key: "catalog_number",
-  //   },
-  //   {
-  //     title: "Rating Value",
-  //     dataIndex: "rating_value",
-  //     key: "rating_value",
-  //   },
-  //   {
-  //     title: "Company",
-  //     dataIndex: "company_name",
-  //     key: "company_name",
-  //   },
-  //   {
-  //     title: "Price",
-  //     dataIndex: "price",
-  //     key: "price",
-  //   },
-  //   {
-  //     title: "Discount",
-  //     dataIndex: "discount",
-  //     key: "discount",
-  //   },
-  //   {
-  //     title: "Quantity",
-  //     dataIndex: "quantity",
-  //     key: "quantity",
-  //   },
-  //   {
-  //     title: "Edit",
-  //     dataIndex: "edit",
-  //     key: "edit",
-  //     render: (r) => {
-  //       return (
-  //         <div>
-  //           <Button
-  //             className="w-fit bg-blue-700 text-white"
-  //             onClick={() => {
-  //               setSubmitted(false);
-
-  //               dispatch(
-  //                 panelActions.removeCompletedSubComponent({
-  //                   data: submittedData._id,
-  //                   index: panel_index,
-  //                   component_index: index,
-  //                   totalPrice: totalPrice,
-  //                 })
-  //               );
-
-  //               dispatch(
-  //                 panelActions.removeCompletedComponentSubComponent({
-  //                   data: submittedData._id,
-  //                   index: panel_index,
-  //                   component_index: index,
-  //                 })
-  //               );
-  //             }}
-  //           >
-  //             Edit
-  //           </Button>
-  //         </div>
-  //       );
-  //     },
-  //   },
-  // ];
 
   useEffect((e) => {
     const foundData = subcomponent_data?.completed_subcomponents_data?.filter(
@@ -136,6 +61,7 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
 
       if (foundData && foundData.length === 0) {
         setSubmitted(false);
+        console.log("I was here");
         return;
       }
 
@@ -162,9 +88,9 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
         value: e.rating_value,
       }));
       const nowDataHere = FilteredData[0].rating;
+      setCompany(foundData[0].company_name);
       setRatingOptions(ratingData);
 
-      setCompany(foundData[0].company_name);
       const catalogEntry = foundSubcomponent.catalog.find(
         (entry) => entry.catalog_number === foundData[0].catalog_number
       );
@@ -187,6 +113,7 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
               value: e.company_id._id,
             };
           });
+          console.log(companyNameList);
           setCompanyOptions(companyNameList);
         }
       }
@@ -227,7 +154,6 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
       value: e.rating_value,
     }));
 
-    console.log(FilteredData[0].rating);
     setNowData(FilteredData[0].rating);
     setRatingOptions(ratingData);
   }, [catalogNo]);
@@ -254,7 +180,6 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
 
         if (ratingEntry) {
           // Extract the "name" field from the "company_id" object
-          console.log(ratingEntry.companies);
           const companyNameList = ratingEntry.companies.map((e) => {
             console.log(e);
             return {
@@ -262,6 +187,8 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
               value: e.company_id._id,
             };
           });
+
+          console.log(companyNameList);
           setCompanyOptions(companyNameList);
         } else {
           console.log("Rating entry not found.");
@@ -283,7 +210,7 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
     if (nowData.length !== 0) {
       const companyData = nowData[0].companies.filter((e) => {
         console.log(e);
-        if (e.company_id === company) {
+        if (e.company_id === company || e.company_id._id === company) {
           return e;
         }
       });
@@ -320,18 +247,26 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
   }, [quantity, price, discount]);
 
   const submitHandler = async () => {
+    console.log(companyOptions);
+    const newCompanyName = companyOptions.filter((e) => {
+      if (e.label === company || e.value === company) {
+        return e;
+      }
+    })[0];
+
     const submitData = {
       desc: data.desc,
       catalog_number: catalogNo,
       rating_value: rating,
       company: {
-        company_name: company,
+        company_name: newCompanyName.value,
         price: price,
         discount: discount,
       },
       quantity: quantity,
     };
 
+    console.log(submitData);
     const response = await offerSubComponent(submitData);
 
     if (response.type === "error") {
@@ -342,24 +277,14 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
       setSubmitted(true);
       console.log(totalPrice);
 
-      // company name
-      const companyData = companyOptions.filter((e) => {
-        console.log(e);
-        if (e.value === company) {
-          return e.label;
-        }
-      });
-
-      console.log(companyData);
-
       const finalData = {
         key: response.data.data._id,
         _id: response.data.data._id,
         desc: data.desc,
         catalog_number: catalogNo,
         rating_value: rating,
-        company_name: companyData[0].label,
-        company_id: companyData[0].value,
+        company_name: newCompanyName.label,
+        company_id: newCompanyName.value,
         price: price,
         discount: discount,
         quantity: quantity,
@@ -402,7 +327,7 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
   };
 
   return (
-    <div className="  ">
+    <div className="">
       <div className="flex flex-col font-semibold text-gray-500 text-center ">
         {submitted === true && (
           <div className="m-1">
@@ -471,15 +396,15 @@ const OfferCompanies = ({ data, panel_index, index, completed }) => {
             />
             {company !== "Select Company" && quantity >= 0 && (
               <div className="w-1/3 flex items-center justify-evenly gap-4">
-                <div className="flex flex-col text-green-500 font-semibold">
+                <div className=" font-semibold">
                   <p>Price</p>
                   <p>{price?.toFixed(2)}</p>
                 </div>
-                <div className="text-red-500 font-semibold">
+                <div className=" font-semibold">
                   <p>Discount</p>
                   <p>{discount?.toFixed(2)}</p>
                 </div>
-                <div className="text-purple-700 font-semibold">
+                <div className="font-semibold">
                   <p>Total Price</p>
                   <p>{totalPrice?.toFixed(2)}</p>
                 </div>

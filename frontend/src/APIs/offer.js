@@ -81,7 +81,6 @@ export const offerSubComponent = async (data) => {
       data
     );
 
-    console.log(response.data);
     return {
       type: "success",
       data: response.data,

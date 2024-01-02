@@ -7,7 +7,6 @@ const updatepanelSlice = createSlice({
     name: "",
     part_name: "",
     components: [],
-    sub_components: [],
     completed_components: [],
     profit_percentage: 0,
     price: 0,
@@ -55,6 +54,19 @@ const updatepanelSlice = createSlice({
       if (newPrice < 0) newPrice = 0;
       state.price = newPrice;
     },
+
+    editSubComponent(state, action) {
+      state.components[action.payload.index].sub_components = state.components[
+        action.payload.index
+      ].sub_components.map((e) => {
+        console.log(e._id, action.payload.id);
+        if (e._id === action.payload.id) {
+          e.status = "editing";
+        }
+        return e;
+      });
+    },
+
     replaceComponents(state, action) {
       state.panel[action.payload].components = action.payload.data;
     },
@@ -73,13 +85,28 @@ const updatepanelSlice = createSlice({
     },
 
     addCompletedSubComponent(state, action) {
+      console.log(
+        state.components[action.payload.component_index].sub_components
+      );
       state.components[action.payload.component_index].sub_components[
         action.payload.sub_index
       ] = action.payload.data;
 
+      state.components[action.payload.component_index].sub_components[
+        action.payload.sub_index
+      ].status = "submitted";
+
+      // if present then replace else push
       state.components[action.payload.component_index].completed_subcomponents[
         action.payload.sub_index
-      ] = action.payload._id;
+      ]
+        ? (state.components[
+            action.payload.component_index
+          ].completed_subcomponents[action.payload.sub_index] =
+            action.payload._id)
+        : state.components[
+            action.payload.component_index
+          ].completed_subcomponents.push(action.payload._id);
 
       state.components[action.payload.component_index].price =
         state.components[action.payload.component_index].price -
@@ -163,7 +190,6 @@ const updatepanelSlice = createSlice({
     },
 
     addConsumable(state, action) {
-      console.log(action.payload);
       state.components[action.payload.index2].sub_components =
         action.payload.data;
       state.components[action.payload.index2].completed_subcomponents =

@@ -29,7 +29,7 @@ export const UpdateOfferPanel = () => {
       key: 0,
       label: panel.part_name,
       children: (
-        <div key={0}>
+        <div key={0} className="w-full">
           <UpdateOfferComponent
             part_name={panel.part_name}
             index={0}
@@ -110,7 +110,7 @@ export const UpdateOfferPanel = () => {
   return (
     <div className="w-full min-h-screen bg-[#f3f7ff]">
       <div className="w-full">
-        <div className="m-5 p-5 bg-white">
+        <div className="m-3 p-3 bg-white">
           <p className="text-blue-800 font-semibold text-xl p-2">
             Panel's Name
           </p>
@@ -130,29 +130,29 @@ export const UpdateOfferPanel = () => {
             Panel's Details
           </p>
 
-          <div className="p-4">
-            <div className="bg-white p-4">
-              <div className="w-full flex justify-evenly">
-                <div className="w-1/2 p-4">
-                  <section>
-                    <div className="font-semibold p-2 text-gray-500 mt-2">
-                      Part Name
-                    </div>
-                    <Input
-                      onChange={(e) => setPartName(e.target.value)}
-                      value={PartName}
-                      className=""
-                      placeholder="Enter Part Name"
-                    />
-                  </section>
-                  <>
-                    <section>
-                      <div className="font-semibold p-2 text-gray-500">
+          <div className="w-full p-2">
+            <div className="w-full bg-white p-4">
+              <div className="w-full flex items-center justify-center">
+                <div className="w-full flex items-center justify-center">
+                  <div className="w-full p-4 flex flex-row gap-4">
+                    <section className={`flex flex-col w-full gap-1`}>
+                      <div className="font-semibold text-gray-500">
+                        Part Name
+                      </div>
+                      <Input
+                        onChange={(e) => setPartName(e.target.value)}
+                        value={PartName}
+                        className="w-full"
+                        placeholder="Enter Part Name"
+                      />
+                    </section>
+                    <section className="flex flex-col w-full gap-1">
+                      <div className="font-semibold text-gray-500">
                         Profit Percentage
                       </div>
                       <Input
                         type="number"
-                        className=""
+                        className="w-full"
                         placeholder="Profit Percentage"
                         value={profitPercentage}
                         onChange={(e) => {
@@ -164,24 +164,19 @@ export const UpdateOfferPanel = () => {
                         }}
                       />
                     </section>
-                  </>
+                  </div>
                 </div>
               </div>
               <div className="w-full flex items-center justify-center">
-                <div className="w-1/5 flex flex-row items-center justify-between gap-2">
-                  <div className="flex flex-col items-start justify-center gap-2">
-                    <div className="font-semibold text-gray-500">Profit</div>
-                    <div className="font-semibold text-gray-500">Price</div>
-                    <div className="font-semibold text-gray-500">
-                      Total Price
-                    </div>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="text-green-500 font-semibold">
+                    Profit: {profit?.toFixed(2)}
                   </div>
-                  <div className="flex flex-col items-start justify-center gap-2">
-                    <div className="font-semibold text-gray-500">{profit}</div>
-                    <div className="font-semibold text-gray-500">{price}</div>
-                    <div className="font-semibold text-gray-500">
-                      {totalPrice}
-                    </div>
+                  <div className="text-red-500 font-semibold">
+                    Price: {price?.toFixed(2)}
+                  </div>
+                  <div className="text-purple-700 font-semibold">
+                    Total Price: {totalPrice?.toFixed(2)}
                   </div>
                 </div>
               </div>

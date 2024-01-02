@@ -45,6 +45,7 @@ import { Landing } from "./Components/Landing/Landing";
 import { AccessHandler } from "./Validator/AccessHandler";
 import { Production } from "./Components/Production/Page";
 import axios from "axios";
+import { ProductionList } from "./Components/Production/List";
 
 function App() {
   axios.defaults.baseURL = import.meta.env.VITE_baseURL;
@@ -349,6 +350,22 @@ function App() {
           />
           <Route
             path="/production"
+            element={
+              <AccessHandler>
+                <Production />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/productionlist"
+            element={
+              <AccessHandler>
+                <ProductionList />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/updateProduction"
             element={
               <AccessHandler>
                 <Production />

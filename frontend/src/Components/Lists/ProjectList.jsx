@@ -84,8 +84,6 @@ export const ProjectList = () => {
     getProjects();
   }, []);
 
-  console.log(projectId);
-
   const columns = [
     {
       title: "Project Name",
@@ -126,6 +124,8 @@ export const ProjectList = () => {
   const BackHandler = () => {
     setProjectId("");
   };
+
+  console.log(projectId);
 
   return (
     <div className="w-full min-h-screen bg-[#f3f7ff]">

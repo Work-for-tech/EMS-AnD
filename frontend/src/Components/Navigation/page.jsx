@@ -35,6 +35,7 @@ export const Navigator = () => {
     GRN: 0,
     Issue: 0,
     Employee: 0,
+    Production: 0,
   });
 
   const columns = [
@@ -45,6 +46,7 @@ export const Navigator = () => {
     "GRN",
     "Issue",
     "Employee",
+    "Production",
   ];
 
   const RWOffer = [
@@ -151,6 +153,18 @@ export const Navigator = () => {
     getItem("Employee", "sub7", [getItem("Employee List", "employeelist")]),
   ];
 
+  const RWProduction = [
+    getItem("Production", "sub8", [
+      getItem("Add Production", "production"),
+      getItem("Production List", "productionlist"),
+    ]),
+  ];
+  const RProduction = [
+    getItem("Production", "sub8", [
+      getItem("Production List", "productionlist"),
+    ]),
+  ];
+
   const [openKeys, setOpenKeys] = useState(["sub1"]);
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
@@ -172,6 +186,7 @@ export const Navigator = () => {
       GRN: 0,
       Issue: 0,
       Employee: 0,
+      Production: 0,
     };
 
     columns.forEach((item) => {
@@ -283,6 +298,16 @@ export const Navigator = () => {
                 onOpenChange={onOpenChange}
                 onClick={(e) => navigate(`/${e.key}`)}
                 items={items.Employee === 1 ? REmployee : RWEmployee}
+              />
+            )}
+            {items.Production !== 0 && (
+              <Menu
+                mode="inline"
+                className=""
+                openKeys={openKeys}
+                onOpenChange={onOpenChange}
+                onClick={(e) => navigate(`/${e.key}`)}
+                items={items.Production === 1 ? RProduction : RWProduction}
               />
             )}
           </div>

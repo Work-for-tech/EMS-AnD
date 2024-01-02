@@ -6,6 +6,7 @@ import { getOneComponent } from "../../APIs/component";
 import { panelActions } from "../../store/panelslice";
 import OfferCompanies from "./OfferCompanies";
 import { offerComponent } from "../../APIs/offer";
+
 export const OfferSubComponent = ({ subcomponents, index, panel_index }) => {
   const dispatch = useDispatch();
   const panel = useSelector((state) => state.panel.panel[panel_index]);
@@ -100,6 +101,7 @@ export const OfferSubComponent = ({ subcomponents, index, panel_index }) => {
     );
     if (foundSubmitted) {
       setCompleted(true);
+      return;
     }
     setCompleted(false);
   });
@@ -123,13 +125,12 @@ export const OfferSubComponent = ({ subcomponents, index, panel_index }) => {
       sub_components: component.completed_subcomponents,
     };
 
-    console.log("component", sendData);
-    console.log(component);
     const response = await offerComponent(sendData);
 
     if (response.type === "success") {
       message.success("Component Created Successfully");
       setCompleted(true);
+
       dispatch(
         panelActions.addCompletedComponent({
           index: panel_index,
@@ -140,7 +141,7 @@ export const OfferSubComponent = ({ subcomponents, index, panel_index }) => {
         panelActions.addCompletedComponentComponent({
           index: panel_index,
           data: response.data.data._id,
-          completed_data: sendData,
+          completed_data: response.data.data,
         })
       );
     } else if (response.type === "error") {

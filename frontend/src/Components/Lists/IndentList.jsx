@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Table, Tooltip } from "antd";
 import { ArrowBigLeftDash, MoreHorizontal } from "lucide-react";
+import { ChangeDiscount } from "../Discount/ChangeDiscount";
 
 export const IndentList = () => {
   const dispatch = useDispatch();
@@ -59,14 +60,19 @@ export const IndentList = () => {
                 setIsIndent(true);
                 setSubcomponentData(
                   record.items.map((e) => {
+                    console.log(e);
                     return {
-                      key: e.subcomponent._id,
+                      key: e._id,
+                      indentId: record.key,
+                      type: "indent",
                       desc: e.subcomponent.desc,
                       catalog_number: e.subcomponent.catalog_number,
                       rating_value: e.subcomponent.rating_value,
-                      company: e.subcomponent.company.company_name.name,
+                      company:
+                        e.subcomponent?.company?.company_name?.name ||
+                        "Unknown",
                       price: e.subcomponent.company.price,
-                      discount: e.subcomponent.company.discount,
+                      discount: e.discount,
                       quantityRequired: e.quantityRequired,
                       quantityOrdered: e.quantityOrdered,
                     };
@@ -114,13 +120,15 @@ export const IndentList = () => {
                   record.items.map((e) => {
                     console.log(e);
                     return {
-                      key: e.subcomponent._id,
+                      key: e._id,
+                      indentId: record.key,
+                      type: "bulk",
                       desc: e.subcomponent.desc,
                       catalog_number: e.subcomponent.catalog_number,
                       rating_value: e.subcomponent.rating_value,
                       company: e.subcomponent.company.company_name.name,
                       price: e.subcomponent.company.price,
-                      discount: e.subcomponent.company.discount,
+                      discount: e.discount,
                       quantityRequired: e.quantityRequired,
                       quantityOrdered: e.quantityOrdered,
                     };
@@ -160,7 +168,14 @@ export const IndentList = () => {
     },
     {
       title: "Discount",
-      dataIndex: "discount",
+      render: (text, record) => {
+        console.log(record);
+        return (
+          <div>
+            <ChangeDiscount discount={record.discount} record={record} />
+          </div>
+        );
+      },
     },
     {
       title: "Quantity Available",
@@ -182,11 +197,13 @@ export const IndentList = () => {
   };
 
   const getAllIndents = async () => {
+    if (isIndent) return;
     const response = await getAllIndent();
     console.log(response.data);
     setBulkData(
-      response.data.bulkData.map((e) => {
+      response.data.bulkData.map((e, i) => {
         return {
+          type: "bulk",
           key: e._id,
           _id: e._id,
           noofitems: e.items.length,
@@ -196,7 +213,8 @@ export const IndentList = () => {
       })
     );
     setIndentData(
-      response.data.indentDataByPid.map((e) => ({
+      response.data.indentDataByPid.map((e, i) => ({
+        type: "indent",
         key: e._id,
         client: e.clientId.name,
         project: e.projectId.project_name,
@@ -208,7 +226,7 @@ export const IndentList = () => {
 
   useEffect(() => {
     getAllIndents();
-  }, []);
+  }, [isIndent]);
 
   return (
     <div className="w-full min-h-screen bg-[#f3f7ff]">

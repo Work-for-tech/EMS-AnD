@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOneOffer } from "../../APIs/offer";
 import { Table, Tooltip } from "antd";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowBigLeftDash, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { offerActions } from "../../store/offerslice";
 
@@ -151,6 +151,17 @@ export const OfferList = () => {
       <p className="text-3xl text-blue-800 font-semibold p-4">
         Offer Panel List
       </p>
+      <div
+        className="px-4 flex flex-row cursor-pointer"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <ArrowBigLeftDash className="text-gray-500 hover:text-blue-800" />
+        <span className="font-semibold text-gray-500 hover:text-blue-800">
+          Back
+        </span>
+      </div>
       <div className="rounded-md bg-white flex flex-col m-4">
         <>
           <p className="text-blue-800 font-semibold text-xl p-5">

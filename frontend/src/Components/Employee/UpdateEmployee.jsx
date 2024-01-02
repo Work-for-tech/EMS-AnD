@@ -1,6 +1,6 @@
 import { Button, Input, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowBigLeftDash, Eye, EyeOff } from "lucide-react";
 import { updateEmployee } from "../../APIs/employee";
 import { useNavigate } from "react-router-dom";
 
@@ -95,6 +95,17 @@ export const UpdateEmployee = () => {
       <p className="text-3xl text-blue-800 font-semibold p-4">
         Update Employee
       </p>
+      <div
+        className="px-4 flex flex-row cursor-pointer"
+        onClick={() => {
+          navigate("/employeelist");
+        }}
+      >
+        <ArrowBigLeftDash className="text-gray-500 hover:text-blue-800" />
+        <span className="font-semibold text-gray-500 hover:text-blue-800">
+          Employee List
+        </span>
+      </div>
       <div className="rounded-md bg-white flex flex-col m-4">
         <p className="text-blue-800 font-semibold text-xl px-4 pt-4">
           Enter Employee's Details

@@ -181,3 +181,43 @@ module.exports.GetBothIndentForList = async (req, res) => {
     });
   }
 };
+
+module.exports.updateDiscountIndent = async (req, res) => {
+  try {
+    var data = await indentSchema.updateOne(
+      { _id: req.body._id, "items._id": req.body.itemId },
+      { $set: { "items.$.discount": req.body.discount } }
+    );
+    if (data != null) {
+      res.status(200).json({ message: "Indent updated", data: data });
+    } else {
+      res.status(400).json({ message: "required data not found" });
+    }
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({
+      message: "Error in updating indent",
+      data: error,
+    });
+  }
+};
+
+module.exports.updateDiscountBulkIndent = async (req, res) => {
+  try {
+    var data = await bulkIndentSchema.updateOne(
+      { _id: req.body._id, "items._id": req.body.itemId },
+      { $set: { "items.$.discount": req.body.discount } }
+    );
+    if (data != null) {
+      res.status(200).json({ message: "Indent updated", data: data });
+    } else {
+      res.status(400).json({ message: "required data not found" });
+    }
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({
+      message: "Error in updating indent",
+      data: error,
+    });
+  }
+};

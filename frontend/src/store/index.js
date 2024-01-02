@@ -11,6 +11,7 @@ import loginSlice from "./loginslice";
 const persistConfig = {
   key: "root",
   storage,
+  version: 1,
   blacklist: ["login"], // Exclude login from persisted state
 };
 
@@ -27,7 +28,7 @@ const persistedReducer = persistReducer(
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: [],
 });
 
 // Create a persisted store

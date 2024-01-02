@@ -69,6 +69,14 @@ export const Access = () => {
       label: "Read and Write Employee",
       value: "RWEmployee",
     },
+    {
+      label: "Read Production Only",
+      value: "RProduction",
+    },
+    {
+      label: "Read and Write Production",
+      value: "RWProduction",
+    },
   ]);
   const [arrow, setArrow] = React.useState("Show");
   const mergedArrow = useMemo(() => {

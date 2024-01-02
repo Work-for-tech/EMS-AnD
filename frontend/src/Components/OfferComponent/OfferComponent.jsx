@@ -12,6 +12,9 @@ export const OfferComponent = ({ part_name, index }) => {
   const dispatch = useDispatch();
   let panel = useSelector((state) => state.panel.panel[index]);
   let components = useSelector((state) => state.panel.panel[index].components);
+  let completedComponents = useSelector(
+    (state) => state.panel.panel[index].completed_components_data
+  );
   const [componentName, setComponentName] = useState("Select Component");
   const [componentOptions, setComponentOptions] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -45,10 +48,18 @@ export const OfferComponent = ({ part_name, index }) => {
                 <div className="w-full flex relative justify-end">
                   <div
                     onClick={() => {
+                      console.log({
+                        index: index,
+                        component_index: i,
+                        name: e.component_id,
+                        _id: e,
+                      });
                       dispatch(
                         panelActions.deleteComponents({
                           index: index,
                           component_index: i,
+                          name: e.component_id,
+                          _id: e._id,
                         })
                       );
                     }}
@@ -100,7 +111,7 @@ export const OfferComponent = ({ part_name, index }) => {
     }
 
     const response = await getOneComponent(componentName);
-    console.log(response.data);
+
     if (response.type === "success") {
       let Name = response.data.data.name;
       let newData = {
@@ -112,6 +123,7 @@ export const OfferComponent = ({ part_name, index }) => {
         totalPrice: 0,
       };
       response.data.data.sub_components.map((e) => {
+        console.log(e);
         e.subcomponent_id.quantity = e.quantity;
         newData.subcomponents.push(e.subcomponent_id);
       });
@@ -193,12 +205,6 @@ export const OfferComponent = ({ part_name, index }) => {
           {filteredItems?.map((e, i) => {
             return <div key={i}>{e.children}</div>;
           })}
-          {/* <Collapse
-            items={filteredItems}
-            bordered={components.length === 0 ? false : true}
-            defaultActiveKey={[0]}
-            className="w-full bg-gray-300 text-white"
-          /> */}
         </div>
       </div>
     </div>
