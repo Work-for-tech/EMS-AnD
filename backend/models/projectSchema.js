@@ -20,6 +20,10 @@ const projectSchema = new Schema({
     type: Number,
     default: 0,
   },
+  finished:{
+    type:Boolean,
+    default:false
+  }
 });
 
 module.exports = mongoose.model("project", projectSchema);
