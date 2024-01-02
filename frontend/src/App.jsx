@@ -44,9 +44,12 @@ import { Login } from "./Components/Login/Login";
 import { Landing } from "./Components/Landing/Landing";
 import { AccessHandler } from "./Validator/AccessHandler";
 import { Production } from "./Components/Production/Page";
+import axios from "axios";
 import { ProductionList } from "./Components/Production/List";
 
 function App() {
+  axios.defaults.baseURL = import.meta.env.VITE_baseURL;
+  // console.log(import.meta.env.VITE_baseURL);
   const dispatch = useDispatch();
 
   if (
