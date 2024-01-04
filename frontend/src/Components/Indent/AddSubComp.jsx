@@ -78,6 +78,7 @@ export const AddSubComp = ({
         ...prev,
         {
           ...data,
+          already: 0,
           quantity_ordered: quantityOrd,
         },
       ];

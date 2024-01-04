@@ -168,6 +168,16 @@ export const AddNewSubComponents = ({ data, setSubComponentsData }) => {
       quantity: quantityOrdered,
     };
 
+    if (
+      submitData.catalog_number === "Select catalog No" ||
+      submitData.rating_value === "Select Rating" ||
+      submitData.company.company_name === "Select Company" ||
+      submitData.quantity === 0
+    ) {
+      message.error("Please fill all the fields");
+      return;
+    }
+
     const response = await offerSubComponent(submitData);
 
     if (response.type === "error") {

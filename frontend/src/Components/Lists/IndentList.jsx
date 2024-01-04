@@ -130,7 +130,7 @@ export const IndentList = () => {
                       price: e.subcomponent.company.price,
                       discount: e.discount,
                       quantityRequired: e.quantityRequired,
-                      quantityOrdered: e.quantityOrdered,
+                      quantityOrdered: e.quantity,
                     };
                   })
                 );

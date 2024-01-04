@@ -89,7 +89,11 @@ module.exports.getindentByProjectId = async (req, res) => {
       .find({ projectId: req.params.id })
       .populate("projectId")
       .populate("clientId")
-      .populate({ path: "items.subcomponent" });
+      .populate({ path: "items.subcomponent" })
+      .populate({
+        path: "items.subcomponent",
+        populate: { path: "company.company_name" },
+      });
     if (data != null) {
       res.status(200).json({ message: "Indent fetched", data: data });
     } else {
@@ -114,7 +118,11 @@ module.exports.getIndentbypid = async (req, res) => {
       })
       .populate("projectId")
       .populate("clientId")
-      .populate({ path: "items.subcomponent" });
+      .populate({ path: "items.subcomponent" })
+      .populate({
+        path: "items.subcomponent",
+        populate: { path: "company.company_name" },
+      });
 
     if (data != null) {
       res.status(200).json({ message: "Indent fetched", data: data });

@@ -4,7 +4,7 @@ import { getAllProjects, getProjects } from "../../APIs/project";
 import { finalProjects } from "../../APIs/offer";
 import { getclients } from "../../APIs/client";
 import { AddSubComp } from "./AddSubComp";
-import { addIndent } from "../../APIs/indent";
+import { addIndent, getIndentbyClientProject } from "../../APIs/indent";
 import { getStoreDataById } from "../../APIs/store";
 import { ArrowBigLeftDash } from "lucide-react";
 
@@ -27,15 +27,17 @@ export const IndentOffers = () => {
     const sendData = {
       clientId: clientName.value,
       projectId: project.value,
-      items: newSubComponents.map((e) => {
-        console.log(e);
-        return {
-          subcomponent: e.key,
-          discount: e.discount,
-          quantityRequired: e.quantityRequired,
-          quantityOrdered: e.quantity_ordered,
-        };
-      }),
+      items: newSubComponents
+        .filter((e) => e.already !== 1)
+        .map((e) => {
+          console.log(e);
+          return {
+            subcomponent: e.key,
+            discount: e.discount,
+            quantityRequired: e.quantityRequired,
+            quantityOrdered: e.quantity_ordered,
+          };
+        }),
     };
     console.log(sendData);
     const response = await addIndent(sendData);
@@ -129,8 +131,8 @@ export const IndentOffers = () => {
             e.components.map((e) => {
               e.sub_components.map(async (e) => {
                 const objectToAdd = {
-                  company: e.company.company_name?.name || "",
-                  companyId: e.company.company_name?._id || "",
+                  company: e.company?.company_name?.name || "",
+                  companyId: e.company?.company_name?._id || "",
                   price: e.company.price,
                   discount: e.company.discount,
                   desc: e.desc,
@@ -147,8 +149,50 @@ export const IndentOffers = () => {
         });
       });
 
-      setSubComponentsData(Array.from(newSubcomponentsData));
-      console.log(Array.from(newSubcomponentsData));
+      const alreadyData = await getIndentbyClientProject(
+        clientName.value,
+        project.value
+      );
+      if (alreadyData.type === "success") {
+        const indentData = alreadyData.data.data;
+        console.log(indentData);
+        const alreadySubComponentsData = new Set();
+        indentData.map((e) => {
+          e.items.map((e) => {
+            console.log(e);
+            alreadySubComponentsData.add({
+              already: 1,
+              company: e.subcomponent?.company?.company_name?.name || "",
+              companyId: e.subcomponent?.company?.company_name?._id || "",
+              price: e.subcomponent?.company?.price,
+              discount: e.subcomponent?.company?.discount,
+              desc: e.subcomponent.desc,
+              quantityRequired: e.quantityRequired,
+              quantity_ordered: e.quantityOrdered,
+              rating_value: e.subcomponent.rating_value,
+              catalog_number: e.subcomponent.catalog_number,
+              key: e._id,
+              subcomponentId: e.subcomponent._id,
+            });
+          });
+        });
+        console.log(Array.from(alreadySubComponentsData));
+        setNewSubComponents(Array.from(alreadySubComponentsData));
+
+        // filter the data from newSubcomponentsData
+        newSubcomponentsData.forEach((e) => {
+          alreadySubComponentsData.forEach((f) => {
+            if (e.key === f.subcomponentId) {
+              newSubcomponentsData.delete(e);
+            }
+          });
+        });
+
+        console.log(Array.from(newSubcomponentsData));
+        setSubComponentsData(Array.from(newSubcomponentsData));
+      } else {
+        message.error("Cannot fetch data");
+      }
       setAddSubcomponents(true);
     } else {
       message.error("Cannot fetch data");
@@ -253,7 +297,7 @@ export const IndentOffers = () => {
                 {subComponentsData.map((e, i) => {
                   return (
                     <AddSubComp
-                      key={i}
+                      key={e._id}
                       subComponentsData={subComponentsData}
                       setSubComponentsData={setSubComponentsData}
                       data={e}
@@ -267,17 +311,16 @@ export const IndentOffers = () => {
               </div>
             </>
           )}
-          {subComponentsData.length === newSubComponents.length &&
-            subComponentsData.length !== 0 && (
-              <div className="flex items-center justify-center p-2">
-                <Button
-                  onClick={HandleOnClickSubmit}
-                  className="bg-blue-700 text-white"
-                >
-                  Submit
-                </Button>
-              </div>
-            )}
+          {subComponentsData.length !== 0 && (
+            <div className="flex items-center justify-center p-2">
+              <Button
+                onClick={HandleOnClickSubmit}
+                className="bg-blue-700 text-white"
+              >
+                Submit
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

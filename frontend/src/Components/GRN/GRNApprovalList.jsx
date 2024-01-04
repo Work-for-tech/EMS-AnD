@@ -7,7 +7,6 @@ import { getPurchaseSubComponent } from "../../APIs/purchase";
 import { GRNApprovalUpdate } from "./GRNApprovalUpdate";
 
 export const GRNApprovalList = () => {
-
   const [purchaseId, setPurchaseId] = useState("");
   const [Purchase, setPurchase] = useState([]);
   const [grnApprovalList, setGrnApprovalList] = useState([]);
@@ -26,8 +25,6 @@ export const GRNApprovalList = () => {
     getAllPurchase();
   }, []);
 
-
-
   const getGRNApprovalListInit = async () => {
     const res = await getGRNApproval({
       purchase_id: purchaseId,
@@ -36,8 +33,7 @@ export const GRNApprovalList = () => {
       console.log(res.data.data);
       setGrnApprovalList(res.data.data[0]);
     }
-  }
-
+  };
 
   const columns = [
     {
@@ -75,45 +71,80 @@ export const GRNApprovalList = () => {
       dataIndex: "action",
       key: "action",
       render: (_, record) => (
-        <Button onClick={() => setGrnApprovalUpdate(record)} className="cursor-pointer">Update
+        <Button
+          onClick={() => setGrnApprovalUpdate(record)}
+          className="cursor-pointer"
+        >
+          Update
         </Button>
       ),
-    }
-  ]
+    },
+  ];
 
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
 
-  return <div className="w-full">
-    <div className="py-5 flex justify-center gap-5">
-      <Select
-        placeholder="Select Purchase"
-        onChange={(e) => setPurchaseId(e)}
-        className="w-1/5"
-        options={Purchase.map((e, i) => {
-          return { label: "Purchase " + (i + 1) + " | " + (e.createdAt ?? "-"), value: e.value };
-        })}
-      />
-      <Button onClick={() => {
-        getGRNApprovalListInit();
-        setGrnApprovalUpdate({})
-      }}>GET LIST</Button>
+  return (
+    <div className="w-full">
+      <div className="py-5 flex justify-center gap-5">
+        <Select
+          placeholder="Select Purchase"
+          onChange={(e) => setPurchaseId(e)}
+          className="w-1/5"
+          options={Purchase.map((e, i) => {
+            return {
+              label:
+                "Purchase " +
+                (i + 1) +
+                " | " +
+                (new Date(e.createdAt).toLocaleString(undefined, options) ??
+                  "-"),
+              value: e.value,
+            };
+          })}
+        />
+        <Button
+          onClick={() => {
+            getGRNApprovalListInit();
+            setGrnApprovalUpdate({});
+          }}
+        >
+          GET LIST
+        </Button>
+      </div>
+      {grnApprovalList.items && (
+        <Table
+          className="p-5"
+          columns={columns}
+          dataSource={grnApprovalList.items.map((e) => {
+            console.log(e);
+            return {
+              key: e._id,
+              description: e.sub_component_id.desc ?? "None",
+              rating: e.sub_component_id.rating_value ?? "None",
+              catalog_number: e.sub_component_id.catalog_number ?? "None",
+              quantity_expected: e.quantity_expected ?? "-",
+              quantity_received: e.quantity_received ?? "-",
+              company_name: e.sub_component_id.company.company_name ?? "-",
+            };
+          })}
+        />
+      )}
+
+      {grnApprovalUpdate.key && (
+        <GRNApprovalUpdate
+          getGRNApprovalListInit={getGRNApprovalListInit}
+          setGrnApprovalList={setGrnApprovalList}
+          setGrnApprovalUpdate={setGrnApprovalUpdate}
+          data={grnApprovalUpdate}
+        />
+      )}
     </div>
-    {grnApprovalList.items && <Table className="p-5" columns={columns} dataSource={grnApprovalList.items.map((e) => {
-      console.log(e)
-      return {
-        key: e._id,
-        description: e.sub_component_id.desc ?? "None",
-        rating: e.sub_component_id.rating_value ?? "None",
-        catalog_number: e.sub_component_id.catalog_number ?? "None",
-        quantity_expected: e.quantity_expected ?? "-",
-        quantity_received: e.quantity_received ?? "-",
-        company_name : e.sub_component_id.company.company_name ?? "-"
-      }
-    })} />}
-
-    {
-      grnApprovalUpdate.key && <GRNApprovalUpdate getGRNApprovalListInit={getGRNApprovalListInit} setGrnApprovalList={setGrnApprovalList} setGrnApprovalUpdate={setGrnApprovalUpdate} data={grnApprovalUpdate} />
-    }
-
-
-  </div>;
+  );
 };

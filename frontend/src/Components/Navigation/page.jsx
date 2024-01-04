@@ -110,6 +110,7 @@ export const Navigator = () => {
   const RWPurchase = [
     getItem("Purchase", "sub4", [
       getItem("Purchase", "purchase"),
+      getItem("Purchase List", "purchaselist"),
       getItem("Bulk Purchase", "bulkpurchase"),
     ]),
   ];
@@ -117,6 +118,7 @@ export const Navigator = () => {
   const RPurchase = [
     getItem("Purchase", "sub4", [
       getItem("Purchase", "purchase"),
+      getItem("Purchase List", "purchaselist"),
       getItem("Bulk Purchase", "bulkpurchase"),
     ]),
   ];

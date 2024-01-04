@@ -170,10 +170,19 @@ export const CreateStore = () => {
       companyId: company.value,
       quantity: Number(quantity),
     };
-    console.log(sendData);
+
+    if (
+      sendData.desc === "" ||
+      sendData.catalog_number === "" ||
+      sendData.rating_value === "" ||
+      sendData.companyId === "" ||
+      sendData.quantity === ""
+    ) {
+      message.error("Please Fill All The Fields");
+      return;
+    }
 
     const response = await createStoreData(sendData);
-    console.log(response.status);
 
     if (response.type === "success") {
       message.success("Data Added Successfully");

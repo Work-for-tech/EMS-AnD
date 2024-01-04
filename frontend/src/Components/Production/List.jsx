@@ -38,12 +38,12 @@ export const ProductionList = () => {
           ) : (
             <Button
               onClick={() => {
-                localStorage.setItem("production_id", record.key);
-                navigate("/updateProduction");
+                localStorage.setItem("finishProject", record.key);
+                navigate("/finishProject");
               }}
               className="bg-red-500 hover:bg-red-700 text-white font-bold rounded"
             >
-              View
+              Finish Project
             </Button>
           )}
         </div>
@@ -65,6 +65,7 @@ export const ProductionList = () => {
           is_finalized: e.is_finalized,
         });
       });
+      console.log(newData);
       setProjectData(newData);
     } else {
       message.error("Error in Fetching Projects");
@@ -81,6 +82,7 @@ export const ProductionList = () => {
       if (response.type === "success") {
         projectData[i].status =
           response.data.data.length === 7 ? "Completed" : "In Progress";
+        console.log(projectData[i]);
         setProjectData([...projectData]);
       } else {
         message.error("Error in Fetching Projects");

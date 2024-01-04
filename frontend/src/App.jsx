@@ -18,9 +18,9 @@ import { useDispatch } from "react-redux";
 import { offerActions } from "./store/offerslice";
 import { OfferExcel } from "./Components/OfferExcel/page";
 import { CreateVendor } from "./Components/Vendor/page";
-import { VendorList } from "./Components/Lists/VendorList";
+import { VendorList } from "./Components/Vendor/VendorList";
 import { CreateStore } from "./Components/Store/page";
-import { StoreList } from "./Components/Lists/StoreList";
+import { StoreList } from "./Components/Store/StoreList";
 import { IndentOffers } from "./Components/Indent/IndentOffers";
 import { BulkIndent } from "./Components/BulkIndent/BulkIndent";
 import { IndentList } from "./Components/Lists/IndentList";
@@ -44,12 +44,11 @@ import { Login } from "./Components/Login/Login";
 import { Landing } from "./Components/Landing/Landing";
 import { AccessHandler } from "./Validator/AccessHandler";
 import { Production } from "./Components/Production/Page";
-import axios from "axios";
 import { ProductionList } from "./Components/Production/List";
+import { PurchaseList } from "./Components/Purchase/PurchaseList";
+import { FinishProject } from "./Components/Production/FinishProject";
 
 function App() {
-  axios.defaults.baseURL = import.meta.env.VITE_baseURL;
-  // console.log(import.meta.env.VITE_baseURL);
   const dispatch = useDispatch();
 
   if (
@@ -243,6 +242,14 @@ function App() {
             }
           />
           <Route
+            path="/purchaseList"
+            element={
+              <AccessHandler>
+                <PurchaseList />
+              </AccessHandler>
+            }
+          />
+          <Route
             path="/bulkpurchase"
             element={
               <AccessHandler>
@@ -369,6 +376,14 @@ function App() {
             element={
               <AccessHandler>
                 <Production />
+              </AccessHandler>
+            }
+          />
+          <Route
+            path="/finishProject"
+            element={
+              <AccessHandler>
+                <FinishProject />
               </AccessHandler>
             }
           />

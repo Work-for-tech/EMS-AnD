@@ -80,7 +80,7 @@ export const BulkIndent = () => {
     subComponentsData.map((e, i) => {
       sendData.items.push({
         subcomponent: e._id,
-        quantityRequired: e.quantity,
+        quantity: e.quantity,
         quantityOrdered: e.quantityOrdered,
       });
     });
