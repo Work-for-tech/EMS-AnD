@@ -99,10 +99,10 @@ export const UpdateSubComponent = () => {
       const response = await getCompanies();
 
       const setdata = [];
-      response.data.data.map((e) => {
+      response.data.data?.map((e) => {
         setdata.push({
-          label: e.name,
-          value: e._id,
+          label: e?.name,
+          value: e?._id,
         });
       });
       setOptions(setdata);
@@ -133,18 +133,18 @@ export const UpdateSubComponent = () => {
       localStorage.getItem("SubComponentData")
     );
     setDescription(SubComponentData.desc);
-    setId(SubComponentData._id);
+    setId(SubComponentData?._id);
     const oldData = [];
-    SubComponentData.catalog.map((e) => {
+    SubComponentData.catalog?.map((e) => {
       e.rating.map((rating) => {
-        rating.companies.map((company) => {
+        rating.companies?.map((company) => {
           console.log({
             key: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
-            catalog_number: e.catalog_number,
-            rating_value: rating.rating_value,
+            catalog_number: e?.catalog_number,
+            rating_value: rating?.rating_value,
             company: {
-              label: company.company_id.name,
-              value: company.company_id._id,
+              label: company.company_id?.name,
+              value: company.company_id?._id,
             },
             price: company.price,
             discount: company.discount,
@@ -157,8 +157,8 @@ export const UpdateSubComponent = () => {
             catalog_number: e.catalog_number,
             rating_value: rating.rating_value,
             company: {
-              label: company.company_id.name,
-              value: company.company_id._id,
+              label: company.company_id?.name,
+              value: company.company_id?._id,
             },
             price: company.price,
             discount: company.discount,
