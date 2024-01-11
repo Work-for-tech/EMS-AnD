@@ -22,9 +22,9 @@ export const Login = () => {
       if (response.type === "success") {
         dispatch(
           loginActions.addNameAndAccess({
-            name: response.data.user.data.userId.name,
-            access: response.data.user.data.moduleName,
-            email: response.data.user.data.userId.email,
+            name: response.data?.user?.data?.userId?.name,
+            access: response.data?.user?.data?.moduleName,
+            email: response.data?.user?.data?.userId?.email,
           })
         );
         console.log(localStorage.getItem("lastpath"));

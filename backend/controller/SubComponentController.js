@@ -62,7 +62,7 @@ exports.deleteById = async (req, res) => {
 
 exports.getAllSubComponents = async (req, res) => {
   try {
-    const items = await subComponentSchema.find().populate({
+    const items = await subComponentSchema.find().sort({_id:-1}).populate({
       path: "catalog.rating.companies.company_id",
       model: "Companies", // Replace with your actual company model name
     });
